@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coach Adel — Coaching sportif personnalisé | Performance &amp; résultats</title>
+<meta name="description" content="Coaching sportif personnalisé avec Adel : programme sur-mesure, suivi régulier, résultats mesurables. Premier échange offert, sans engagement.">
+<meta name="theme-color" content="#220901">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23220901'/%3E%3Crect x='7' y='14' width='18' height='4' rx='2' fill='%23F6AA1C'/%3E%3C/svg%3E">
+<meta property="og:title" content="Coach Adel | Coaching personnalisé & performance">
+<meta property="og:description" content="Un accompagnement personnalisé, structuré autour de tes objectifs, de ton niveau et de ta progression.">
+<meta property="og:type" content="website">
+<!--
+  IMAGES :
+  - Hero : image.png (visuel local fourni pour le coach)
+  - Portrait + cartes : photos open-source (Licence Unsplash, usage libre)
+-->
+<style>
+/* ============ 1. DESIGN SYSTEM — COACH ADEL ============ */
+:root{
+  --coffee-bean:#220901;
+  --dark-garnet:#621708;
+  --oxblood:#941B0C;
+  --rusty-spice:#BC3908;
+  --orange:#F6AA1C;
+  --text-primary:#FFF8F0;
+  --text-secondary:#E8D8CC;
+  --text-muted:#BFAEA3;
+  --surface-main:#220901;
+  --surface-dark:#621708;
+  --surface-card:#3A0D05;
+  --accent:#F6AA1C;
+  --border-subtle:rgba(255,248,240,.12);
+  --overlay-dark:rgba(34,9,1,.72);
+  --shadow-soft:0 8px 30px rgba(0,0,0,.25);
+  --shadow-strong:0 18px 50px rgba(0,0,0,.40);
+  --radius-sm:10px;
+  --radius-md:16px;
+  --radius-lg:24px;
+  --content-max-width:1200px;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:20px; --space-6:24px; --space-7:32px; --space-8:40px;
+  --space-9:48px; --space-10:64px;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+/* ============ RESET ============ */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:hidden;overflow-x:clip;scroll-padding-top:76px}
+body{margin:0;min-width:320px;overflow-x:hidden;overflow-x:clip;background:var(--surface-main);color:var(--text-primary);font-family:var(--font);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ul,ol,figure,blockquote{margin:0}
+ul,ol{padding:0}
+img,svg,video{display:block;max-width:100%}
+button,a,input,textarea,select{font:inherit}
+button,a{-webkit-tap-highlight-color:transparent}
+h1,h2,h3,p,li,blockquote,a,span{overflow-wrap:break-word}
+::selection{background:var(--accent);color:var(--coffee-bean)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+.skip{position:absolute;left:-9999px;top:0;background:var(--accent);color:var(--coffee-bean);padding:12px 18px;font-weight:800;z-index:2000;border-radius:0 0 10px 0}
+.skip:focus{left:0}
+/* ============ LAYOUT GLOBAL ============ */
+.container{width:min(calc(100% - 32px),var(--content-max-width));margin-inline:auto}
+@media(min-width:768px){.container{width:min(calc(100% - 48px),var(--content-max-width))}}
+@media(min-width:1024px){html{scroll-padding-top:88px}.container{width:min(calc(100% - 64px),var(--content-max-width))}}
+.section{padding-block:72px;position:relative;isolation:isolate}
+@media(min-width:1024px){.section{padding-block:96px}}
+.section-alt{background:rgba(148,27,12,.14);border-block:1px solid var(--border-subtle)}
+.section-header{max-width:680px;margin-bottom:32px}
+@media(min-width:1024px){.section-header{margin-bottom:40px}}
+.section-eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--accent);font-size:.78rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px}
+.section-eyebrow::before{content:"";width:26px;height:3px;border-radius:2px;background:var(--accent);flex:none}
+.section-header h2{font-size:clamp(2rem,5vw,4rem);line-height:1.05;letter-spacing:-.02em;margin-bottom:12px}
+.section-header p{color:var(--text-secondary);font-size:1.02rem}
+/* ============ GRIDS (mobile-first) ============ */
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.grid>*{min-width:0}
+@media(min-width:768px){.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1024px){.grid-3{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.grid-4{grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}}
+/* ============ TYPO ============ */
+h1{font-size:clamp(2.5rem,8vw,6rem);line-height:.95;letter-spacing:-.02em}
+h3{font-size:1.15rem;line-height:1.25}
+.lead{color:var(--text-secondary);font-size:1.04rem}
+/* ============ BOUTONS ============ */
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 20px;border-radius:12px;font-weight:800;font-size:1rem;text-decoration:none;border:0;cursor:pointer;line-height:1.25;text-align:center;min-width:0;transition:transform .15s ease,filter .15s ease,background .15s ease,color .15s ease,border-color .15s ease}
+.btn-primary{background:var(--accent);color:var(--coffee-bean);box-shadow:var(--shadow-strong)}
+.btn-primary::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shine 3.4s ease-in-out infinite}
+@keyframes shine{0%,60%{left:-80%}100%{left:180%}}
+.btn-secondary{border:2px solid var(--text-primary);color:var(--text-primary);background:transparent}
+.btn-row{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+@media(min-width:768px){.btn-row{display:flex;flex-wrap:wrap}.btn-row .btn{flex:1 1 0}}
+@media(hover:hover){
+  .btn-primary:hover{filter:brightness(1.08);transform:translateY(-2px)}
+  .btn-secondary:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+  .btn:active{transform:translateY(2px)}
+}
+.btn-block{width:100%}
+.pulse{animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:var(--shadow-strong),0 0 0 0 rgba(246,170,28,.5)}70%{box-shadow:var(--shadow-strong),0 0 0 18px rgba(246,170,28,0)}100%{box-shadow:var(--shadow-strong),0 0 0 0 rgba(246,170,28,0)}}
+/* ============ PROGRESS / FOND ============ */
+.progress{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,var(--rusty-spice),var(--accent));z-index:1500}
+.orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);animation:drift 16s ease-in-out infinite alternate}
+.orb-1{width:50vw;height:50vw;left:-14vw;top:-12vw;background:radial-gradient(circle,rgba(148,27,12,.55),transparent 70%)}
+.orb-2{width:34vw;height:34vw;right:-10vw;top:34vh;background:radial-gradient(circle,rgba(246,170,28,.14),transparent 70%);animation-delay:-6s}
+.orb-3{width:42vw;height:42vw;left:22vw;bottom:-18vw;background:radial-gradient(circle,rgba(98,23,8,.6),transparent 70%);animation-delay:-11s}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(3vw,3vh)}}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E")}
+main,header,footer{position:relative;z-index:2}
+/* ============ HEADER ============ */
+.topbar{display:none}
+@media(min-width:1024px){
+  .topbar{display:block;position:sticky;top:0;z-index:1000;background:rgba(34,9,1,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border-subtle)}
+  .topbar-inner{display:flex;align-items:center;min-height:72px}
+  .nav-desk{display:flex;gap:26px;align-items:center;margin-left:auto}
+  .nav-desk a{text-decoration:none;color:var(--text-secondary);font-weight:700;font-size:.95rem;padding:12px 2px}
+  .nav-desk a[aria-current="true"],.nav-desk a:hover{color:var(--text-primary)}
+  .nav-desk .btn{margin-left:24px;min-height:48px;padding:10px 20px;font-size:.92rem}
+  .nav-desk .btn::after{display:none}
+}
+.brand{font-weight:900;letter-spacing:-.02em;text-decoration:none;font-size:1.12rem;flex:none}
+.brand span{color:var(--accent)}
+.mobilebar{position:sticky;top:0;z-index:1300;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;background:rgba(34,9,1,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border-subtle);padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-right))}
+@media(min-width:1024px){.mobilebar{display:none}}
+.burger{width:48px;height:48px;flex:none;border:1px solid var(--border-subtle);border-radius:12px;background:rgba(255,248,240,.06);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.burger span{display:block;width:22px;height:3px;border-radius:2px;background:var(--text-primary);transition:transform .32s cubic-bezier(.22,.9,.28,1),opacity .18s ease}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(9px) rotate(45deg);background:var(--accent)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-9px) rotate(-45deg);background:var(--accent)}
+.mmenu{position:fixed;inset:0;z-index:1200;background:rgba(34,9,1,.62);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s}
+.mmenu.open{opacity:1;visibility:visible}
+.mmenu-panel{position:absolute;top:0;left:0;right:0;background:var(--surface-card);border-bottom:3px solid var(--accent);border-radius:0 0 24px 24px;padding:84px 16px 24px;transform:translateY(-102%);transition:transform .42s cubic-bezier(.22,.9,.28,1);max-height:88vh;overflow:auto}
+.mmenu.open .mmenu-panel{transform:translateY(0)}
+.mmenu nav{display:grid}
+.mmenu a.mlink{color:var(--text-primary);text-decoration:none;font-weight:800;font-size:1.25rem;padding:13px 6px;border-bottom:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;min-height:56px;opacity:0;transform:translateX(-16px);transition:opacity .3s ease,transform .32s ease}
+.mmenu.open a.mlink{opacity:1;transform:none}
+.mmenu.open a.mlink:nth-child(1){transition-delay:.07s}.mmenu.open a.mlink:nth-child(2){transition-delay:.12s}.mmenu.open a.mlink:nth-child(3){transition-delay:.17s}.mmenu.open a.mlink:nth-child(4){transition-delay:.22s}.mmenu.open a.mlink:nth-child(5){transition-delay:.27s}.mmenu.open a.mlink:nth-child(6){transition-delay:.32s}.mmenu.open a.mlink:nth-child(7){transition-delay:.37s}
+.mmenu a.mlink small{color:var(--accent);font-size:.8rem}
+.mmenu .btn{margin-top:18px}
+/* ============ HERO ============ */
+.hero{padding-block:32px 56px}
+@media(min-width:1024px){.hero{padding-block:88px}}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;grid-template-areas:"media" "content"}
+.hero-media{grid-area:media;position:relative;overflow:hidden;border-radius:var(--radius-lg);border:1px solid var(--border-subtle);min-width:0}
+.hero-media img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;animation:kenburns 24s ease-in-out infinite alternate}
+@keyframes kenburns{from{transform:scale(1)}to{transform:scale(1.1)}}
+.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(34,9,1,.05) 40%,rgba(34,9,1,.55) 100%);pointer-events:none}
+.hero-media figcaption{position:absolute;left:0;right:0;bottom:0;padding:32px 16px 12px;font-size:.82rem;color:var(--text-secondary);background:linear-gradient(transparent,rgba(34,9,1,.92))}
+.hero-content{grid-area:content;min-width:0;display:grid;gap:16px;align-content:start}
+.hero-content h1 .hl{color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;list-style:none}
+.chip{background:rgba(255,248,240,.08);border:1px solid var(--border-subtle);color:var(--text-primary);font-weight:700;font-size:.82rem;padding:10px 16px;border-radius:999px;animation:floaty 4s ease-in-out infinite}
+.chip:nth-child(2){animation-delay:-1.3s}.chip:nth-child(3){animation-delay:-2.6s}
+.chip b{color:var(--accent)}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.mini-card{background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:20px;min-width:0}
+.mini-card strong{display:block;font-size:1.4rem;margin:8px 0}
+.mini-card p{color:var(--text-secondary);font-size:.94rem}
+.mini-card .btn{margin-top:16px}
+@media(min-width:1024px){
+  .hero-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:48px;align-items:center;grid-template-areas:"content media"}
+  .hero-media img{aspect-ratio:16/11}
+  .mini-card{padding:24px}
+}
+/* ============ MARQUEE ============ */
+.marquee{background:var(--accent);color:var(--coffee-bean);overflow:hidden}
+.marquee-track{display:inline-flex;white-space:nowrap;padding:12px 0;font-weight:900;letter-spacing:.08em;animation:slide 20s linear infinite;will-change:transform}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* ============ CARTES ============ */
+.card{min-width:0;width:100%;padding:20px;background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden}
+@media(min-width:1024px){.card{padding:28px}}
+.card-light{background:var(--text-primary);color:var(--coffee-bean);border-color:transparent}
+.card .num{font-size:.78rem;font-weight:800;letter-spacing:.14em;color:var(--accent)}
+.card-light .num{color:var(--oxblood)}
+.card h3{margin:8px 0 6px}
+.card p{color:var(--text-secondary);font-size:.95rem}
+.card-light p{color:var(--dark-garnet)}
+@media(hover:hover){.card-lift{transition:transform .2s ease,box-shadow .2s ease}.card-lift:hover{transform:translateY(-5px);box-shadow:var(--shadow-strong)}}
+/* ============ ABOUT ============ */
+.about-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:24px}
+.about-grid>*{min-width:0}
+.about-media{position:relative;overflow:hidden;border-radius:var(--radius-lg);border:1px solid var(--border-subtle)}
+.about-media img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover}
+.about-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(34,9,1,.05) 50%,rgba(34,9,1,.6) 100%);pointer-events:none}
+.about-media figcaption{position:absolute;left:0;right:0;bottom:0;padding:32px 16px 12px;font-size:.84rem;color:var(--text-secondary);background:linear-gradient(transparent,rgba(34,9,1,.92))}
+.about-copy{display:grid;gap:16px;align-content:start}
+.checks{list-style:none;display:grid;gap:12px;margin-top:4px}
+.checks li{background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;min-width:0}
+.checks strong{color:var(--accent);font-size:.78rem;letter-spacing:.12em}
+.checks h3{margin:4px 0}
+.checks p{color:var(--text-secondary);font-size:.93rem}
+.mantra{margin-top:8px;background:var(--surface-card);border:1px solid rgba(246,170,28,.35);border-radius:var(--radius-md);padding:24px;text-align:center;position:relative;overflow:hidden}
+.mantra::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(246,170,28,.16),transparent 60%);pointer-events:none}
+.mantra strong{position:relative;font-size:clamp(1.4rem,5vw,1.9rem)}
+.mantra strong em{font-style:normal;color:var(--accent);animation:glow 2.6s ease-in-out infinite}
+@keyframes glow{0%,100%{opacity:1}50%{opacity:.6}}
+.mantra p{position:relative;color:var(--text-secondary);margin-top:8px;font-size:.94rem}
+@media(min-width:1024px){.about-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:center}.checks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* ============ TÉMOIGNAGES ============ */
+.avatar{width:52px;height:52px;flex:none;border-radius:50%;background:var(--accent);color:var(--coffee-bean);font-weight:900;display:inline-flex;align-items:center;justify-content:center;font-size:1rem}
+.testi{display:flex;flex-direction:column;gap:12px}
+.testi-head{display:flex;align-items:center;gap:12px}
+.stars{color:var(--rusty-spice);letter-spacing:.18em;font-size:.9rem;font-weight:900}
+.testi blockquote{font-size:1rem;line-height:1.55}
+.testi .meta{font-size:.87rem;color:var(--dark-garnet)}
+.testi .result{display:inline-block;background:var(--coffee-bean);color:var(--accent);font-weight:800;border-radius:8px;padding:7px 12px;font-size:.85rem;width:fit-content;max-width:100%}
+/* ============ PROGRAMMES ============ */
+.prog-card{display:flex;flex-direction:column;gap:0;padding:0}
+.prog-media{overflow:hidden;aspect-ratio:16/10}
+.prog-media img{width:100%;height:100%;object-fit:cover}
+.prog-body{display:flex;flex-direction:column;gap:10px;padding:20px;flex:1;min-width:0}
+@media(min-width:1024px){.prog-body{padding:24px}}
+.prog-label{font-size:.74rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.prog-price{font-size:1.5rem;font-weight:900;color:var(--accent)}
+.prog-price small{font-size:.85rem;font-weight:600;color:var(--text-muted)}
+.prog-body p{color:var(--text-secondary);font-size:.93rem}
+.prog-body ul{list-style:none;display:grid;gap:8px;color:var(--text-secondary);font-size:.9rem}
+.prog-body li{padding-left:26px;position:relative}
+.prog-body li::before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:900}
+.prog-cta{margin-top:auto;padding-top:8px;display:flex}
+.badge{display:inline-block;align-self:flex-start;background:var(--accent);color:var(--coffee-bean);font-weight:900;font-size:.74rem;letter-spacing:.08em;padding:8px 14px;border-radius:999px;white-space:normal;max-width:100%}
+/* ============ STATS ============ */
+.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.stats-grid>*{min-width:0}
+@media(min-width:1024px){.stats-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}}
+.stat{background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:20px;text-align:left}
+.stat strong{display:block;font-size:clamp(1.9rem,7vw,2.5rem);color:var(--accent);line-height:1;letter-spacing:-.02em}
+.stat span{display:block;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);font-weight:700;margin-top:8px}
+/* ============ BLOG ============ */
+.post-card{display:flex;flex-direction:column;padding:0}
+.post-media{overflow:hidden;aspect-ratio:16/10}
+.post-media img{width:100%;height:100%;object-fit:cover}
+.post-body{display:flex;flex-direction:column;gap:10px;padding:20px;flex:1;min-width:0}
+@media(min-width:1024px){.post-body{padding:24px}}
+.post-meta{font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.post-body p{color:var(--text-secondary);font-size:.93rem}
+.post-more{margin-top:auto;padding-top:8px}
+.post-more details{border-top:1px solid var(--border-subtle);padding-top:12px}
+.post-more summary{cursor:pointer;color:var(--accent);font-weight:800;min-height:44px;display:inline-flex;align-items:center;list-style:none}
+.post-more summary::-webkit-details-marker{display:none}
+.post-more summary::after{content:"+";margin-left:8px;font-size:1.2rem}
+.post-more details[open] summary::after{content:"−"}
+.post-more .full{color:var(--text-secondary);font-size:.93rem;padding-top:10px;display:grid;gap:10px}
+/* ============ FAQ ============ */
+.faq{display:grid;gap:12px;max-width:800px}
+.faq-item{background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:12px;overflow:hidden;min-width:0}
+.faq-item summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:56px;padding:16px 18px;font-weight:800;font-size:1rem;color:var(--text-primary)}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary .ic{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--coffee-bean);font-size:1.2rem;font-weight:900;display:inline-flex;align-items:center;justify-content:center}
+.faq-item details[open] summary .ic,.faq-item summary .ic{transition:transform .25s ease}
+.faq-item[open] summary .ic{transform:rotate(45deg)}
+.faq-item .answer{padding:0 18px 18px;color:var(--text-secondary);font-size:.95rem}
+/* ============ CTA FINAL ============ */
+.final{background:linear-gradient(135deg,var(--dark-garnet),var(--oxblood) 60%,var(--dark-garnet));border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:48px 20px;text-align:center;position:relative;overflow:hidden}
+@media(min-width:1024px){.final{padding:72px 48px}}
+.final::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(246,170,28,.22),transparent 60%);pointer-events:none}
+.final>*{position:relative}
+.final h2{font-size:clamp(2rem,5vw,3.4rem);margin:10px 0 12px}
+.final p{color:var(--text-secondary);max-width:36rem;margin-inline:auto}
+.final .btn-row{max-width:560px;margin:24px auto 0}
+.micro{font-size:.88rem;color:var(--text-primary);font-weight:700;margin-top:14px}
+.coords{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;margin:26px auto 0;padding:0;list-style:none;max-width:640px;text-align:left}
+@media(min-width:768px){.coords{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 24px}}
+.coords>*{min-width:0}
+.coords a{color:var(--text-primary);text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:4px;font-weight:700;min-height:48px;display:inline-flex;align-items:center;gap:10px;font-size:1rem}
+.coords span{display:inline-flex;align-items:center;gap:10px;min-height:48px;color:var(--text-secondary);font-weight:600}
+/* ============ FOOTER ============ */
+.sitefoot{background:var(--surface-main);border-top:2px solid var(--accent);padding:48px 0 calc(120px + env(safe-area-inset-bottom))}
+@media(min-width:1024px){.sitefoot{padding-bottom:48px}}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:32px}
+.foot-grid>*{min-width:0}
+@media(min-width:1024px){.foot-grid{grid-template-columns:2fr 1fr 1fr 1fr}}
+.foot-desc{color:var(--text-secondary);font-size:.94rem;margin-top:10px;max-width:36ch}
+.foot-h{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:800;margin-bottom:10px}
+.foot-nav{list-style:none;display:grid}
+.foot-nav a{display:inline-flex;align-items:center;min-height:44px;color:var(--text-secondary);text-decoration:none;font-weight:600}
+.foot-nav a:hover{color:var(--text-primary)}
+.foot-contact{list-style:none;display:grid}
+.foot-contact a{color:var(--text-primary);font-weight:700;min-height:44px;display:inline-flex;align-items:center;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:4px}
+.socials{list-style:none;display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.socials a{display:inline-flex;align-items:center;gap:9px;min-height:48px;padding:10px 18px;border:1px solid var(--border-subtle);border-radius:999px;color:var(--text-primary);text-decoration:none;font-weight:700;font-size:.92rem}
+@media(hover:hover){.socials a:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}}
+.foot-legal{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:32px;padding-top:18px;border-top:1px solid var(--border-subtle);color:var(--text-muted);font-size:.85rem}
+/* ============ BOTTOM NAV + TOTOP ============ */
+.bottomnav{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:1000;background:rgba(34,9,1,.96);border:1px solid rgba(246,170,28,.20);border-radius:20px;display:grid;grid-template-columns:1fr 1fr 1.4fr 1fr;gap:4px;padding:8px;min-height:64px}
+@media(min-width:1024px){.bottomnav{display:none}}
+.bottomnav>*{min-width:0}
+.bottomnav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;font-size:.64rem;font-weight:800;letter-spacing:.04em;color:var(--text-secondary);min-height:56px;border-radius:14px;padding:8px 2px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bottomnav a .dot{width:6px;height:6px;border-radius:50%;background:transparent;flex:none}
+.bottomnav a[aria-current="true"]{color:var(--accent)}
+.bottomnav a[aria-current="true"] .dot{background:var(--accent)}
+.bottomnav a.cta{background:var(--accent);color:var(--coffee-bean)}
+.totop{position:fixed;right:12px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:1000;min-height:52px;padding:12px 18px;border-radius:999px;border:0;background:var(--accent);color:var(--coffee-bean);font-size:.95rem;font-weight:900;cursor:pointer;display:none;align-items:center;gap:8px;box-shadow:var(--shadow-strong)}
+.totop.show{display:inline-flex}
+@media(min-width:1024px){.totop{bottom:28px;right:28px}}
+@media(max-width:1023.98px){main{padding-bottom:100px}}
+/* ============ REVEAL ============ */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:none}
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"Person","name":"Coach Adel","jobTitle":"Personal Trainer","description":"Coaching sportif personnalisé : performance, progression mesurable et routine durable."},
+{"@type":"ProfessionalService","name":"Coaching Sportif Personnalisé — Coach Adel","priceRange":"49€ - 249€","areaServed":"France"},
+{"@type":"Blog","name":"Conseils Coach Adel","blogPost":[
+{"@type":"BlogPosting","headline":"3 séances par semaine : pourquoi c'est le bon rythme"},
+{"@type":"BlogPosting","headline":"Progression vs perfection : la règle des 80%"},
+{"@type":"BlogPosting","headline":"Que manger autour de tes séances ?"}]},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Combien de séances par semaine ?","acceptedAnswer":{"@type":"Answer","text":"2 à 3 séances par semaine pour une progression régulière et tenable."}},
+{"@type":"Question","name":"Le coaching peut-il être réalisé à distance ?","acceptedAnswer":{"@type":"Answer","text":"Oui, en visio avec programme suivi et ajustements hebdomadaires."}},
+{"@type":"Question","name":"Comment se déroule le premier rendez-vous ?","acceptedAnswer":{"@type":"Answer","text":"Échange de 15 minutes sans engagement puis bilan initial complet."}},
+{"@type":"Question","name":"Puis-je changer de programme ?","acceptedAnswer":{"@type":"Answer","text":"Oui, à tout moment selon ta progression et tes contraintes."}},
+{"@type":"Question","name":"Quel niveau faut-il avoir ?","acceptedAnswer":{"@type":"Answer","text":"Aucun niveau requis. Le programme part de ton point de départ réel."}}]}]}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="orbs" aria-hidden="true"><span class="orb orb-1"></span><span class="orb orb-2"></span><span class="orb orb-3"></span></div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="mobilebar">
+  <a class="brand" href="#accueil" aria-label="Coach Adel — retour à l'accueil">COACH<span>ADEL</span></a>
+  <button class="burger" id="burger" aria-expanded="false" aria-controls="mobilemenu" aria-label="Ouvrir le menu"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
+</div>
+<div class="mmenu" id="mobilemenu" aria-hidden="true">
+  <div class="mmenu-panel">
+    <nav aria-label="Menu mobile">
+      <a class="mlink" href="#accueil">Accueil <small>01</small></a>
+      <a class="mlink" href="#services">Services <small>02</small></a>
+      <a class="mlink" href="#coach">Coach <small>03</small></a>
+      <a class="mlink" href="#avis">Avis <small>04</small></a>
+      <a class="mlink" href="#programmes">Programmes <small>05</small></a>
+      <a class="mlink" href="#blog">Conseils <small>06</small></a>
+      <a class="mlink" href="#contact">Contact <small>07</small></a>
+    </nav>
+    <a class="btn btn-primary btn-block" href="#contact">Réserver mon premier échange</a>
+  </div>
+</div>
+
+<header class="topbar" aria-label="Navigation principale">
+  <div class="container topbar-inner">
+    <a class="brand" href="#accueil" aria-label="Coach Adel — retour à l'accueil">COACH<span>ADEL</span></a>
+    <nav class="nav-desk" aria-label="Sections">
+      <a href="#accueil" data-nav="accueil">Accueil</a>
+      <a href="#coach" data-nav="coach">Méthode</a>
+      <a href="#programmes" data-nav="programmes">Programmes</a>
+      <a href="#resultats" data-nav="resultats">Résultats</a>
+      <a href="#blog" data-nav="blog">Conseils</a>
+      <a class="btn btn-primary" href="#contact">Réserver</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<!-- HERO -->
+<section class="hero" id="accueil" aria-labelledby="h1">
+  <div class="container hero-grid">
+    <figure class="hero-media reveal">
+      <img src="image.png" width="1254" height="1254" alt="Coach Adel en pleine action pendant une séance d'entraînement" fetchpriority="high">
+      <figcaption>Séance réelle — technique, intensité, cadre pro.</figcaption>
+    </figure>
+    <div class="hero-content">
+      <p class="section-eyebrow">Coaching sportif • Performance • Bien-être</p>
+      <h1 id="h1">Transforme ton entraînement. <span class="hl">Construis une version plus forte de toi.</span></h1>
+      <p class="lead">Un accompagnement personnalisé, structuré autour de tes objectifs, de ton niveau et de ta progression.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary pulse" href="#contact">Commencer mon coaching</a>
+        <a class="btn btn-secondary" href="#coach">Découvrir la méthode</a>
+      </div>
+      <ul class="chips" aria-label="Points clés">
+        <li class="chip"><b>+150</b> clients coachés</li>
+        <li class="chip"><b>8 ans</b> de terrain</li>
+        <li class="chip"><b>92%</b> d'assidus</li>
+      </ul>
+      <div class="mini-card reveal">
+        <p class="section-eyebrow">Séance type</p>
+        <strong>60 min. 100% sur-mesure.</strong>
+        <p>Échauffement ciblé → blocs force et technique → conditionnement → retour au calme. Chaque minute a un objectif.</p>
+        <a class="btn btn-secondary btn-block" href="#programmes">Voir les programmes</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>DISCIPLINE • PERFORMANCE • RÉGULARITÉ • PROGRESSION • DISCIPLINE • PERFORMANCE • RÉGULARITÉ • PROGRESSION •&nbsp;</span><span>DISCIPLINE • PERFORMANCE • RÉGULARITÉ • PROGRESSION • DISCIPLINE • PERFORMANCE • RÉGULARITÉ • PROGRESSION •&nbsp;</span></div></div>
+
+<!-- FEATURES / SERVICES -->
+<section class="section" id="services" aria-labelledby="h-services">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Services</p>
+      <h2 id="h-services">Pas de programme standard. Une méthode construite autour de toi.</h2>
+      <p>Trois engagements simples, tenus à chaque séance et à chaque point de suivi.</p>
+    </div>
+    <ol class="grid grid-3" style="list-style:none">
+      <li class="card card-light card-lift reveal"><span class="num">01</span><h3>Programme personnalisé</h3><p>Construit à partir de ton bilan initial : niveau, contraintes, planning. Rien de copié-collé.</p></li>
+      <li class="card card-light card-lift reveal"><span class="num">02</span><h3>Suivi régulier</h3><p>Point hebdomadaire, ajustements concrets, cap gardé ensemble. Tu ne restes jamais seul.</p></li>
+      <li class="card card-light card-lift reveal"><span class="num">03</span><h3>Progression mesurable</h3><p>Forces, mensurations, régularité : des chiffres clairs pour voir ce qui avance vraiment.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ABOUT COACH -->
+<section class="section section-alt" id="coach" aria-labelledby="h-coach">
+  <div class="container">
+    <div class="about-grid">
+      <figure class="about-media reveal">
+        <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?auto=format&fit=crop&w=900&q=80" width="900" height="1125" alt="Portrait de Coach Adel, bras croisés en salle de sport" loading="lazy">
+        <figcaption>Adel — 8 ans de terrain, +150 accompagnements.</figcaption>
+      </figure>
+      <div class="about-copy">
+        <div class="reveal">
+          <p class="section-eyebrow">Ton coach</p>
+          <h2 id="h-coach" style="font-size:clamp(2rem,5vw,4rem);line-height:1.05;letter-spacing:-.02em">Le coaching ne consiste pas seulement à s'entraîner.</h2>
+        </div>
+        <p class="lead reveal">Chaque personne arrive avec son histoire, son niveau, ses contraintes et ses objectifs. Mon rôle n'est pas de te faire suivre un programme générique : c'est de construire avec toi une méthode que tu peux réellement tenir dans le temps.</p>
+        <ol class="checks" style="list-style:none">
+          <li class="reveal"><strong>01 — ÉCOUTER</strong><h3>Comprendre</h3><p>Ton objectif, ton rythme de vie et tes contraintes réelles.</p></li>
+          <li class="reveal"><strong>02 — STRUCTURER</strong><h3>Construire</h3><p>Un programme adapté à ton niveau, clair et progressif.</p></li>
+          <li class="reveal"><strong>03 — SUIVRE</strong><h3>Analyser</h3><p>Ta progression, séance après séance, chiffres à l'appui.</p></li>
+          <li class="reveal"><strong>04 — AJUSTER</strong><h3>Faire évoluer</h3><p>Le programme quand ton corps et tes objectifs évoluent.</p></li>
+        </ol>
+        <div class="mantra reveal" role="note" aria-label="Principe clé">
+          <strong>La progression <em>&gt;</em> la perfection</strong>
+          <p>Mieux vaut 3 séances tenues à 80% que 5 séances parfaites abandonnées en 2 semaines.</p>
+        </div>
+        <div class="btn-row reveal">
+          <a class="btn btn-primary" href="#contact">Faire mon bilan</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section" id="avis" aria-labelledby="h-avis">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Témoignages</p>
+      <h2 id="h-avis">Les résultats racontent mieux l'histoire.</h2>
+      <p>Des parcours réels, des objectifs différents, une même méthode.</p>
+    </div>
+    <ul class="grid grid-3" style="list-style:none">
+      <li class="card card-light card-lift testi reveal">
+        <span class="stars" aria-hidden="true">★★★★★</span>
+        <span class="result">−12 kg • 4 mois</span>
+        <blockquote>« Je voulais simplement retrouver une routine. En 4 mois, j'ai non seulement progressé physiquement, mais surtout retrouvé confiance dans mon entraînement. »</blockquote>
+        <p class="testi-head"><span class="avatar" aria-hidden="true">TH</span><span class="meta"><strong>Thomas</strong> — perte de poids • 3 séances / semaine</span></p>
+      </li>
+      <li class="card card-light card-lift testi reveal">
+        <span class="stars" aria-hidden="true">★★★★★</span>
+        <span class="result">+35% force • 6 mois</span>
+        <blockquote>« Fini les séances au hasard. Chaque semaine je savais quoi faire et pourquoi. Mon squat est passé de 60 à 85 kg, sans me blesser. »</blockquote>
+        <p class="testi-head"><span class="avatar" aria-hidden="true">SA</span><span class="meta"><strong>Sarah</strong> — force • 3 séances / semaine</span></p>
+      </li>
+      <li class="card card-light card-lift testi reveal">
+        <span class="stars" aria-hidden="true">★★★★★</span>
+        <span class="result">Régularité • 3 mois</span>
+        <blockquote>« Avec deux enfants et un planning chargé, je pensais que c'était mort. Le suivi hebdo m'a gardée régulière. Je ne lâche plus. »</blockquote>
+        <p class="testi-head"><span class="avatar" aria-hidden="true">IN</span><span class="meta"><strong>Inès</strong> — routine durable • 2 séances / semaine</span></p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROGRAMMES -->
+<section class="section section-alt" id="programmes" aria-labelledby="h-prog">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Programmes</p>
+      <h2 id="h-prog">Choisis ton niveau d'accompagnement.</h2>
+      <p>Des formats clairs, des tarifs affichés. Une même exigence : un coaching structuré et orienté résultats.</p>
+    </div>
+    <div class="grid grid-2 grid-3">
+      <article class="card prog-card card-lift reveal">
+        <div class="prog-media"><img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=800&q=80" width="800" height="500" alt="Travail aux haltères en salle de sport" loading="lazy"></div>
+        <div class="prog-body">
+          <p class="prog-label">Reprise • Séance unique</p>
+          <h3>Start</h3>
+          <p>Pour reprendre une routine sportive en douceur, avec les bonnes bases techniques.</p>
+          <ul><li>Séance personnalisée</li><li>Programme adapté</li><li>Conseils techniques</li></ul>
+          <p class="prog-price">49€ <small>/ séance</small></p>
+          <div class="prog-cta"><a class="btn btn-secondary btn-block" href="#contact">Choisir Start</a></div>
+        </div>
+      </article>
+      <article class="card prog-card card-lift reveal">
+        <div class="prog-media"><img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=800&q=80" width="800" height="500" alt="Coach Adel corrigeant la posture d'un client en salle" loading="lazy"></div>
+        <div class="prog-body">
+          <p class="prog-label">Suivi mensuel • Recommandé</p>
+          <h3>Pro <span class="badge">Le plus populaire</span></h3>
+          <p>Le format régulier pour progresser durablement, avec un suivi hebdomadaire.</p>
+          <ul><li>Programme personnalisé</li><li>Suivi hebdomadaire</li><li>Conseils nutritionnels généraux</li></ul>
+          <p class="prog-price">149€ <small>/ mois</small></p>
+          <div class="prog-cta"><a class="btn btn-primary btn-block" href="#contact">Choisir Pro</a></div>
+        </div>
+      </article>
+      <article class="card prog-card card-lift reveal">
+        <div class="prog-media"><img src="https://images.unsplash.com/photo-1583864697784-a0efc8379f70?auto=format&fit=crop&w=800&q=80" width="800" height="500" alt="Séance de boxe intensive en salle sombre" loading="lazy"></div>
+        <div class="prog-body">
+          <p class="prog-label">Accompagnement intensif</p>
+          <h3>Premium</h3>
+          <p>Un suivi rapproché et une adaptation continue pour un objectif ambitieux.</p>
+          <ul><li>Suivi rapproché</li><li>Analyse de progression</li><li>Accompagnement nutritionnel</li></ul>
+          <p class="prog-price">249€ <small>/ mois</small></p>
+          <div class="prog-cta"><a class="btn btn-secondary btn-block" href="#contact">Choisir Premium</a></div>
+        </div>
+      </article>
+      <article class="card prog-card card-lift reveal">
+        <div class="prog-media"><img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=800&q=80" width="800" height="500" alt="Athlète s'entraînant aux battle ropes" loading="lazy"></div>
+        <div class="prog-body">
+          <p class="prog-label">Objectif • Force</p>
+          <h3>Force &amp; Masse</h3>
+          <p>Construire une base solide : mouvements fondamentaux, charges progressives, zéro blessure.</p>
+          <ul><li>Technique des mouvements clés</li><li>Planification des charges</li></ul>
+          <p class="prog-price">Inclus <small>Pro / Premium</small></p>
+          <div class="prog-cta"><a class="btn btn-secondary btn-block" href="#contact">En parler au coach</a></div>
+        </div>
+      </article>
+      <article class="card prog-card card-lift reveal">
+        <div class="prog-media"><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=80" width="800" height="500" alt="Séance de remise en forme avec haltères" loading="lazy"></div>
+        <div class="prog-body">
+          <p class="prog-label">Objectif • Forme</p>
+          <h3>Remise en forme</h3>
+          <p>Retrouver énergie et régularité après une pause, à ton rythme et sans pression.</p>
+          <ul><li>Reprise progressive</li><li>Routine tenable au quotidien</li></ul>
+          <p class="prog-price">Inclus <small>Pro / Premium</small></p>
+          <div class="prog-cta"><a class="btn btn-secondary btn-block" href="#contact">En parler au coach</a></div>
+        </div>
+      </article>
+      <article class="card prog-card card-lift reveal">
+        <div class="prog-media"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80" width="800" height="500" alt="Salle de sport équipée pour l'entraînement" loading="lazy"></div>
+        <div class="prog-body">
+          <p class="prog-label">Format • Distance</p>
+          <h3>Coaching à distance</h3>
+          <p>Le même suivi, où que tu sois : visio, retours vidéo et ajustements hebdomadaires.</p>
+          <ul><li>Séances en visio</li><li>Programme suivi à distance</li></ul>
+          <p class="prog-price">149€ <small>/ mois</small></p>
+          <div class="prog-cta"><a class="btn btn-secondary btn-block" href="#contact">Choisir Distance</a></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- RÉSULTATS / STATS -->
+<section class="section" id="resultats" aria-labelledby="h-stats">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Résultats</p>
+      <h2 id="h-stats">La preuve avant la promesse.</h2>
+      <p>Des indicateurs suivis et assumés. Résultats individuels variables, méthode constante.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat reveal"><strong><span data-count="150" data-prefix="+">+150</span></strong><span>Clients accompagnés</span></div>
+      <div class="stat reveal"><strong><span data-count="8">8</span>&nbsp;ans</strong><span>D'expérience terrain</span></div>
+      <div class="stat reveal"><strong><span data-count="92" data-suffix="%">92%</span></strong><span>De clients assidus</span></div>
+      <div class="stat reveal"><strong><span data-count="100" data-suffix="%">100%</span></strong><span>Programmes sur-mesure</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG / CONSEILS -->
+<section class="section section-alt" id="blog" aria-labelledby="h-blog">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Conseils</p>
+      <h2 id="h-blog">Ce que je répète à tous mes clients.</h2>
+      <p>Des principes simples, applicables dès ta prochaine séance.</p>
+    </div>
+    <div class="grid grid-3">
+      <article class="card post-card card-lift reveal">
+        <div class="post-media"><img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=800&q=80" width="800" height="500" alt="Séance d'entraînement avec haltères légers" loading="lazy"></div>
+        <div class="post-body">
+          <p class="post-meta">Méthode • 5 min</p>
+          <h3>3 séances par semaine : pourquoi c'est le bon rythme</h3>
+          <p>Ni trop pour récupérer, ni trop peu pour progresser. Voici comment structurer ta semaine type.</p>
+          <div class="post-more"><details><summary>Lire l'article</summary><div class="full"><p>Deux séances entretiennent, trois font progresser, quatre et plus exigent une vraie gestion de la récupération. Pour 90% des clients, le créneau gagnant est simple : lundi, mercredi, vendredi — ou tout trio régulier que tu peux tenir douze semaines d'affilée.</p><p>La règle d'or : une séance manquée se rattrape, une semaine abandonnée se paie. Mieux vaut trois séances à 80% que cinq séances parfaites deux semaines puis plus rien.</p></div></details></div>
+        </div>
+      </article>
+      <article class="card post-card card-lift reveal">
+        <div class="post-media"><img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=800&q=80" width="800" height="500" alt="Préparation avant une séance de sport" loading="lazy"></div>
+        <div class="post-body">
+          <p class="post-meta">État d'esprit • 4 min</p>
+          <h3>Progression vs perfection : la règle des 80%</h3>
+          <p>La régularité bat l'intensité. Comment arrêter de tout abandonner au premier écart.</p>
+          <div class="post-more"><details><summary>Lire l'article</summary><div class="full"><p>La perfection demande 100% d'énergie pour 10% de résultats en plus. La progression demande 80% d'efforts tenus dans le temps — et c'est elle qui transforme les corps.</p><p>Concrètement : note chaque séance sur 10. Tant que ta moyenne mensuelle dépasse 7, tu progresses. En dessous, on ajuste le programme ensemble au lieu de culpabiliser.</p></div></details></div>
+        </div>
+      </article>
+      <article class="card post-card card-lift reveal">
+        <div class="post-media"><img src="https://images.unsplash.com/photo-1550345332-09e3ac987658?auto=format&fit=crop&w=800&q=80" width="800" height="500" alt="Sportif en plein effort pendant l'entraînement" loading="lazy"></div>
+        <div class="post-body">
+          <p class="post-meta">Nutrition • 6 min</p>
+          <h3>Que manger autour de tes séances ?</h3>
+          <p>Pas de régime miracle : des repères simples avant et après l'effort pour mieux récupérer.</p>
+          <div class="post-more"><details><summary>Lire l'article</summary><div class="full"><p>Avant la séance (1 à 2h) : un repas normal avec des glucides — riz, pâtes, pain, fruits. Évite les graisses lourdes qui ralentissent la digestion.</p><p>Après la séance : protéines + glucides dans les deux heures — poulet et riz, omelette et pain, yaourt et fruits. Et de l'eau, beaucoup d'eau. Le reste, on le construit ensemble dans ton suivi.</p></div></details></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq" aria-labelledby="h-faq">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Questions fréquentes</p>
+      <h2 id="h-faq">Tout ce que tu veux savoir avant de commencer.</h2>
+    </div>
+    <div class="faq">
+      <div class="faq-item reveal"><details><summary>Combien de séances par semaine ?<span class="ic" aria-hidden="true">+</span></summary><p class="answer">2 à 3 séances suffisent pour progresser durablement. On calibre selon ton emploi du temps, pas l'inverse.</p></details></div>
+      <div class="faq-item reveal"><details><summary>Le coaching peut-il être réalisé à distance ?<span class="ic" aria-hidden="true">+</span></summary><p class="answer">Oui. Visio + programme suivi + retours vidéo. Même exigence qu'en présentiel, avec ajustements hebdomadaires.</p></details></div>
+      <div class="faq-item reveal"><details><summary>Comment se déroule le premier rendez-vous ?<span class="ic" aria-hidden="true">+</span></summary><p class="answer">15 minutes d'échange sans engagement, puis bilan complet : historique, niveau, contraintes, objectif à 90 jours.</p></details></div>
+      <div class="faq-item reveal"><details><summary>Puis-je changer de programme ?<span class="ic" aria-hidden="true">+</span></summary><p class="answer">Oui, à tout moment. Start → Pro → Premium selon ta progression et tes besoins. Sans frais cachés.</p></details></div>
+      <div class="faq-item reveal"><details><summary>Quel niveau faut-il avoir ?<span class="ic" aria-hidden="true">+</span></summary><p class="answer">Aucun. Débutant ou confirmé, on part de ton point de départ réel et on construit dessus.</p></details></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL / CONTACT -->
+<section class="section" id="contact" aria-labelledby="h-cta">
+  <div class="container">
+    <div class="final reveal">
+      <p class="section-eyebrow" style="justify-content:center">Premier échange offert</p>
+      <h2 id="h-cta">Prêt à commencer ?</h2>
+      <p>Parlons de ton objectif et voyons ensemble quel accompagnement est le plus adapté.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary pulse" href="mailto:contact@coach-adel.fr?subject=Premier%20%C3%A9change%20coaching">Réserver mon premier échange</a>
+        <a class="btn btn-secondary" href="tel:+33600000000">Parler au coach</a>
+      </div>
+      <p class="micro">15 min • Sans engagement</p>
+      <ul class="coords">
+        <li><a href="tel:+33600000000" aria-label="Appeler Coach Adel">📞 06 00 00 00 00</a></li>
+        <li><a href="mailto:contact@coach-adel.fr">✉️ contact@coach-adel.fr</a></li>
+        <li><a href="https://instagram.com" target="_blank" rel="noopener">📸 Instagram — @coach.adel</a></li>
+        <li><span>📍 [Ville] &amp; visio — zone d'intervention 20 km</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="sitefoot">
+  <div class="container foot-grid">
+    <div>
+      <a class="brand" href="#accueil" aria-label="Coach Adel — retour à l'accueil">COACH<span>ADEL</span></a>
+      <p class="foot-desc">Coaching sportif personnalisé — discipline, progression mesurable, routine durable.</p>
+    </div>
+    <nav aria-label="Pied de page">
+      <p class="foot-h">Navigation</p>
+      <ul class="foot-nav">
+        <li><a href="#accueil">Accueil</a></li>
+        <li><a href="#coach">Méthode</a></li>
+        <li><a href="#programmes">Programmes</a></li>
+        <li><a href="#resultats">Résultats</a></li>
+        <li><a href="#blog">Conseils</a></li>
+      </ul>
+    </nav>
+    <div>
+      <p class="foot-h">Contact</p>
+      <ul class="foot-contact">
+        <li><a href="tel:+33600000000">06 00 00 00 00</a></li>
+        <li><a href="mailto:contact@coach-adel.fr">contact@coach-adel.fr</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="foot-h">Réseaux</p>
+      <ul class="socials" aria-label="Réseaux sociaux de Coach Adel">
+        <li><a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram de Coach Adel"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none"/></svg>Instagram</a></li>
+        <li><a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok de Coach Adel"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 17.5V7l8.5-2v9"/><circle cx="7" cy="17.5" r="2.5"/><circle cx="15.5" cy="16" r="2.5"/></svg>TikTok</a></li>
+        <li><a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube de Coach Adel"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="6" width="19" height="12" rx="4"/><path d="M10.5 9.8v4.4l4-2.2z" fill="currentColor" stroke="none"/></svg>YouTube</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container foot-legal">
+    <span>© <span id="year">2026</span> Coach Adel — Coaching personnalisé.</span>
+    <span>Résultats individuels variables. Aucune promesse médicale.</span>
+  </div>
+</footer>
+
+<nav class="bottomnav" aria-label="Navigation mobile">
+  <a href="#accueil" data-nav="accueil" aria-current="true"><span class="dot" aria-hidden="true"></span>Accueil</a>
+  <a href="#coach" data-nav="coach"><span class="dot" aria-hidden="true"></span>Méthode</a>
+  <a href="#contact" class="cta" data-nav="contact">Commencer</a>
+  <a href="#programmes" data-nav="programmes"><span class="dot" aria-hidden="true"></span>Offres</a>
+</nav>
+<button class="totop" id="totop" aria-label="Remonter en haut de page"><span aria-hidden="true">↑</span> Top</button>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('year').textContent = new Date().getFullYear();
+  var bar = document.getElementById('progress');
+  var totop = document.getElementById('totop');
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+    if (h.scrollTop > 700) totop.classList.add('show'); else totop.classList.remove('show');
+  }
+  document.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  totop.addEventListener('click', function(){ window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); });
+  var burger = document.getElementById('burger');
+  var mmenu = document.getElementById('mobilemenu');
+  function setMenu(open){
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+    mmenu.classList.toggle('open', open);
+    mmenu.setAttribute('aria-hidden', String(!open));
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) { var f = mmenu.querySelector('a'); if (f) f.focus(); }
+  }
+  burger.addEventListener('click', function(){ setMenu(burger.getAttribute('aria-expanded') !== 'true'); });
+  mmenu.addEventListener('click', function(e){ if (e.target.closest('a') || e.target === mmenu) setMenu(false); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && mmenu.classList.contains('open')) { setMenu(false); burger.focus(); } });
+  var els = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:.12});
+    els.forEach(function(el){ io.observe(el); });
+  } else { els.forEach(function(el){ el.classList.add('in'); }); }
+  function animate(el){
+    var target = parseFloat(el.getAttribute('data-count'));
+    var pre = el.getAttribute('data-prefix') || '';
+    var suf = el.getAttribute('data-suffix') || '';
+    if (reduce) { el.textContent = pre + target + suf; return; }
+    var t0 = null, dur = 1300;
+    function frame(t){
+      if(!t0) t0 = t;
+      var p = Math.min((t - t0)/dur, 1);
+      el.textContent = pre + Math.round(target * (1 - Math.pow(1-p, 3))) + suf;
+      if(p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  var counters = document.querySelectorAll('[data-count]');
+  if ('IntersectionObserver' in window) {
+    var io2 = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ animate(e.target); io2.unobserve(e.target); } });
+    }, {threshold:.5});
+    counters.forEach(function(c){ io2.observe(c); });
+  } else { counters.forEach(animate); }
+  var links = document.querySelectorAll('[data-nav]');
+  var map = {};
+  links.forEach(function(a){ (map[a.getAttribute('data-nav')] = map[a.getAttribute('data-nav')] || []).push(a); });
+  if ('IntersectionObserver' in window) {
+    var io3 = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          var id = e.target.id;
+          Object.keys(map).forEach(function(k){ map[k].forEach(function(a){ a.removeAttribute('aria-current'); }); });
+          (map[id] || []).forEach(function(a){ a.setAttribute('aria-current','true'); });
+        }
+      });
+    }, {rootMargin:'-40% 0px -55% 0px'});
+    ['accueil','services','coach','avis','programmes','resultats','blog','faq','contact'].forEach(function(id){ var s = document.getElementById(id); if(s) io3.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
