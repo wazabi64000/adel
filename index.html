@@ -137,8 +137,14 @@ main,header,footer{position:relative;z-index:2}
 .nav-desk .tiktok-nav::after{display:none}
 @media(hover:hover){.tiktok-nav:hover{filter:brightness(1.2);border-color:rgba(255,255,255,.6);box-shadow:inset 0 1px 1px rgba(255,255,255,.3),inset 0 -2px 3px #000,0 5px 0 #00b8c5,0 11px 24px rgba(254,44,85,.4);transform:translateY(-3px) scale(1.05)}}
 .tiktok-nav:active{box-shadow:inset 0 2px 4px #000,0 1px 0 #00b8c5,0 4px 10px rgba(254,44,85,.25);transform:translateY(1px) scale(.98)}
+.whatsapp-nav{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border:1px solid rgba(255,255,255,.4);border-radius:13px;color:#fff!important;text-decoration:none;background:linear-gradient(145deg,#35e676,#10a94e);box-shadow:inset 0 1px 1px rgba(255,255,255,.55),inset 0 -2px 3px rgba(0,90,35,.35),0 4px 0 #087c39,0 8px 18px rgba(37,211,102,.28);transform:translateY(-2px);transition:filter .2s ease,box-shadow .2s ease,transform .2s ease}
+.whatsapp-nav svg{width:25px;height:25px;filter:drop-shadow(0 2px 1px rgba(0,70,30,.38))}
+.nav-desk .whatsapp-nav::after{display:none}
+@media(hover:hover){.whatsapp-nav:hover{filter:saturate(1.15) brightness(1.08);border-color:rgba(255,255,255,.7);box-shadow:inset 0 1px 1px rgba(255,255,255,.65),inset 0 -2px 3px rgba(0,90,35,.3),0 5px 0 #087c39,0 11px 24px rgba(37,211,102,.4);transform:translateY(-3px) scale(1.05)}}
+.whatsapp-nav:active{box-shadow:inset 0 2px 4px rgba(0,80,30,.45),0 1px 0 #087c39,0 4px 10px rgba(37,211,102,.25);transform:translateY(1px) scale(.98)}
 .mobilebar{position:sticky;top:0;z-index:1300;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;background:rgba(25,25,25,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border-subtle);padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-right))}
 .mobilebar .instagram-nav{margin-left:auto}
+@media(max-width:480px){.mobilebar{gap:6px}.mobilebar .brand{font-size:.88rem}.mobilebar .instagram-nav,.mobilebar .tiktok-nav,.mobilebar .whatsapp-nav{width:38px;height:38px;border-radius:11px}.mobilebar .burger{width:44px;height:44px}}
 @media(min-width:1024px){.mobilebar{display:none}}
 .mobilebar{transition:box-shadow .25s ease}
 .mobilebar.scrolled{box-shadow:var(--shadow-strong)}
@@ -363,6 +369,9 @@ main,header,footer{position:relative;z-index:2}
   <a class="tiktok-nav" href="https://www.tiktok.com/@adel.cherif36" target="_blank" rel="noopener" aria-label="TikTok adel.cherif36">
     <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M14.1 3v11.2a4.4 4.4 0 1 1-3.8-4.36v2.76a1.8 1.8 0 1 0 1.2 1.7V3h2.6Zm0 0c.25 2.25 1.5 3.6 3.9 3.85v2.7c-1.5-.05-2.8-.5-3.9-1.35V3Z"/></svg>
   </a>
+  <a class="whatsapp-nav" href="https://wa.me/33659057585?text=Bonjour%20Adel%2C%20je%20souhaite%20%C3%A9changer%20sur%20votre%20accompagnement." target="_blank" rel="noopener" aria-label="Écrire à Coach Adel sur WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.1A8 8 0 1 1 20 11.5Z"/><path d="M8.8 8.2c.5 3.7 2.4 5.6 6.1 6.1l1.3-1.5"/></svg>
+  </a>
   <button class="burger" id="burger" aria-expanded="false" aria-controls="mobilemenu" aria-label="Ouvrir le menu"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
 </div>
 <div class="mmenu" id="mobilemenu" role="dialog" aria-modal="true" aria-label="Menu de navigation" aria-hidden="true">
@@ -394,6 +403,9 @@ main,header,footer{position:relative;z-index:2}
       </a>
       <a class="tiktok-nav" href="https://www.tiktok.com/@adel.cherif36" target="_blank" rel="noopener" aria-label="TikTok adel.cherif36">
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M14.1 3v11.2a4.4 4.4 0 1 1-3.8-4.36v2.76a1.8 1.8 0 1 0 1.2 1.7V3h2.6Zm0 0c.25 2.25 1.5 3.6 3.9 3.85v2.7c-1.5-.05-2.8-.5-3.9-1.35V3Z"/></svg>
+      </a>
+      <a class="whatsapp-nav" href="https://wa.me/33659057585?text=Bonjour%20Adel%2C%20je%20souhaite%20%C3%A9changer%20sur%20votre%20accompagnement." target="_blank" rel="noopener" aria-label="Écrire à Coach Adel sur WhatsApp">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.1A8 8 0 1 1 20 11.5Z"/><path d="M8.8 8.2c.5 3.7 2.4 5.6 6.1 6.1l1.3-1.5"/></svg>
       </a>
       <a class="btn btn-primary" href="#contact">Réserver</a>
     </nav>
