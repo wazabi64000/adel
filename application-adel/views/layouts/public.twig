@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}{{ title | default('Coach Adel') }}{% endblock %}</title>
 <meta name="description" content="Un accompagnement global avec Coach Adel : activité physique, habitudes nutritionnelles, préparation mentale et plaisir de progresser à ton rythme.">
-<meta name="theme-color" content="#191919">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23191919'/%3E%3Crect x='7' y='14' width='18' height='4' rx='2' fill='%23ffd12f'/%3E%3C/svg%3E">
+{% include 'partials/pwa-head.twig' %}
 <meta property="og:title" content="Coach Adel | Corps, nutrition et mental">
 <meta property="og:description" content="Un accompagnement global fondé sur le mouvement, l'équilibre nutritionnel, la force mentale et le plaisir.">
 <meta property="og:type" content="website">
@@ -126,8 +125,10 @@
   <a href="{{ home ? '#rejoindre' : '/#rejoindre' }}" class="cta">Rejoindre</a>
 </nav>
 <button class="totop" id="totop" aria-label="Remonter en haut de page"><span aria-hidden="true">↑</span> Top</button>
+{% include 'partials/pwa-install.twig' %}
 
 <script src="/js/site.js" defer></script>
+<script src="/js/pwa.js" defer></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

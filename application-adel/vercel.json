@@ -3,11 +3,11 @@
   "regions": ["cdg1"],
   "functions": {
     "src/app.js": {
-      "includeFiles": "views/**",
+      "includeFiles": "{views,public}/**",
       "maxDuration": 30
     },
     "src/server.js": {
-      "includeFiles": "views/**",
+      "includeFiles": "{views,public}/**",
       "maxDuration": 30
     }
   }

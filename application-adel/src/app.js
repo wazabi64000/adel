@@ -37,6 +37,8 @@ export function createApp() {
           imgSrc: ["'self'", 'data:', 'https://res.cloudinary.com'],
           fontSrc: ["'self'", 'data:'],
           connectSrc: ["'self'"],
+          workerSrc: ["'self'"],
+          manifestSrc: ["'self'"],
           objectSrc: ["'none'"],
           frameAncestors: ["'self'"],
           formAction: ["'self'"],
@@ -52,6 +54,23 @@ export function createApp() {
   app.use(express.urlencoded({ extended: false, limit: '1mb' }));
   app.use(express.json({ limit: '1mb' }));
   app.use(methodOverride('_method'));
+
+  /* --------- PWA : SW + manifest jamais en cache longue durée ------------ */
+  app.get('/sw.js', (_req, res) => {
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Service-Worker-Allowed': '/',
+      'Content-Type': 'application/javascript; charset=utf-8',
+    });
+    res.sendFile('sw.js', { root: PUBLIC_DIR });
+  });
+  app.get('/manifest.webmanifest', (_req, res) => {
+    res.set({
+      'Cache-Control': 'no-cache, must-revalidate',
+      'Content-Type': 'application/manifest+json; charset=utf-8',
+    });
+    res.sendFile('manifest.webmanifest', { root: PUBLIC_DIR });
+  });
 
   /* ------------------------------ Fichiers statiques ---------------------- */
   app.use(

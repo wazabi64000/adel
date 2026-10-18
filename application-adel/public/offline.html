@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#191919">
+<title>Hors ligne — Coach Adel</title>
+<link rel="icon" href="/icons/favicon-32.png" type="image/png">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100dvh; display: grid; place-items: center;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    background: #191919; color: #f5f5f5; padding: 24px;
+  }
+  .card {
+    width: min(100%, 420px); background: #242424; border: 1px solid rgba(255,209,47,.22);
+    border-radius: 20px; padding: 28px 24px; text-align: center;
+  }
+  .brand { font-weight: 900; letter-spacing: -.03em; font-size: 1.25rem; margin: 0 0 18px; }
+  .brand span { color: #ffd12f; }
+  h1 { font-size: 1.35rem; margin: 0 0 8px; }
+  p { margin: 0 0 20px; color: #bdbdbd; line-height: 1.45; }
+  a {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 48px; padding: 0 20px; border-radius: 999px;
+    background: #ffd12f; color: #191919; font-weight: 800; text-decoration: none;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <p class="brand">COACH<span>ADEL</span></p>
+    <h1>Tu es hors ligne</h1>
+    <p>Cette page n’est pas disponible sans connexion. Réessaie dès que le réseau revient.</p>
+    <a href="/">Réessayer</a>
+  </div>
+  <script>
+    window.addEventListener('online', () => { location.href = '/'; });
+  </script>
+</body>
+</html>
