@@ -142,9 +142,11 @@
               </div>
               <div class="field-row">
                 <div class="field"><label>Charge</label><input type="text" name="weight" value="{{ ex.weight | default('') }}"></div>
-                <div class="field"><label>Vidéo (URL)</label><input type="url" name="video_url" value="{{ ex.video_url | default('') }}"></div>
+                <div class="field"><label>Vidéo (URL)</label><input type="url" name="video_url" value="{{ ex.video_url | default('') }}" placeholder="https://…"></div>
               </div>
-              <div class="field"><label>Image</label><input type="file" name="image" accept="image/*"></div>
+              <div class="field"><label>Image — fichier</label><input type="file" name="image" accept="image/*"></div>
+              <div class="field"><label>Image — lien à coller</label><input type="url" name="image_url" value="{{ ex.image_url | default('') }}" placeholder="https://…/exercice.jpg"></div>
+              <p class="muted" style="margin-top:-6px;font-size:.85rem">Si tu envoies un fichier, il remplace le lien.</p>
               <button class="btn btn-primary btn-sm" type="submit">Enregistrer</button>
             </form>
           </details>
@@ -187,9 +189,11 @@
         </div>
         <div class="field-row">
           <div class="field"><label>Charge</label><input type="text" name="weight"></div>
-          <div class="field"><label>Vidéo (URL)</label><input type="url" name="video_url"></div>
+          <div class="field"><label>Vidéo (URL)</label><input type="url" name="video_url" placeholder="https://…"></div>
         </div>
-        <div class="field"><label>Image de l'exercice</label><input type="file" name="image" accept="image/*"></div>
+        <div class="field"><label>Image — fichier</label><input type="file" name="image" accept="image/*"></div>
+        <div class="field"><label>Image — lien à coller</label><input type="url" name="image_url" placeholder="https://…/exercice.jpg"></div>
+        <p class="muted" style="margin-top:-6px;font-size:.85rem">Upload ou lien : si les deux sont remplis, le fichier l’emporte.</p>
         <button class="btn btn-primary btn-sm" type="submit">Ajouter l'exercice</button>
       </form>
     </details>

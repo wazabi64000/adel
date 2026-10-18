@@ -139,6 +139,12 @@ export function validateExercise(body) {
     'etirement',
     'autre',
   ]);
+  const imageUrl = clean(body.image_url);
+  if (imageUrl && !/^https?:\/\/.+/i.test(imageUrl)) {
+    v.errors.image_url = "Le lien de l'image doit commencer par http:// ou https://.";
+  }
+  v.max('image_url', "Le lien de l'image", imageUrl, 500);
+  v.max('video_url', 'Le lien vidéo', clean(body.video_url), 500);
   return {
     ok: v.ok(),
     errors: v.errors,
@@ -152,6 +158,7 @@ export function validateExercise(body) {
       reps: clean(body.reps),
       restSeconds: toInt(body.rest_seconds),
       weight: clean(body.weight),
+      imageUrl: imageUrl || null,
       videoUrl: clean(body.video_url),
     },
   };

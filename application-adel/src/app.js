@@ -121,16 +121,8 @@ export function createApp() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Export par défaut pour les déploiements serverless (Vercel).              */
-/*                                                                            */
-/*  Retourne directement une instance Express utilisable comme handler        */
-/*  (req, res) par le runtime Vercel, sans appeler app.listen.                */
-/*                                                                            */
-/*  createApp reste exporté nommément pour src/server.js (développement local).*/
+/*  Export par défaut : instance Express.                                     */
+/*  Vercel s'en sert comme application (sans app.listen).                      */
 /* -------------------------------------------------------------------------- */
-let appInstance = null;
-
-export default function appHandler(req, res, next) {
-  appInstance ??= createApp();
-  return appInstance(req, res, next);
-}
+const app = createApp();
+export default app;

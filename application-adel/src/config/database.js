@@ -1,5 +1,18 @@
+import dns from 'node:dns';
+import net from 'node:net';
 import mysql from 'mysql2/promise';
 import config from './env.js';
+
+/*
+ * AlwaysData publie une adresse IPv6. Depuis les fonctions Vercel, cette
+ * adresse ne répond pas : Node 22 la tente en premier et la connexion reste
+ * ouverte jusqu'au timeout de la plateforme (504 après 300 s).
+ * On force IPv4 avant toute connexion mysql2, y compris le store de session.
+ */
+dns.setDefaultResultOrder('ipv4first');
+if (typeof net.setDefaultAutoSelectFamily === 'function') {
+  net.setDefaultAutoSelectFamily(false);
+}
 
 /**
  * Pool de connexions MySQL partagé.
@@ -14,6 +27,7 @@ export const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: config.db.connectionLimit,
   queueLimit: 0,
+  connectTimeout: 10_000,
   charset: 'utf8mb4_unicode_ci',
   timezone: 'Z',
   dateStrings: false,

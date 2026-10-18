@@ -20,6 +20,7 @@ export const create = asyncHandler(async (req, res) => {
     return res.redirect(`/admin/programs/${day.program_id}#day-${day.id}`);
   }
   data.programDayId = day.id;
+  // Upload prioritaire ; sinon lien collé dans image_url.
   if (req.file) {
     const { url } = await uploadImage(req.file.buffer, { folder: 'exercises', originalName: req.file.originalname });
     data.imageUrl = url;
@@ -40,10 +41,12 @@ export const update = asyncHandler(async (req, res) => {
     req.flash('error', Object.values(errors)[0]);
     return res.redirect(`/admin/programs/${day.program_id}#day-${day.id}`);
   }
-  data.imageUrl = exercise.image_url;
+  // Upload > lien collé > image déjà enregistrée.
   if (req.file) {
     const { url } = await uploadImage(req.file.buffer, { folder: 'exercises', originalName: req.file.originalname });
     data.imageUrl = url;
+  } else if (!data.imageUrl) {
+    data.imageUrl = exercise.image_url;
   }
   await exerciseRepo.update(exercise.id, data);
   req.flash('success', 'Exercice mis à jour.');
