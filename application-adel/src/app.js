@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import flash from 'connect-flash';
 
 import config, { PUBLIC_DIR } from './config/env.js';
+import { pool } from './config/database.js';
 import { configureViews, assertViewsPresent } from './config/twig.js';
 import routes from './routes/index.js';
 import { attachUser } from './middlewares/auth.js';
@@ -61,26 +62,27 @@ export function createApp() {
   );
 
   /* --------------------------------- Session ------------------------------ */
+  // Réutilise le pool applicatif : un 2ᵉ pool (défaut express-mysql-session)
+  // doublait les connexions et saturait max_user_connections AlwaysData.
   const MySQLStore = MySQLStoreFactory(session);
-  const sessionStore = new MySQLStore({
-    host: config.db.host,
-    port: config.db.port,
-    user: config.db.user,
-    password: config.db.password,
-    database: config.db.database,
-    createDatabaseTable: true,
-    clearExpired: true,
-    checkExpirationInterval: 1000 * 60 * 15,
-    expiration: config.session.maxAge,
-    schema: {
-      tableName: 'sessions',
-      columnNames: {
-        session_id: 'session_id',
-        expires: 'expires',
-        data: 'data',
+  const sessionStore = new MySQLStore(
+    {
+      createDatabaseTable: true,
+      // Sur serverless, un timer d'expiration garde des connexions ouvertes.
+      clearExpired: !config.isProd,
+      checkExpirationInterval: 1000 * 60 * 30,
+      expiration: config.session.maxAge,
+      schema: {
+        tableName: 'sessions',
+        columnNames: {
+          session_id: 'session_id',
+          expires: 'expires',
+          data: 'data',
+        },
       },
     },
-  });
+    pool,
+  );
   sessionStore.on('error', (err) => console.error('[session-store]', err.message));
 
   app.use(

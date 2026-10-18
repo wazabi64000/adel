@@ -26,6 +26,8 @@ export const pool = mysql.createPool({
   database: config.db.database,
   waitForConnections: true,
   connectionLimit: config.db.connectionLimit,
+  maxIdle: 1,
+  idleTimeout: 10_000,
   queueLimit: 0,
   connectTimeout: 10_000,
   charset: 'utf8mb4_unicode_ci',

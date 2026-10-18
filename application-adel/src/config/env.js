@@ -40,7 +40,9 @@ const config = {
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'adel_app',
-    connectionLimit: int(process.env.DB_CONNECTION_LIMIT, 10),
+    // AlwaysData limite souvent max_user_connections (~5–15). Sur Vercel,
+    // chaque instance froide ouvre un pool : rester très bas.
+    connectionLimit: int(process.env.DB_CONNECTION_LIMIT, 2),
   },
 
   cloudinary: {
