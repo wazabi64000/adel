@@ -1,0 +1,48 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}Posts{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <form class="toolbar-filters" method="get" action="/admin/posts">
+    <select name="status">
+      <option value="">Tous les statuts</option>
+      <option value="published" {{ filters.status == 'published' ? 'selected' : '' }}>Publiés</option>
+      <option value="draft" {{ filters.status == 'draft' ? 'selected' : '' }}>Brouillons</option>
+    </select>
+    <button class="btn btn-secondary btn-sm" type="submit">Filtrer</button>
+  </form>
+  <a class="btn btn-primary btn-sm" href="/admin/posts/new">+ Nouveau post</a>
+</div>
+
+{% if posts and posts | length > 0 %}
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Contenu</th><th>Statut</th><th>Date</th><th></th></tr></thead>
+  <tbody>
+    {% for p in posts %}
+    <tr>
+      <td>
+        {% if p.image_url %}<img class="thumb" src="{{ p.image_url }}" alt="">{% endif %}
+        {% if p.title %}<strong>{{ p.title }}</strong><br>{% endif %}
+        <span class="muted">{{ p.content | truncate(90) }}</span>
+      </td>
+      <td><span class="tag tag-{{ p.status }}">{{ label(p.status) }}</span></td>
+      <td>{{ date_fr(p.published_at | default(p.created_at)) }}</td>
+      <td class="row-actions">
+        <a class="btn btn-ghost btn-sm" href="/admin/posts/{{ p.id }}/edit">Éditer</a>
+        <form method="post" action="/admin/posts/{{ p.id }}?_method=DELETE" data-confirm="Supprimer ce post ?">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <button class="btn btn-danger btn-sm" type="submit">Suppr.</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% include 'partials/pagination.twig' with { pagination: pagination, baseUrl: '/admin/posts', query: query } %}
+{% else %}
+<p class="empty">Aucun post. <a href="/admin/posts/new">Créer le premier post</a>.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}Articles{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <form class="toolbar-filters" method="get" action="/admin/articles">
+    <input type="search" name="q" value="{{ filters.q }}" placeholder="Rechercher un titre…">
+    <select name="status">
+      <option value="">Tous les statuts</option>
+      <option value="published" {{ filters.status == 'published' ? 'selected' : '' }}>Publiés</option>
+      <option value="draft" {{ filters.status == 'draft' ? 'selected' : '' }}>Brouillons</option>
+    </select>
+    <button class="btn btn-secondary btn-sm" type="submit">Filtrer</button>
+  </form>
+  <a class="btn btn-primary btn-sm" href="/admin/articles/new">+ Nouvel article</a>
+</div>
+
+{% if articles and articles | length > 0 %}
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Titre</th><th>Catégorie</th><th>Statut</th><th>Date</th><th></th></tr></thead>
+  <tbody>
+    {% for a in articles %}
+    <tr>
+      <td>
+        {% if a.cover_url %}<img class="thumb" src="{{ a.cover_url }}" alt="">{% endif %}
+        <strong>{{ a.title }}</strong>
+      </td>
+      <td>{{ a.category | default('—') }}</td>
+      <td><span class="tag tag-{{ a.status }}">{{ label(a.status) }}</span></td>
+      <td>{{ date_fr(a.published_at | default(a.created_at)) }}</td>
+      <td class="row-actions">
+        <a class="btn btn-ghost btn-sm" href="/admin/articles/{{ a.id }}/edit">Éditer</a>
+        <form method="post" action="/admin/articles/{{ a.id }}?_method=DELETE" data-confirm="Supprimer cet article ?">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <button class="btn btn-danger btn-sm" type="submit">Suppr.</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% include 'partials/pagination.twig' with { pagination: pagination, baseUrl: '/admin/articles', query: query } %}
+{% else %}
+<p class="empty">Aucun article. <a href="/admin/articles/new">Créer le premier article</a>.</p>
+{% endif %}
+{% endblock %}

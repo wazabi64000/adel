@@ -1,0 +1,30 @@
+{% extends 'layouts/auth.twig' %}
+
+{% block content %}
+<h1 class="auth-title">Mon compte</h1>
+<p class="auth-sub">{{ user.name }} — {{ user.email }}<br>Rôle : {{ user.role == 'admin' ? 'Coach (admin)' : 'Sportif' }}</p>
+
+{% if user.must_change_password %}
+<div class="alert alert-info" role="alert" style="background:rgba(255,209,47,.16);color:#ffe9a8">
+  <strong>Première connexion.</strong> Choisis ton mot de passe personnel pour activer ton accès.
+</div>
+{% endif %}
+
+<section class="auth-section">
+  <h2 class="auth-section-title">{{ user.must_change_password ? 'Choisir mon mot de passe' : 'Changer mon mot de passe' }}</h2>
+  <form method="post" action="/compte/mot-de-passe" novalidate class="app-form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div class="field">
+      <label for="current_password">Mot de passe actuel{{ user.must_change_password ? ' (provisoire)' : '' }}</label>
+      <input id="current_password" name="current_password" type="password" required autocomplete="current-password">
+    </div>
+    <div class="field">
+      <label for="new_password">Nouveau mot de passe</label>
+      <input id="new_password" name="new_password" type="password" required minlength="8" autocomplete="new-password">
+    </div>
+    <button class="btn btn-primary btn-block" type="submit">Mettre à jour</button>
+  </form>
+</section>
+
+<p class="auth-links"><a href="{{ user.role == 'admin' ? '/admin' : '/mon-espace' }}">← Retour à mon espace</a></p>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}{{ program ? 'Éditer un programme' : 'Nouveau programme' }}{% endblock %}
+
+{% block content %}
+<form class="app-form panel" method="post"
+      action="{{ program ? '/admin/programs/' ~ program.id ~ '?_method=PUT' : '/admin/programs' }}">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+  <div class="field">
+    <label for="title">Titre *</label>
+    <input id="title" name="title" type="text" value="{{ old(formData, 'title') }}" required maxlength="190">
+    {% if formErrors.title %}<small class="field-error">{{ formErrors.title }}</small>{% endif %}
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="athlete_id">Sportif *</label>
+      <select id="athlete_id" name="athlete_id" required>
+        <option value="">— Choisir —</option>
+        {% for a in athletes %}
+          {% set selected = (old(formData, 'athlete_id') | default(presetAthleteId | default(''))) %}
+          <option value="{{ a.id }}" {{ selected == a.id ? 'selected' : '' }}>{{ a.first_name }} {{ a.last_name }}</option>
+        {% endfor %}
+      </select>
+      {% if formErrors.athlete_id %}<small class="field-error">{{ formErrors.athlete_id }}</small>{% endif %}
+    </div>
+    <div class="field">
+      <label for="location">Lieu</label>
+      <select id="location" name="location">
+        <option value="salle" {{ old(formData, 'location') == 'salle' ? 'selected' : '' }}>Salle</option>
+        <option value="home" {{ old(formData, 'location') == 'home' ? 'selected' : '' }}>À la maison (home)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="level">Niveau</label>
+      <select id="level" name="level">
+        <option value="debutant" {{ old(formData, 'level') == 'debutant' ? 'selected' : '' }}>Débutant</option>
+        <option value="intermediaire" {{ old(formData, 'level') == 'intermediaire' ? 'selected' : '' }}>Intermédiaire</option>
+        <option value="avance" {{ old(formData, 'level') == 'avance' ? 'selected' : '' }}>Avancé</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="status">Statut</label>
+      <select id="status" name="status">
+        <option value="active" {{ old(formData, 'status') == 'active' ? 'selected' : '' }}>Actif</option>
+        <option value="draft" {{ old(formData, 'status') == 'draft' ? 'selected' : '' }}>Brouillon</option>
+        <option value="archived" {{ old(formData, 'status') == 'archived' ? 'selected' : '' }}>Archivé</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="goal">Objectif</label>
+    <input id="goal" name="goal" type="text" value="{{ old(formData, 'goal') }}" maxlength="255">
+  </div>
+
+  <div class="field">
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="4">{{ old(formData, 'description') }}</textarea>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="weeks">Nombre de semaines</label>
+      <input id="weeks" name="weeks" type="number" min="1" max="52" value="{{ old(formData, 'weeks') | default(4) }}">
+    </div>
+    <div class="field">
+      <label for="start_date">Date de début</label>
+      <input id="start_date" name="start_date" type="date" value="{{ old(formData, 'start_date') }}">
+    </div>
+    <div class="field">
+      <label for="end_date">Date de fin</label>
+      <input id="end_date" name="end_date" type="date" value="{{ old(formData, 'end_date') }}">
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">{{ program ? 'Enregistrer' : 'Créer le programme' }}</button>
+    <a class="btn btn-secondary" href="{{ program ? '/admin/programs/' ~ program.id : '/admin/programs' }}">Annuler</a>
+  </div>
+</form>
+{% endblock %}

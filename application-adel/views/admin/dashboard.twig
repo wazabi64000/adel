@@ -1,0 +1,58 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}Tableau de bord{% endblock %}
+
+{% block content %}
+<div class="stat-cards">
+  <a class="stat-card" href="/admin/athletes"><span class="stat-card-num">{{ cards.athletes }}</span><span>Profils sportifs</span></a>
+  <a class="stat-card" href="/admin/programs"><span class="stat-card-num">{{ cards.programsActive }}</span><span>Programmes actifs</span></a>
+  <div class="stat-card"><span class="stat-card-num">{{ cards.exercises }}</span><span>Exercices au total</span></div>
+  <div class="stat-card"><span class="stat-card-num">{{ cards.logsWeek }}</span><span>Séances enregistrées (7 j)</span></div>
+  <a class="stat-card" href="/admin/articles"><span class="stat-card-num">{{ cards.articlesPublished }}</span><span>Articles publiés</span></a>
+  <a class="stat-card" href="/admin/posts"><span class="stat-card-num">{{ cards.postsPublished }}</span><span>Posts publiés</span></a>
+  <a class="stat-card {{ cards.unreadMessages > 0 ? 'is-alert' : '' }}" href="/admin/messages"><span class="stat-card-num">{{ cards.unreadMessages }}</span><span>Messages non lus</span></a>
+  <a class="stat-card {{ cards.pendingRequests > 0 ? 'is-alert' : '' }}" href="/admin/demandes"><span class="stat-card-num">{{ cards.pendingRequests }}</span><span>Demandes en attente</span></a>
+</div>
+
+<div class="panel-grid">
+  <section class="panel">
+    <div class="panel-head"><h2>Activité des 30 derniers jours</h2></div>
+    <div class="panel-body">
+      {% if recentActivity and recentActivity | length > 0 %}
+      <ul class="mini-chart">
+        {% for day in recentActivity %}
+        <li><span class="bar" style="height:{{ day.logs_count > 0 ? (day.logs_count * 6) : 4 }}px" title="{{ date_fr(day.log_date) }} : {{ day.logs_count }} réalisation(s)"></span><em>{{ day.logs_count }}</em></li>
+        {% endfor %}
+      </ul>
+      <p class="muted">{{ cards.logsTotal }} réalisations au total.</p>
+      {% else %}
+      <p class="muted">Aucune activité enregistrée pour l'instant.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Sportifs les plus actifs</h2></div>
+    <div class="panel-body">
+      {% if topAthletes and topAthletes | length > 0 %}
+      <table class="table">
+        <thead><tr><th>Sportif</th><th>Séances</th><th>Réalisations</th></tr></thead>
+        <tbody>
+          {% for a in topAthletes %}
+          <tr><td><a href="/admin/athletes/{{ a.id }}">{{ a.first_name }} {{ a.last_name }}</a></td><td>{{ a.sessions_count }}</td><td>{{ a.logs_count }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="muted">Pas encore de suivi enregistré.</p>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<div class="btn-row" style="margin-top:24px">
+  <a class="btn btn-primary" href="/admin/programs/new">Créer un programme</a>
+  <a class="btn btn-secondary" href="/admin/articles/new">Nouvel article</a>
+  <a class="btn btn-secondary" href="/admin/athletes/new">Nouveau profil sportif</a>
+</div>
+{% endblock %}

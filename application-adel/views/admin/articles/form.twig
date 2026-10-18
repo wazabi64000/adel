@@ -1,0 +1,55 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}{{ article ? 'Éditer un article' : 'Nouvel article' }}{% endblock %}
+
+{% block content %}
+<form class="app-form panel" method="post" enctype="multipart/form-data"
+      action="{{ article ? '/admin/articles/' ~ article.id ~ '?_method=PUT' : '/admin/articles' }}">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+  <div class="field">
+    <label for="title">Titre *</label>
+    <input id="title" name="title" type="text" value="{{ old(formData, 'title') }}" required maxlength="220">
+    {% if formErrors.title %}<small class="field-error">{{ formErrors.title }}</small>{% endif %}
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="category">Catégorie</label>
+      <input id="category" name="category" type="text" value="{{ old(formData, 'category') }}" placeholder="Physique, Nutrition, Mental…">
+    </div>
+    <div class="field">
+      <label for="read_minutes">Temps de lecture (min)</label>
+      <input id="read_minutes" name="read_minutes" type="number" min="1" max="60" value="{{ old(formData, 'read_minutes') }}">
+    </div>
+    <div class="field">
+      <label for="status">Statut</label>
+      <select id="status" name="status">
+        <option value="draft" {{ old(formData, 'status') == 'draft' ? 'selected' : '' }}>Brouillon</option>
+        <option value="published" {{ old(formData, 'status') == 'published' ? 'selected' : '' }}>Publié</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="excerpt">Chapeau / résumé</label>
+    <textarea id="excerpt" name="excerpt" rows="2" maxlength="400">{{ old(formData, 'excerpt') }}</textarea>
+  </div>
+
+  <div class="field">
+    <label for="content">Contenu</label>
+    <textarea id="content" name="content" rows="12" placeholder="Sépare les paragraphes par une ligne vide.">{{ old(formData, 'content') }}</textarea>
+  </div>
+
+  <div class="field">
+    <label for="cover">Image de couverture</label>
+    <input id="cover" name="cover" type="file" accept="image/*" data-preview="cover-preview">
+    {% if article and article.cover_url %}<img id="cover-preview" class="preview" src="{{ article.cover_url }}" alt="Couverture actuelle">{% else %}<img id="cover-preview" class="preview" hidden alt="">{% endif %}
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">{{ article ? 'Enregistrer' : 'Créer l\'article' }}</button>
+    <a class="btn btn-secondary" href="/admin/articles">Annuler</a>
+  </div>
+</form>
+{% endblock %}

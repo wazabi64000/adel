@@ -1,0 +1,19 @@
+<aside class="admin-side" id="admin-side">
+  <a class="admin-brand" href="/admin">COACH<span>ADEL</span></a>
+  <nav class="admin-nav" aria-label="Navigation admin">
+    <a href="/admin" class="{{ currentPath == '/admin' ? 'is-active' : '' }}">Tableau de bord</a>
+    <a href="/admin/articles" class="{{ currentPath starts with '/admin/articles' ? 'is-active' : '' }}">Articles</a>
+    <a href="/admin/posts" class="{{ currentPath starts with '/admin/posts' ? 'is-active' : '' }}">Posts</a>
+    <a href="/admin/athletes" class="{{ currentPath starts with '/admin/athletes' ? 'is-active' : '' }}">Profils sportifs</a>
+    <a href="/admin/programs" class="{{ currentPath starts with '/admin/programs' ? 'is-active' : '' }}">Programmes</a>
+    <a href="/admin/messages" class="{{ currentPath starts with '/admin/messages' ? 'is-active' : '' }}">
+      Messages {% if unreadMessages and unreadMessages > 0 %}<span class="badge-count">{{ unreadMessages }}</span>{% endif %}
+    </a>
+    <a href="/admin/demandes" class="{{ currentPath starts with '/admin/demandes' ? 'is-active' : '' }}">
+      Demandes d'accès {% if pendingRequests and pendingRequests > 0 %}<span class="badge-count">{{ pendingRequests }}</span>{% endif %}
+    </a>
+  </nav>
+  <div class="admin-side-foot">
+    <a href="/" target="_blank" rel="noopener">Voir le site ↗</a>
+  </div>
+</aside>

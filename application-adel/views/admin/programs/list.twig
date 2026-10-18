@@ -1,0 +1,55 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}Programmes{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <form class="toolbar-filters" method="get" action="/admin/programs">
+    <input type="search" name="q" value="{{ filters.q }}" placeholder="Titre du programme…">
+    <select name="athlete_id">
+      <option value="">Tous les sportifs</option>
+      {% for a in athletes %}<option value="{{ a.id }}" {{ filters.athlete_id == a.id ? 'selected' : '' }}>{{ a.first_name }} {{ a.last_name }}</option>{% endfor %}
+    </select>
+    <select name="location">
+      <option value="">Tous les lieux</option>
+      <option value="salle" {{ filters.location == 'salle' ? 'selected' : '' }}>Salle</option>
+      <option value="home" {{ filters.location == 'home' ? 'selected' : '' }}>À la maison</option>
+    </select>
+    <select name="status">
+      <option value="">Tous les statuts</option>
+      <option value="active" {{ filters.status == 'active' ? 'selected' : '' }}>Actif</option>
+      <option value="draft" {{ filters.status == 'draft' ? 'selected' : '' }}>Brouillon</option>
+      <option value="archived" {{ filters.status == 'archived' ? 'selected' : '' }}>Archivé</option>
+    </select>
+    <button class="btn btn-secondary btn-sm" type="submit">Filtrer</button>
+  </form>
+  <a class="btn btn-primary btn-sm" href="/admin/programs/new">+ Nouveau programme</a>
+</div>
+
+{% if programs and programs | length > 0 %}
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Titre</th><th>Sportif</th><th>Lieu</th><th>Statut</th><th>Jours</th><th>Exercices</th><th></th></tr></thead>
+  <tbody>
+    {% for p in programs %}
+    <tr>
+      <td><a href="/admin/programs/{{ p.id }}"><strong>{{ p.title }}</strong></a></td>
+      <td>{{ p.first_name }} {{ p.last_name }}</td>
+      <td><span class="tag tag-neutral">{{ label(p.location) }}</span></td>
+      <td><span class="tag tag-{{ p.status }}">{{ label(p.status) }}</span></td>
+      <td>{{ p.days_count }}</td>
+      <td>{{ p.exercises_count }}</td>
+      <td class="row-actions">
+        <a class="btn btn-ghost btn-sm" href="/admin/programs/{{ p.id }}">Ouvrir</a>
+        <a class="btn btn-ghost btn-sm" href="/admin/programs/{{ p.id }}/edit">Éditer</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% include 'partials/pagination.twig' with { pagination: pagination, baseUrl: '/admin/programs', query: query } %}
+{% else %}
+<p class="empty">Aucun programme. <a href="/admin/programs/new">Créer le premier programme</a>.</p>
+{% endif %}
+{% endblock %}

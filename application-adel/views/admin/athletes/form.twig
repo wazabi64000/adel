@@ -1,0 +1,101 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}{{ athlete ? 'Éditer un profil' : 'Nouveau profil sportif' }}{% endblock %}
+
+{% block content %}
+<form class="app-form panel" method="post" enctype="multipart/form-data"
+      action="{{ athlete ? '/admin/athletes/' ~ athlete.id ~ '?_method=PUT' : '/admin/athletes' }}">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+  <div class="field-row">
+    <div class="field">
+      <label for="first_name">Prénom *</label>
+      <input id="first_name" name="first_name" type="text" value="{{ old(formData, 'first_name') }}" required maxlength="100">
+      {% if formErrors.first_name %}<small class="field-error">{{ formErrors.first_name }}</small>{% endif %}
+    </div>
+    <div class="field">
+      <label for="last_name">Nom *</label>
+      <input id="last_name" name="last_name" type="text" value="{{ old(formData, 'last_name') }}" required maxlength="100">
+      {% if formErrors.last_name %}<small class="field-error">{{ formErrors.last_name }}</small>{% endif %}
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="email">E-mail</label>
+      <input id="email" name="email" type="email" value="{{ old(formData, 'email') }}">
+      {% if formErrors.email %}<small class="field-error">{{ formErrors.email }}</small>{% endif %}
+    </div>
+    <div class="field">
+      <label for="phone">Téléphone</label>
+      <input id="phone" name="phone" type="tel" value="{{ old(formData, 'phone') }}">
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="birthdate">Date de naissance</label>
+      <input id="birthdate" name="birthdate" type="date" value="{{ old(formData, 'birthdate') }}">
+    </div>
+    <div class="field">
+      <label for="gender">Genre</label>
+      <select id="gender" name="gender">
+        <option value="">—</option>
+        <option value="femme" {{ old(formData, 'gender') == 'femme' ? 'selected' : '' }}>Femme</option>
+        <option value="homme" {{ old(formData, 'gender') == 'homme' ? 'selected' : '' }}>Homme</option>
+        <option value="autre" {{ old(formData, 'gender') == 'autre' ? 'selected' : '' }}>Autre</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="level">Niveau</label>
+      <select id="level" name="level">
+        <option value="debutant" {{ old(formData, 'level') == 'debutant' ? 'selected' : '' }}>Débutant</option>
+        <option value="intermediaire" {{ old(formData, 'level') == 'intermediaire' ? 'selected' : '' }}>Intermédiaire</option>
+        <option value="avance" {{ old(formData, 'level') == 'avance' ? 'selected' : '' }}>Avancé</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="height_cm">Taille (cm)</label>
+      <input id="height_cm" name="height_cm" type="number" min="80" max="250" value="{{ old(formData, 'height_cm') }}">
+    </div>
+    <div class="field">
+      <label for="weight_kg">Poids (kg)</label>
+      <input id="weight_kg" name="weight_kg" type="number" step="0.1" min="20" max="300" value="{{ old(formData, 'weight_kg') }}">
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="goal">Objectif</label>
+    <input id="goal" name="goal" type="text" value="{{ old(formData, 'goal') }}" maxlength="255">
+  </div>
+
+  <div class="field">
+    <label for="notes">Notes internes</label>
+    <textarea id="notes" name="notes" rows="4">{{ old(formData, 'notes') }}</textarea>
+  </div>
+
+  <div class="field">
+    <label for="photo">Photo</label>
+    <input id="photo" name="photo" type="file" accept="image/*" data-preview="photo-preview">
+    {% if athlete and athlete.photo_url %}<img id="photo-preview" class="preview" src="{{ athlete.photo_url }}" alt="">{% else %}<img id="photo-preview" class="preview" hidden alt="">{% endif %}
+  </div>
+
+  <div class="field field-check">
+    <label><input type="checkbox" name="is_active" value="1" {{ (athlete ? athlete.is_active : 1) ? 'checked' : '' }}> Profil actif</label>
+  </div>
+
+  {% if not athlete %}
+  <div class="field field-check">
+    <label><input type="checkbox" name="create_account" value="1"> Créer aussi un accès sportif (envoie les identifiants par e-mail)</label>
+  </div>
+  {% endif %}
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">{{ athlete ? 'Enregistrer' : 'Créer le profil' }}</button>
+    <a class="btn btn-secondary" href="{{ athlete ? '/admin/athletes/' ~ athlete.id : '/admin/athletes' }}">Annuler</a>
+  </div>
+</form>
+{% endblock %}

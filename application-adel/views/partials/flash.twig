@@ -1,0 +1,7 @@
+{% if flash and (flash.success or flash.error or flash.info) %}
+<div class="app-flash" role="status" aria-live="polite">
+  {% for msg in flash.success | default([]) %}<div class="app-flash__item app-flash__item--success">{{ msg }}</div>{% endfor %}
+  {% for msg in flash.info | default([]) %}<div class="app-flash__item app-flash__item--info">{{ msg }}</div>{% endfor %}
+  {% for msg in flash.error | default([]) %}<div class="app-flash__item app-flash__item--error">{{ msg }}</div>{% endfor %}
+</div>
+{% endif %}

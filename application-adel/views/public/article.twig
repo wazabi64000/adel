@@ -1,0 +1,41 @@
+{% extends 'layouts/public.twig' %}
+
+{% block content %}
+<article class="section" style="padding-top:48px">
+  <div class="container article-container">
+    <p class="section-eyebrow"><a href="/articles" style="color:inherit;text-decoration:none">← Conseils</a></p>
+    <p class="post-meta">{{ article.category | default('Conseil') }}{% if article.read_minutes %} • {{ article.read_minutes }} min{% endif %} • {{ date_fr(article.published_at) }}</p>
+    <h1 class="page-title" style="text-align:left">{{ article.title }}</h1>
+
+    {% if article.cover_url %}
+    <figure class="article-cover"><img src="{{ article.cover_url }}" alt="{{ article.title }}"></figure>
+    {% endif %}
+
+    {% if article.excerpt %}<p class="lead">{{ article.excerpt }}</p>{% endif %}
+
+    <div class="prose">
+      {% for p in paragraphs(article.content) %}<p>{{ p }}</p>{% endfor %}
+    </div>
+
+    <div class="btn-row" style="margin-top:40px">
+      <a class="btn btn-primary" href="/#rejoindre">Intégrer le programme</a>
+      <a class="btn btn-secondary" href="/articles">Autres conseils</a>
+    </div>
+
+    {% if related and related | length > 0 %}
+    <div class="section-header" style="margin-top:56px"><h2 style="font-size:1.4rem">À lire aussi</h2></div>
+    <div class="grid grid-3">
+      {% for r in related %}
+      <article class="card post-card card-lift">
+        {% if r.cover_url %}<div class="post-media"><img src="{{ r.cover_url }}" alt="{{ r.title }}" loading="lazy"></div>{% endif %}
+        <div class="post-body">
+          <p class="post-meta">{{ r.category | default('Conseil') }}</p>
+          <h3><a href="/articles/{{ r.slug }}" style="color:inherit;text-decoration:none">{{ r.title }}</a></h3>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</article>
+{% endblock %}

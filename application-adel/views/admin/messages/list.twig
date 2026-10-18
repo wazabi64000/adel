@@ -1,0 +1,42 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}Messages{% endblock %}
+
+{% block content %}
+{% if messages and messages | length > 0 %}
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Date</th><th>Expéditeur</th><th>Message</th><th>Statut</th><th></th></tr></thead>
+  <tbody>
+    {% for m in messages %}
+    <tr class="{{ m.is_read ? '' : 'is-unread' }}">
+      <td>{{ date_fr(m.created_at, true) }}</td>
+      <td>
+        <strong>{{ m.name }}</strong><br>
+        <a href="mailto:{{ m.email }}">{{ m.email }}</a>
+        {% if m.phone %}<br><span class="muted">{{ m.phone }}</span>{% endif %}
+      </td>
+      <td class="msg-cell">{{ m.message }}</td>
+      <td>{% if m.is_read %}<span class="tag tag-neutral">Lu</span>{% else %}<span class="tag tag-draft">Nouveau</span>{% endif %}</td>
+      <td class="row-actions">
+        {% if not m.is_read %}
+        <form method="post" action="/admin/messages/{{ m.id }}/read">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <button class="btn btn-ghost btn-sm" type="submit">Marquer lu</button>
+        </form>
+        {% endif %}
+        <form method="post" action="/admin/messages/{{ m.id }}?_method=DELETE" data-confirm="Supprimer ce message ?">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <button class="btn btn-danger btn-sm" type="submit">Suppr.</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% include 'partials/pagination.twig' with { pagination: pagination, baseUrl: '/admin/messages', query: query } %}
+{% else %}
+<p class="empty">Aucun message reçu.</p>
+{% endif %}
+{% endblock %}

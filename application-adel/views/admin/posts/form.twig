@@ -1,0 +1,42 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}{{ post ? 'Éditer un post' : 'Nouveau post' }}{% endblock %}
+
+{% block content %}
+<form class="app-form panel" method="post" enctype="multipart/form-data"
+      action="{{ post ? '/admin/posts/' ~ post.id ~ '?_method=PUT' : '/admin/posts' }}">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+  <div class="field">
+    <label for="title">Titre (optionnel)</label>
+    <input id="title" name="title" type="text" value="{{ old(formData, 'title') }}" maxlength="220">
+  </div>
+
+  <div class="field">
+    <label for="content">Contenu *</label>
+    <textarea id="content" name="content" rows="8" required>{{ old(formData, 'content') }}</textarea>
+    {% if formErrors.content %}<small class="field-error">{{ formErrors.content }}</small>{% endif %}
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="status">Statut</label>
+      <select id="status" name="status">
+        <option value="draft" {{ old(formData, 'status') == 'draft' ? 'selected' : '' }}>Brouillon</option>
+        <option value="published" {{ old(formData, 'status') == 'published' ? 'selected' : '' }}>Publié</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="image">Image (optionnel)</label>
+      <input id="image" name="image" type="file" accept="image/*" data-preview="image-preview">
+    </div>
+  </div>
+
+  {% if post and post.image_url %}<img id="image-preview" class="preview" src="{{ post.image_url }}" alt="Image actuelle">{% else %}<img id="image-preview" class="preview" hidden alt="">{% endif %}
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">{{ post ? 'Enregistrer' : 'Créer le post' }}</button>
+    <a class="btn btn-secondary" href="/admin/posts">Annuler</a>
+  </div>
+</form>
+{% endblock %}

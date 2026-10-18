@@ -1,0 +1,35 @@
+{% extends 'layouts/public.twig' %}
+
+{% block content %}
+<section class="section" style="padding-top:48px">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Conseils</p>
+      <h1 class="page-title">Tous les conseils du coach.</h1>
+      <p>Des principes simples pour mieux bouger, mieux manger et renforcer ton équilibre mental.</p>
+    </div>
+
+    {% if articles and articles | length > 0 %}
+    <div class="grid grid-3">
+      {% for article in articles %}
+      <article class="card post-card card-lift reveal">
+        {% if article.cover_url %}<div class="post-media"><img src="{{ article.cover_url }}" alt="{{ article.title }}" loading="lazy"></div>{% endif %}
+        <div class="post-body">
+          <p class="post-meta">{{ article.category | default('Conseil') }}{% if article.read_minutes %} • {{ article.read_minutes }} min{% endif %}</p>
+          <h3>{{ article.title }}</h3>
+          {% if article.excerpt %}<p>{{ article.excerpt }}</p>{% endif %}
+          <div class="post-more"><a class="btn btn-secondary btn-block" href="/articles/{{ article.slug }}">Lire l'article</a></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="lead" style="text-align:center">Aucun article publié pour le moment.</p>
+    {% endif %}
+
+    <div class="btn-row" style="margin-top:32px;justify-content:center">
+      <a class="btn btn-secondary" href="/">← Retour à l'accueil</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

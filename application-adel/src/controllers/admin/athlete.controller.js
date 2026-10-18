@@ -1,0 +1,232 @@
+import crypto from 'node:crypto';
+import * as athleteRepo from '../../repositories/athlete.repo.js';
+import * as programRepo from '../../repositories/program.repo.js';
+import * as userRepo from '../../repositories/user.repo.js';
+import * as progressRepo from '../../repositories/progressPhoto.repo.js';
+import * as authService from '../../services/auth.service.js';
+import * as logRepo from '../../repositories/log.repo.js';
+import { uploadImage, destroyImage } from '../../services/upload.service.js';
+import { athleteStats } from '../../services/stats.service.js';
+import { sendAthleteWelcome } from '../../services/mail.service.js';
+import { validateAthlete } from '../../validators/index.js';
+import { asyncHandler, clean, paginate, HttpError } from '../../utils/http.js';
+
+const PHASES = ['avant', 'apres'];
+const VIEWS = ['devant', 'dos', 'profil_droit', 'profil_gauche'];
+const isoToday = () => new Date().toISOString().slice(0, 10);
+
+export const list = asyncHandler(async (req, res) => {
+  const { page, perPage, offset, limit } = paginate(req.query, { perPage: 12 });
+  const { rows, total } = await athleteRepo.list({
+    search: clean(req.query.q) ?? '',
+    level: clean(req.query.level),
+    limit,
+    offset,
+  });
+  return res.render('admin/athletes/list', {
+    title: 'Profils sportifs',
+    athletes: rows,
+    pagination: { page, perPage, total, pages: Math.ceil(total / perPage) || 1 },
+    filters: { q: req.query.q ?? '', level: req.query.level ?? '' },
+  });
+});
+
+export const show = asyncHandler(async (req, res) => {
+  const athlete = await athleteRepo.findById(req.params.id);
+  if (!athlete) throw new HttpError(404, 'Profil introuvable.');
+  const [programs, stats, logs, photos] = await Promise.all([
+    programRepo.findByAthlete(athlete.id),
+    athleteStats(athlete.id),
+    logRepo.listByAthlete(athlete.id, { limit: 15, offset: 0 }),
+    progressRepo.listByAthlete(athlete.id),
+  ]);
+  return res.render('admin/athletes/show', {
+    title: `${athlete.first_name} ${athlete.last_name}`,
+    athlete,
+    programs,
+    stats,
+    logs,
+    photos,
+    today: isoToday(),
+  });
+});
+
+export const newForm = asyncHandler(async (req, res) => {
+  return res.render('admin/athletes/form', {
+    title: 'Nouveau profil sportif',
+    athlete: null,
+    formErrors: {},
+    formData: {},
+  });
+});
+
+export const create = asyncHandler(async (req, res) => {
+  const { ok, errors, data } = validateAthlete(req.body);
+  if (!ok) {
+    return res.status(422).render('admin/athletes/form', {
+      title: 'Nouveau profil sportif',
+      athlete: null,
+      formErrors: errors,
+      formData: req.body,
+    });
+  }
+  if (req.file) {
+    const { url } = await uploadImage(req.file.buffer, { folder: 'athletes', originalName: req.file.originalname });
+    data.photoUrl = url;
+  }
+  const id = await athleteRepo.create(data);
+
+  // Création optionnelle d'un accès sportif.
+  if (req.body.create_account === '1' && data.email) {
+    await provisionAccount(id, data, req);
+  }
+
+  req.flash('success', 'Profil créé.');
+  return res.redirect(`/admin/athletes/${id}`);
+});
+
+export const editForm = asyncHandler(async (req, res) => {
+  const athlete = await athleteRepo.findById(req.params.id);
+  if (!athlete) throw new HttpError(404, 'Profil introuvable.');
+  return res.render('admin/athletes/form', {
+    title: `Éditer — ${athlete.first_name} ${athlete.last_name}`,
+    athlete,
+    formErrors: {},
+    formData: athlete,
+  });
+});
+
+export const update = asyncHandler(async (req, res) => {
+  const athlete = await athleteRepo.findById(req.params.id);
+  if (!athlete) throw new HttpError(404, 'Profil introuvable.');
+
+  const { ok, errors, data } = validateAthlete(req.body);
+  if (!ok) {
+    return res.status(422).render('admin/athletes/form', {
+      title: `Éditer — ${athlete.first_name} ${athlete.last_name}`,
+      athlete,
+      formErrors: errors,
+      formData: req.body,
+    });
+  }
+  data.photoUrl = athlete.photo_url;
+  if (req.file) {
+    const { url } = await uploadImage(req.file.buffer, { folder: 'athletes', originalName: req.file.originalname });
+    data.photoUrl = url;
+  }
+  await athleteRepo.update(athlete.id, data);
+  req.flash('success', 'Profil mis à jour.');
+  return res.redirect(`/admin/athletes/${athlete.id}`);
+});
+
+export const remove = asyncHandler(async (req, res) => {
+  const athlete = await athleteRepo.findById(req.params.id);
+  if (athlete?.user_id) {
+    await userRepo.remove(athlete.user_id); // supprime aussi le profil (FK SET NULL) puis l'athlète
+  }
+  await athleteRepo.remove(req.params.id);
+  req.flash('success', 'Profil supprimé.');
+  return res.redirect('/admin/athletes');
+});
+
+/* ------------------------- Photos de progression ------------------------- */
+
+/** Téléverse une photo avant/après (date + vue) pour un profil sportif. */
+export const uploadPhoto = asyncHandler(async (req, res) => {
+  const athlete = await athleteRepo.findById(req.params.id);
+  if (!athlete) throw new HttpError(404, 'Profil introuvable.');
+
+  if (!req.file) {
+    req.flash('error', 'Choisis une image à téléverser.');
+    return res.redirect(`/admin/athletes/${athlete.id}#photos`);
+  }
+
+  const phase = PHASES.includes(req.body.phase) ? req.body.phase : 'avant';
+  const view = VIEWS.includes(req.body.view_key) ? req.body.view_key : 'devant';
+  const takenOn = /^\d{4}-\d{2}-\d{2}$/.test(req.body.taken_on || '')
+    ? req.body.taken_on
+    : isoToday();
+
+  const { url, publicId } = await uploadImage(req.file.buffer, {
+    folder: 'athletes/progress',
+    originalName: req.file.originalname,
+  });
+
+  await progressRepo.create({
+    athleteId: athlete.id,
+    takenOn,
+    phase,
+    view,
+    imageUrl: url,
+    imagePublicId: publicId,
+    notes: clean(req.body.notes),
+  });
+
+  req.flash('success', 'Photo de progression ajoutée.');
+  return res.redirect(`/admin/athletes/${athlete.id}#photos`);
+});
+
+/** Supprime une photo de progression (vérifie l'appartenance à l'athlète). */
+export const deletePhoto = asyncHandler(async (req, res) => {
+  const athlete = await athleteRepo.findById(req.params.id);
+  if (!athlete) throw new HttpError(404, 'Profil introuvable.');
+
+  const photo = await progressRepo.findById(req.params.photoId);
+  if (photo && photo.athlete_id === athlete.id) {
+    await destroyImage(photo.image_public_id);
+    await progressRepo.remove(photo.id);
+    req.flash('success', 'Photo supprimée.');
+  }
+  return res.redirect(`/admin/athletes/${athlete.id}#photos`);
+});
+
+/** Crée (ou réinitialise) le compte d'accès de l'athlète + e-mail de bienvenue. */
+export const account = asyncHandler(async (req, res) => {
+  const athlete = await athleteRepo.findById(req.params.id);
+  if (!athlete) throw new HttpError(404, 'Profil introuvable.');
+  if (!athlete.email) {
+    req.flash('error', "Renseigne d'abord un e-mail sur le profil.");
+    return res.redirect(`/admin/athletes/${athlete.id}`);
+  }
+
+  const tempPassword = crypto.randomBytes(4).toString('hex');
+  if (athlete.user_id) {
+    await authService.changePasswordByAdmin(athlete.user_id, tempPassword);
+  } else {
+    const userId = await userRepo.create({
+      name: `${athlete.first_name} ${athlete.last_name}`,
+      email: athlete.email.toLowerCase(),
+      passwordHash: await authService.hashPassword(tempPassword),
+      role: 'athlete',
+      isActive: 1,
+      mustChangePassword: 1,
+    });
+    await athleteRepo.linkUser(athlete.id, userId);
+  }
+  await sendAthleteWelcome({
+    name: athlete.first_name,
+    email: athlete.email,
+    tempPassword,
+  });
+
+  req.flash('success', `Accès sportif activé. Mot de passe provisoire : ${tempPassword}`);
+  return res.redirect(`/admin/athletes/${athlete.id}`);
+});
+
+/** Utilitaire interne : crée le compte au moment de la création du profil. */
+async function provisionAccount(athleteId, data, req) {
+  const existing = await userRepo.findByEmail(data.email.toLowerCase());
+  if (existing) return;
+  const tempPassword = crypto.randomBytes(4).toString('hex');
+  const userId = await userRepo.create({
+    name: `${data.firstName} ${data.lastName}`,
+    email: data.email.toLowerCase(),
+    passwordHash: await authService.hashPassword(tempPassword),
+    role: 'athlete',
+    isActive: 1,
+    mustChangePassword: 1,
+  });
+  await athleteRepo.linkUser(athleteId, userId);
+  await sendAthleteWelcome({ name: data.firstName, email: data.email, tempPassword });
+  req.flash('info', `Compte d'accès créé. Mot de passe provisoire : ${tempPassword}`);
+}

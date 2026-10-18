@@ -1,0 +1,48 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}Profils sportifs{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <form class="toolbar-filters" method="get" action="/admin/athletes">
+    <input type="search" name="q" value="{{ filters.q }}" placeholder="Nom ou e-mail…">
+    <select name="level">
+      <option value="">Tous les niveaux</option>
+      <option value="debutant" {{ filters.level == 'debutant' ? 'selected' : '' }}>Débutant</option>
+      <option value="intermediaire" {{ filters.level == 'intermediaire' ? 'selected' : '' }}>Intermédiaire</option>
+      <option value="avance" {{ filters.level == 'avance' ? 'selected' : '' }}>Avancé</option>
+    </select>
+    <button class="btn btn-secondary btn-sm" type="submit">Filtrer</button>
+  </form>
+  <a class="btn btn-primary btn-sm" href="/admin/athletes/new">+ Nouveau profil</a>
+</div>
+
+{% if athletes and athletes | length > 0 %}
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Sportif</th><th>Niveau</th><th>Programmes</th><th>Accès</th><th></th></tr></thead>
+  <tbody>
+    {% for a in athletes %}
+    <tr>
+      <td>
+        {% if a.photo_url %}<img class="thumb thumb-round" src="{{ a.photo_url }}" alt="">{% endif %}
+        <a href="/admin/athletes/{{ a.id }}"><strong>{{ a.first_name }} {{ a.last_name }}</strong></a>
+        {% if a.email %}<br><span class="muted">{{ a.email }}</span>{% endif %}
+      </td>
+      <td>{{ label(a.level) }}</td>
+      <td>{{ a.programs_count }}</td>
+      <td>{% if a.user_id %}<span class="tag tag-published">Actif</span>{% else %}<span class="tag tag-draft">Aucun</span>{% endif %}</td>
+      <td class="row-actions">
+        <a class="btn btn-ghost btn-sm" href="/admin/athletes/{{ a.id }}">Voir</a>
+        <a class="btn btn-ghost btn-sm" href="/admin/athletes/{{ a.id }}/edit">Éditer</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% include 'partials/pagination.twig' with { pagination: pagination, baseUrl: '/admin/athletes', query: query } %}
+{% else %}
+<p class="empty">Aucun profil sportif. <a href="/admin/athletes/new">Créer le premier profil</a>.</p>
+{% endif %}
+{% endblock %}

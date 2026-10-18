@@ -1,0 +1,13 @@
+{% if pagination and pagination.pages and pagination.pages > 1 %}
+{% set qs = '' %}
+{% for k, v in query | default({}) %}{% if k != 'page' and v is not empty %}{% set qs = qs ~ '&' ~ k ~ '=' ~ (v | url_encode) %}{% endif %}{% endfor %}
+<nav class="pagination" aria-label="Pagination">
+  {% if pagination.page > 1 %}
+    <a class="btn btn-ghost btn-sm" href="{{ baseUrl }}?page={{ pagination.page - 1 }}{{ qs }}">← Précédent</a>
+  {% endif %}
+  <span class="pagination-info">Page {{ pagination.page }} / {{ pagination.pages }} — {{ pagination.total }} résultat(s)</span>
+  {% if pagination.page < pagination.pages %}
+    <a class="btn btn-ghost btn-sm" href="{{ baseUrl }}?page={{ pagination.page + 1 }}{{ qs }}">Suivant →</a>
+  {% endif %}
+</nav>
+{% endif %}

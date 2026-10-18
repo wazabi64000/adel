@@ -1,0 +1,180 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}{{ athlete.first_name }} {{ athlete.last_name }}{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <div class="toolbar-filters">
+    <a class="btn btn-ghost btn-sm" href="/admin/athletes">← Tous les profils</a>
+  </div>
+  <div class="toolbar-filters">
+    <a class="btn btn-secondary btn-sm" href="/admin/athletes/{{ athlete.id }}/edit">Éditer</a>
+    <a class="btn btn-primary btn-sm" href="/admin/programs/new?athlete_id={{ athlete.id }}">+ Programme</a>
+  </div>
+</div>
+
+<div class="detail-grid">
+  <section class="panel">
+    <div class="panel-head"><h2>Profil</h2></div>
+    <div class="panel-body">
+      <div class="profile-head">
+        {% if athlete.photo_url %}<img class="profile-photo" src="{{ athlete.photo_url }}" alt="">{% endif %}
+        <ul class="kv">
+          <li><span>Niveau</span><b>{{ label(athlete.level) }}</b></li>
+          <li><span>Objectif</span><b>{{ athlete.goal | default('—') }}</b></li>
+          <li><span>Naissance</span><b>{{ date_fr(athlete.birthdate) | default('—') }}</b></li>
+          <li><span>Taille / Poids</span><b>{{ athlete.height_cm | default('—') }} cm / {{ athlete.weight_kg | default('—') }} kg</b></li>
+          <li><span>E-mail</span><b>{{ athlete.email | default('—') }}</b></li>
+          <li><span>Téléphone</span><b>{{ athlete.phone | default('—') }}</b></li>
+          <li><span>Accès sportif</span><b>{{ athlete.user_id ? 'Actif' : 'Non activé' }}</b></li>
+        </ul>
+      </div>
+      {% if athlete.notes %}<p class="muted" style="margin-top:12px;white-space:pre-line">{{ athlete.notes }}</p>{% endif %}
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Suivi & statistiques</h2></div>
+    <div class="panel-body">
+      <div class="stat-inline">
+        <div><b>{{ stats.summary.sessionsCount }}</b><span>Séances</span></div>
+        <div><b>{{ stats.summary.logsCount }}</b><span>Réalisations</span></div>
+        <div><b>{{ stats.summary.totalMinutes }}</b><span>Minutes</span></div>
+        <div><b>{{ stats.summary.avgRpe }}</b><span>RPE moyen</span></div>
+      </div>
+      <div class="progressbar" title="Taux de réalisation"><span style="width:{{ stats.completion.rate }}%"></span></div>
+      <p class="muted">{{ stats.completion.done }} / {{ stats.completion.planned }} exercices réalisés ({{ stats.completion.rate }}%)</p>
+
+      {% if stats.weekly and stats.weekly | length > 0 %}
+      <table class="table table-compact">
+        <thead><tr><th>Semaine</th><th>Séances</th><th>Réalisations</th><th>Minutes</th></tr></thead>
+        <tbody>
+          {% for w in stats.weekly %}
+          <tr><td>Semaine {{ w.weekNumber }}</td><td>{{ w.sessionsCount }}</td><td>{{ w.logsCount }}</td><td>{{ w.totalMinutes }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}<p class="muted">Aucune donnée de suivi.</p>{% endif %}
+    </div>
+  </section>
+</div>
+
+<section class="panel" id="photos">
+  <div class="panel-head"><h2>Photos avant / après</h2></div>
+  <div class="panel-body">
+    <form class="app-form photo-form" method="post" action="/admin/athletes/{{ athlete.id }}/photos" enctype="multipart/form-data" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      <div class="field-grid">
+        <div class="field"><label for="ph-file">Photo</label><input id="ph-file" type="file" name="photo" accept="image/*" required></div>
+        <div class="field"><label for="ph-date">Date</label><input id="ph-date" type="date" name="taken_on" value="{{ today }}"></div>
+        <div class="field"><label for="ph-phase">Moment</label><select id="ph-phase" name="phase"><option value="avant">Avant</option><option value="apres">Après</option></select></div>
+        <div class="field"><label for="ph-view">Vue</label><select id="ph-view" name="view_key"><option value="devant">Devant</option><option value="dos">Dos</option><option value="profil_droit">Profil droit</option><option value="profil_gauche">Profil gauche</option></select></div>
+      </div>
+      <div class="field"><label for="ph-notes">Note (optionnel)</label><input id="ph-notes" name="notes" type="text" maxlength="255"></div>
+      <button class="btn btn-primary btn-sm" type="submit">Téléverser la photo</button>
+    </form>
+
+    {% set viewList = [{key:'devant',label:'Devant'},{key:'dos',label:'Dos'},{key:'profil_droit',label:'Profil droit'},{key:'profil_gauche',label:'Profil gauche'}] %}
+    {% set phaseList = [{key:'avant',label:'Avant'},{key:'apres',label:'Après'}] %}
+
+    {% if photos and photos | length > 0 %}
+    <div class="compare-grid">
+      {% for v in viewList %}
+      <div class="compare-block">
+        <h4>{{ v.label }}</h4>
+        <div class="compare-cols">
+          {% for ph in phaseList %}
+          <div class="compare-col">
+            <h5>{{ ph.label }}</h5>
+            <div class="photo-thumbs">
+              {% for p in photos %}
+                {% if p.view_key == v.key and p.phase == ph.key %}
+                <figure class="photo-thumb">
+                  <img src="{{ p.image_url }}" alt="Vue {{ v.label }} — {{ ph.label }} du {{ date_fr(p.taken_on) }}" loading="lazy">
+                  <figcaption><b>{{ date_fr(p.taken_on) }}</b>{% if p.notes %}<span>{{ p.notes }}</span>{% endif %}</figcaption>
+                  <form method="post" action="/admin/athletes/{{ athlete.id }}/photos/{{ p.id }}?_method=DELETE" data-confirm="Supprimer cette photo ?">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                    <button class="photo-del" type="submit" aria-label="Supprimer cette photo">×</button>
+                  </form>
+                </figure>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="muted" style="margin-top:14px">Aucune photo de progression pour l'instant.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h2>Programmes</h2><a class="btn btn-primary btn-sm" href="/admin/programs/new?athlete_id={{ athlete.id }}">+ Nouveau</a></div>
+  <div class="panel-body">
+    {% if programs and programs | length > 0 %}
+    <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Titre</th><th>Lieu</th><th>Statut</th><th>Jours</th><th></th></tr></thead>
+      <tbody>
+        {% for p in programs %}
+        <tr>
+          <td><a href="/admin/programs/{{ p.id }}"><strong>{{ p.title }}</strong></a></td>
+          <td>{{ label(p.location) }}</td>
+          <td><span class="tag tag-{{ p.status }}">{{ label(p.status) }}</span></td>
+          <td>{{ p.days_count }}</td>
+          <td class="row-actions"><a class="btn btn-ghost btn-sm" href="/admin/programs/{{ p.id }}">Ouvrir</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    {% else %}<p class="muted">Aucun programme pour ce sportif.</p>{% endif %}
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h2>Dernières séances enregistrées</h2></div>
+  <div class="panel-body">
+    {% if logs and logs | length > 0 %}
+    <div class="table-wrap">
+    <table class="table table-compact">
+      <thead><tr><th>Date</th><th>Exercice</th><th>Séries</th><th>Reps</th><th>Charge</th><th>RPE</th><th>Ressenti</th></tr></thead>
+      <tbody>
+        {% for l in logs %}
+        <tr>
+          <td>{{ date_fr(l.log_date) }}</td>
+          <td>{{ l.exercise_name }}</td>
+          <td>{{ l.sets_done | default('—') }}</td>
+          <td>{{ l.reps_done | default('—') }}</td>
+          <td>{{ l.weight_used | default('—') }}</td>
+          <td>{{ l.rpe | default('—') }}</td>
+          <td>{{ l.feeling | default('—') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    {% else %}<p class="muted">Aucune séance enregistrée.</p>{% endif %}
+  </div>
+</section>
+
+<section class="panel danger-zone">
+  <div class="panel-head"><h2>Zone sensible</h2></div>
+  <div class="panel-body">
+    <div class="btn-row">
+      <form method="post" action="/admin/athletes/{{ athlete.id }}/account">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <button class="btn btn-secondary" type="submit">{{ athlete.user_id ? 'Réinitialiser l\'accès (nouveau mot de passe)' : 'Activer l\'accès sportif' }}</button>
+      </form>
+      <form method="post" action="/admin/athletes/{{ athlete.id }}?_method=DELETE" data-confirm="Supprimer ce profil et son programme associé ?">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <button class="btn btn-danger" type="submit">Supprimer le profil</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

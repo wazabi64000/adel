@@ -1,0 +1,17 @@
+{# Modale de pré-inscription — partagée par toutes les pages publiques. #}
+<dialog class="modal" id="preinscription" aria-labelledby="modal-pre-title">
+  <div class="modal__panel">
+    <button class="modal__close" type="button" data-modal-close aria-label="Fermer">×</button>
+    <p class="section-eyebrow">Pré-inscription gratuite</p>
+    <h2 id="modal-pre-title" class="modal__title">Se pré-inscrire gratuitement</h2>
+    <p class="modal__sub">Le coach reçoit ta demande, la valide, puis t'ouvre un accès personnel. Aucun paiement demandé ici.</p>
+    <form class="app-form modal__form" method="post" action="/acces-sportif" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      <div class="field"><label for="acc-name">Nom complet</label><input id="acc-name" name="full_name" type="text" required autocomplete="name"></div>
+      <div class="field"><label for="acc-email">E-mail</label><input id="acc-email" name="email" type="email" required autocomplete="email"></div>
+      <div class="field"><label for="acc-phone">Téléphone (optionnel)</label><input id="acc-phone" name="phone" type="tel" autocomplete="tel"></div>
+      <div class="field"><label for="acc-message">Ton objectif (optionnel)</label><textarea id="acc-message" name="message" rows="3"></textarea></div>
+      <button class="btn btn-primary btn-block" type="submit">Envoyer ma pré-inscription</button>
+    </form>
+  </div>
+</dialog>

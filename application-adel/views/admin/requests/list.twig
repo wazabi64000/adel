@@ -1,0 +1,72 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}Demandes d'accès sportif{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <form class="toolbar-filters" method="get" action="/admin/demandes">
+    <select name="status">
+      <option value="">Tous les statuts</option>
+      <option value="pending" {{ filters.status == 'pending' ? 'selected' : '' }}>En attente</option>
+      <option value="approved" {{ filters.status == 'approved' ? 'selected' : '' }}>Approuvées</option>
+      <option value="rejected" {{ filters.status == 'rejected' ? 'selected' : '' }}>Refusées</option>
+    </select>
+    <button class="btn btn-secondary btn-sm" type="submit">Filtrer</button>
+  </form>
+</div>
+
+{% if requests and requests | length > 0 %}
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Date</th><th>Demandeur</th><th>Message</th><th>Statut</th><th></th></tr></thead>
+  <tbody>
+    {% for r in requests %}
+    <tr>
+      <td>{{ date_fr(r.created_at, true) }}</td>
+      <td>
+        <strong>{{ r.full_name }}</strong><br>
+        <a href="mailto:{{ r.email }}">{{ r.email }}</a>
+        {% if r.phone %}<br><span class="muted">{{ r.phone }}</span>{% endif %}
+        {% if r.uuid %}<br><span class="muted" style="font-size:.72rem">Réf. {{ r.uuid | slice(0, 8) }}</span>{% endif %}
+      </td>
+      <td class="msg-cell">{{ r.message | default('—') }}</td>
+      <td><span class="tag tag-{{ r.status == 'approved' ? 'published' : (r.status == 'rejected' ? 'archived' : 'draft') }}">{{ r.status == 'approved' ? 'Approuvée' : (r.status == 'rejected' ? 'Refusée' : 'En attente') }}</span></td>
+      <td class="row-actions">
+        {% if r.athlete_id %}
+        <a class="btn btn-ghost btn-sm" href="/admin/athletes/{{ r.athlete_id }}">Voir l'accès</a>
+        {% elseif r.status == 'approved' %}
+        <form method="post" action="/admin/demandes/{{ r.id }}/acces">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <button class="btn btn-primary btn-sm" type="submit">Créer l'accès</button>
+        </form>
+        {% else %}
+        {% if r.status != 'approved' %}
+        <form method="post" action="/admin/demandes/{{ r.id }}/status">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <input type="hidden" name="status" value="approved">
+          <button class="btn btn-ghost btn-sm" type="submit">Approuver</button>
+        </form>
+        {% endif %}
+        {% if r.status != 'rejected' %}
+        <form method="post" action="/admin/demandes/{{ r.id }}/status">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <input type="hidden" name="status" value="rejected">
+          <button class="btn btn-ghost btn-sm" type="submit">Refuser</button>
+        </form>
+        {% endif %}
+        {% endif %}
+        <form method="post" action="/admin/demandes/{{ r.id }}?_method=DELETE" data-confirm="Supprimer cette demande ?">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <button class="btn btn-danger btn-sm" type="submit">Suppr.</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% include 'partials/pagination.twig' with { pagination: pagination, baseUrl: '/admin/demandes', query: query } %}
+{% else %}
+<p class="empty">Aucune demande d'accès.</p>
+{% endif %}
+{% endblock %}

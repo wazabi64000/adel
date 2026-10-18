@@ -1,0 +1,67 @@
+{% extends 'layouts/athlete.twig' %}
+
+{% block heading %}Semaine {{ day.week_number }} — {{ day_name(day.day_of_week) }}{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <div class="toolbar-filters">
+    <a class="btn btn-ghost btn-sm" href="/mon-espace/programme/{{ day.program_id }}">← Retour au programme</a>
+    {% if day.focus %}<span class="tag tag-neutral">{{ day.focus }}</span>{% endif %}
+  </div>
+</div>
+
+{% if day.title %}<h2 class="section-title">{{ day.title }}</h2>{% endif %}
+
+{% if day.is_rest_day %}
+<section class="panel"><div class="panel-body"><p class="muted">Journée de repos 😴 — prends soin de toi.</p></div></section>
+{% elseif exercises and exercises | length > 0 %}
+<div class="exercise-list">
+  {% for ex in exercises %}
+  {% set done = doneByExercise[ex.id] | default(null) %}
+  <article class="exercise-card {{ done ? 'is-done' : '' }}">
+    {% if ex.image_url %}<img class="exercise-img" src="{{ ex.image_url }}" alt="{{ ex.name }}" loading="lazy">{% else %}<div class="exercise-img placeholder">🏋️</div>{% endif %}
+    <div class="exercise-info">
+      <h4>{{ ex.name }} {% if done %}<span class="tag tag-published">Fait</span>{% endif %}</h4>
+      <p class="muted">{{ ex.muscle_group | default('—') }} · {{ ex.equipment | default('—') }} · {{ ex.type }}</p>
+      <p class="exercise-metrics"><b>{{ ex.sets | default('—') }}</b> séries × <b>{{ ex.reps | default('—') }}</b> · repos {{ ex.rest_seconds | default(0) }}s {% if ex.weight %}· {{ ex.weight }}{% endif %}</p>
+      {% if ex.description %}<p class="muted">{{ ex.description }}</p>{% endif %}
+      {% if ex.video_url %}<p><a href="{{ ex.video_url }}" target="_blank" rel="noopener">Voir la vidéo ↗</a></p>{% endif %}
+      {% if done %}<p class="muted">Dernière saisie ({{ date_fr(done.log_date) }}) : {{ done.sets_done | default('—') }} × {{ done.reps_done | default('—') }}{% if done.weight_used %} · {{ done.weight_used }}{% endif %}</p>{% endif %}
+    </div>
+    <div class="exercise-actions">
+      <details class="inline-edit">
+        <summary>{{ done ? 'Mettre à jour' : 'Enregistrer' }}</summary>
+        <form class="app-form" method="post" action="/mon-espace/log">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <input type="hidden" name="exercise_id" value="{{ ex.id }}">
+          <input type="hidden" name="week_number" value="{{ day.week_number }}">
+          <div class="field"><label>Date</label><input type="date" name="log_date" value="{{ done ? date_iso(done.log_date) : today }}" required></div>
+          <div class="field-row">
+            <div class="field"><label>Séries faites</label><input type="number" name="sets_done" min="0" value="{{ done.sets_done | default('') }}"></div>
+            <div class="field"><label>Répétitions</label><input type="text" name="reps_done" value="{{ done.reps_done | default('') }}"></div>
+            <div class="field"><label>Charge</label><input type="text" name="weight_used" value="{{ done.weight_used | default('') }}"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Durée (min)</label><input type="number" name="duration_min" min="0" value="{{ done.duration_min | default('') }}"></div>
+            <div class="field"><label>RPE (1-10)</label><input type="number" name="rpe" min="1" max="10" value="{{ done.rpe | default('') }}"></div>
+            <div class="field"><label>Ressenti</label>
+              <select name="feeling">
+                <option value="">—</option>
+                <option value="facile" {{ done.feeling == 'facile' ? 'selected' : '' }}>Facile</option>
+                <option value="ok" {{ done.feeling == 'ok' ? 'selected' : '' }}>OK</option>
+                <option value="difficile" {{ done.feeling == 'difficile' ? 'selected' : '' }}>Difficile</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Notes</label><textarea name="notes" rows="2">{{ done.notes | default('') }}</textarea></div>
+          <button class="btn btn-primary btn-sm" type="submit">Valider</button>
+        </form>
+      </details>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">Aucun exercice prévu.</p>
+{% endif %}
+{% endblock %}

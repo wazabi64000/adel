@@ -1,0 +1,33 @@
+{% extends 'layouts/public.twig' %}
+
+{% block title %}{{ title }} — Coach Adel{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width:640px">
+    {% if status == 'invalid' %}
+      <div class="final">
+        <p class="section-eyebrow" style="justify-content:center">Pré-inscription</p>
+        <h2>Lien invalide</h2>
+        <p>Ce lien de validation est introuvable. Il a peut-être déjà été utilisé ou supprimé.</p>
+        <div class="btn-row"><a class="btn btn-secondary" href="/">Retour à l'accueil</a></div>
+      </div>
+    {% elseif status == 'already' %}
+      <div class="final">
+        <p class="section-eyebrow" style="justify-content:center">Pré-inscription</p>
+        <h2>Déjà validée</h2>
+        <p>La pré-inscription de <strong>{{ request.full_name }}</strong> a déjà été validée.</p>
+        <div class="btn-row"><a class="btn btn-primary" href="/login?next=/admin/demandes">Créer son accès</a></div>
+      </div>
+    {% else %}
+      <div class="final">
+        <p class="section-eyebrow" style="justify-content:center">Pré-inscription validée</p>
+        <h2>C'est validé ✅</h2>
+        <p>La pré-inscription de <strong>{{ request.full_name }}</strong> ({{ request.email }}) est validée.</p>
+        <p>Prochaine étape : crée son accès sportif. Un mot de passe provisoire lui sera envoyé, à changer à sa première connexion.</p>
+        <div class="btn-row"><a class="btn btn-primary" href="/login?next=/admin/demandes">Créer son accès</a></div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

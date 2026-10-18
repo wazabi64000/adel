@@ -1,0 +1,58 @@
+{% extends 'layouts/athlete.twig' %}
+
+{% block heading %}Bonjour {{ athlete.first_name }} 👋{% endblock %}
+
+{% block content %}
+<div class="stat-cards">
+  <div class="stat-card"><span class="stat-card-num">{{ stats.summary.sessionsCount }}</span><span>Séances réalisées</span></div>
+  <div class="stat-card"><span class="stat-card-num">{{ stats.summary.logsCount }}</span><span>Exercices enregistrés</span></div>
+  <div class="stat-card"><span class="stat-card-num">{{ stats.summary.totalMinutes }}</span><span>Minutes d'effort</span></div>
+  <div class="stat-card"><span class="stat-card-num">{{ stats.completion.rate }}%</span><span>Taux de réalisation</span></div>
+</div>
+
+<h2 class="section-title">Mes programmes</h2>
+{% if programs and programs | length > 0 %}
+<div class="card-grid">
+  {% for p in programs %}
+  <article class="panel program-card">
+    <div class="panel-head">
+      <h3>{{ p.title }}</h3>
+      <span class="tag tag-neutral">{{ label(p.location) }}</span>
+    </div>
+    <div class="panel-body">
+      <p class="muted">{{ p.description | default('') | truncate(120) }}</p>
+      <p><b>{{ p.days_count }}</b> journée(s) planifiée(s)</p>
+      <a class="btn btn-primary btn-sm" href="/mon-espace/programme/{{ p.id }}">Ouvrir le programme</a>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">Aucun programme actif pour le moment. Coach Adel t'en prépare un !</p>
+{% endif %}
+
+<h2 class="section-title">Dernières séances</h2>
+<section class="panel">
+  <div class="panel-body">
+    {% if recentLogs and recentLogs | length > 0 %}
+    <div class="table-wrap">
+    <table class="table table-compact">
+      <thead><tr><th>Date</th><th>Exercice</th><th>Séries</th><th>Reps</th><th>Charge</th><th>Ressenti</th></tr></thead>
+      <tbody>
+        {% for l in recentLogs %}
+        <tr>
+          <td>{{ date_fr(l.log_date) }}</td>
+          <td>{{ l.exercise_name }}</td>
+          <td>{{ l.sets_done | default('—') }}</td>
+          <td>{{ l.reps_done | default('—') }}</td>
+          <td>{{ l.weight_used | default('—') }}</td>
+          <td>{{ l.feeling | default('—') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    {% else %}<p class="muted">Aucune séance enregistrée pour l'instant.</p>{% endif %}
+  </div>
+</section>
+{% endblock %}
