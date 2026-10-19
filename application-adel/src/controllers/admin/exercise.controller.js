@@ -1,6 +1,7 @@
 import * as exerciseRepo from '../../repositories/exercise.repo.js';
 import * as programDayRepo from '../../repositories/programDay.repo.js';
 import { uploadImage } from '../../services/upload.service.js';
+import { notifyActiveProgramContent } from '../../services/notify.service.js';
 import { validateExercise } from '../../validators/index.js';
 import { asyncHandler, clean, toInt, HttpError } from '../../utils/http.js';
 
@@ -26,6 +27,7 @@ export const create = asyncHandler(async (req, res) => {
     data.imageUrl = url;
   }
   await exerciseRepo.create(data);
+  await notifyActiveProgramContent(day.program_id);
   req.flash('success', 'Exercice ajouté.');
   return res.redirect(`/admin/programs/${day.program_id}#day-${day.id}`);
 });
@@ -49,6 +51,7 @@ export const update = asyncHandler(async (req, res) => {
     data.imageUrl = exercise.image_url;
   }
   await exerciseRepo.update(exercise.id, data);
+  await notifyActiveProgramContent(day.program_id);
   req.flash('success', 'Exercice mis à jour.');
   return res.redirect(`/admin/programs/${day.program_id}#day-${day.id}`);
 });
@@ -58,6 +61,7 @@ export const remove = asyncHandler(async (req, res) => {
   if (!exercise) throw new HttpError(404, 'Exercice introuvable.');
   const day = await programDayRepo.findById(exercise.program_day_id);
   await exerciseRepo.remove(exercise.id);
+  await notifyActiveProgramContent(day.program_id);
   req.flash('success', 'Exercice supprimé.');
   return res.redirect(`/admin/programs/${day.program_id}#day-${day.id}`);
 });

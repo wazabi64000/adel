@@ -120,4 +120,19 @@
       banner.hidden = true;
     });
   }
+
+  document.querySelectorAll('[data-toast]').forEach(function (toast) {
+    var close = toast.querySelector('.app-flash__close');
+    function dismiss() {
+      toast.classList.add('is-leaving');
+      window.setTimeout(function () {
+        toast.remove();
+        var root = document.getElementById('app-flash');
+        if (root && !root.children.length) root.remove();
+      }, 220);
+    }
+    if (close) close.addEventListener('click', dismiss);
+    var delay = toast.classList.contains('app-flash__item--error') ? 9000 : 5200;
+    window.setTimeout(dismiss, delay);
+  });
 })();

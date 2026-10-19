@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#1c1a18">
+<meta name="theme-color" content="#141210">
 <title>Hors ligne — Coach Adel</title>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/icons/favicon-32.png" type="image/png">
@@ -13,20 +13,20 @@
   body {
     margin: 0; min-height: 100dvh; display: grid; place-items: center;
     font-family: ui-sans-serif, system-ui, sans-serif;
-    background: #1c1a18; color: #f5f1ea; padding: 24px;
+    background: #141210; color: #faf7f2; padding: 24px;
   }
   .card {
-    width: min(100%, 420px); background: #252220; border: 1px solid rgba(255,255,255,.1);
+    width: min(100%, 420px); background: #23201c; border: 1px solid rgba(250,247,242,.16);
     border-radius: 2px; padding: 28px 24px; text-align: center;
   }
   .brand { font-weight: 900; letter-spacing: -.03em; font-size: 1.25rem; margin: 0 0 18px; }
   .brand span { color: #ef8a2c; }
   h1 { font-size: 1.35rem; margin: 0 0 8px; }
-  p { margin: 0 0 20px; color: #a39d94; line-height: 1.45; }
+  p { margin: 0 0 20px; color: #c4bdb3; line-height: 1.45; }
   a {
     display: inline-flex; align-items: center; justify-content: center;
     min-height: 48px; padding: 0 20px; border-radius: 2px;
-    background: #ef8a2c; color: #1c1a18; font-weight: 800; text-decoration: none;
+    background: #ef8a2c; color: #141210; font-weight: 800; text-decoration: none;
   }
 </style>
 </head>
@@ -38,7 +38,7 @@
     <a href="/">Réessayer</a>
   </div>
   <script>
-    window.addEventListener('online', () => { location.href = '/'; });
+    window.addEventListener('online', function () { location.reload(); });
   </script>
 </body>
 </html>

@@ -57,7 +57,8 @@ export async function findByAthlete(athleteId, { status } = {}) {
 
 export async function findById(id) {
   return queryOne(
-    `SELECT ${FIELDS}, a.first_name, a.last_name, a.user_id AS athlete_user_id
+    `SELECT ${FIELDS}, a.first_name, a.last_name, a.email AS athlete_email,
+       a.user_id AS athlete_user_id
      FROM programs p
      JOIN athletes a ON a.id = p.athlete_id
      WHERE p.id = ? LIMIT 1`,

@@ -11,7 +11,7 @@
   "display_override": ["standalone", "minimal-ui", "browser"],
   "orientation": "portrait-primary",
   "background_color": "#d6c29d",
-  "theme_color": "#1c1a18",
+  "theme_color": "#141210",
   "categories": ["health", "fitness", "lifestyle"],
   "icons": [
     {

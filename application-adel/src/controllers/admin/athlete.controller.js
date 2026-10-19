@@ -76,12 +76,16 @@ export const create = asyncHandler(async (req, res) => {
   }
   const id = await athleteRepo.create(data);
 
-  // Création optionnelle d'un accès sportif.
-  if (req.body.create_account === '1' && data.email) {
-    await provisionAccount(id, data, req);
+  // Création optionnelle d'un accès sportif + envoi des identifiants.
+  if (req.body.create_account === '1') {
+    if (!data.email) {
+      req.flash('error', "Profil créé, mais l'accès n'a pas pu être ouvert : e-mail manquant.");
+    } else {
+      await provisionAccount(id, data, req);
+    }
+  } else {
+    req.flash('success', 'Profil créé.');
   }
-
-  req.flash('success', 'Profil créé.');
   return res.redirect(`/admin/athletes/${id}`);
 });
 
@@ -203,20 +207,41 @@ export const account = asyncHandler(async (req, res) => {
     });
     await athleteRepo.linkUser(athlete.id, userId);
   }
-  await sendAthleteWelcome({
+  const mail = await sendAthleteWelcome({
     name: athlete.first_name,
     email: athlete.email,
     tempPassword,
   });
 
-  req.flash('success', `Accès sportif activé. Mot de passe provisoire : ${tempPassword}`);
+  if (mail.sent) {
+    req.flash(
+      'success',
+      `Accès sportif activé. Identifiants envoyés à ${athlete.email}. Mot de passe provisoire : ${tempPassword}`,
+    );
+  } else if (mail.skipped) {
+    req.flash(
+      'info',
+      `Accès activé (e-mail non envoyé : SMTP non configuré). Mot de passe provisoire : ${tempPassword}`,
+    );
+  } else {
+    req.flash(
+      'error',
+      `Accès activé, mais l'e-mail a échoué. Mot de passe provisoire à transmettre manuellement : ${tempPassword}`,
+    );
+  }
   return res.redirect(`/admin/athletes/${athlete.id}`);
 });
 
 /** Utilitaire interne : crée le compte au moment de la création du profil. */
 async function provisionAccount(athleteId, data, req) {
   const existing = await userRepo.findByEmail(data.email.toLowerCase());
-  if (existing) return;
+  if (existing) {
+    req.flash(
+      'error',
+      `Profil créé, mais cet e-mail (${data.email}) a déjà un compte. Relie ou réinitialise l'accès depuis la fiche.`,
+    );
+    return;
+  }
   const tempPassword = crypto.randomBytes(4).toString('hex');
   const userId = await userRepo.create({
     name: `${data.firstName} ${data.lastName}`,
@@ -227,6 +252,21 @@ async function provisionAccount(athleteId, data, req) {
     mustChangePassword: 1,
   });
   await athleteRepo.linkUser(athleteId, userId);
-  await sendAthleteWelcome({ name: data.firstName, email: data.email, tempPassword });
-  req.flash('info', `Compte d'accès créé. Mot de passe provisoire : ${tempPassword}`);
+  const mail = await sendAthleteWelcome({ name: data.firstName, email: data.email, tempPassword });
+  if (mail.sent) {
+    req.flash(
+      'success',
+      `Profil et accès créés. Identifiants envoyés à ${data.email}. Mot de passe provisoire : ${tempPassword}`,
+    );
+  } else if (mail.skipped) {
+    req.flash(
+      'info',
+      `Profil et accès créés (e-mail non envoyé : SMTP non configuré). Mot de passe provisoire : ${tempPassword}`,
+    );
+  } else {
+    req.flash(
+      'error',
+      `Profil et accès créés, mais l'e-mail a échoué. Mot de passe provisoire : ${tempPassword}`,
+    );
+  }
 }

@@ -1,5 +1,6 @@
 import * as programDayRepo from '../../repositories/programDay.repo.js';
 import * as programRepo from '../../repositories/program.repo.js';
+import { notifyActiveProgramContent } from '../../services/notify.service.js';
 import { asyncHandler, toInt, clean, HttpError } from '../../utils/http.js';
 
 /** Crée (ou récupère) une journée de programme. */
@@ -17,6 +18,7 @@ export const ensure = asyncHandler(async (req, res) => {
   }
 
   const day = await programDayRepo.ensureDay(program.id, weekNumber, dayOfWeek);
+  await notifyActiveProgramContent(program.id);
   req.flash('success', 'Journée prête. Ajoute des exercices.');
   return res.redirect(`/admin/programs/${program.id}#day-${day.id}`);
 });
@@ -31,6 +33,7 @@ export const update = asyncHandler(async (req, res) => {
     notes: clean(req.body.notes),
     isRestDay: req.body.is_rest_day === '1' || req.body.is_rest_day === 'on',
   });
+  await notifyActiveProgramContent(day.program_id);
   req.flash('success', 'Journée mise à jour.');
   return res.redirect(`/admin/programs/${day.program_id}#day-${day.id}`);
 });
@@ -39,6 +42,7 @@ export const remove = asyncHandler(async (req, res) => {
   const day = await programDayRepo.findById(req.params.dayId);
   if (!day) throw new HttpError(404, 'Journée introuvable.');
   await programDayRepo.remove(day.id);
+  await notifyActiveProgramContent(day.program_id);
   req.flash('success', 'Journée supprimée.');
   return res.redirect(`/admin/programs/${day.program_id}`);
 });

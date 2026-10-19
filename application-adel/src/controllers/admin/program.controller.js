@@ -3,6 +3,7 @@ import * as programDayRepo from '../../repositories/programDay.repo.js';
 import * as exerciseRepo from '../../repositories/exercise.repo.js';
 import * as athleteRepo from '../../repositories/athlete.repo.js';
 import { programStats } from '../../services/stats.service.js';
+import { notifyProgramChange } from '../../services/notify.service.js';
 import { validateProgram } from '../../validators/index.js';
 import { asyncHandler, clean, paginate, HttpError } from '../../utils/http.js';
 
@@ -58,7 +59,13 @@ export const create = asyncHandler(async (req, res) => {
   }
   data.createdBy = req.currentUser.id;
   const id = await programRepo.create(data);
-  req.flash('success', 'Programme créé. Ajoute maintenant les jours et les exercices.');
+  const mail = await notifyProgramChange(id, data.status === 'active' ? 'activated' : 'created');
+  req.flash(
+    'success',
+    mail.sent
+      ? 'Programme créé. Le sportif a été informé par e-mail. Ajoute maintenant les jours et les exercices.'
+      : 'Programme créé. Ajoute maintenant les jours et les exercices.',
+  );
   return res.redirect(`/admin/programs/${id}`);
 });
 
@@ -116,7 +123,17 @@ export const update = asyncHandler(async (req, res) => {
     });
   }
   await programRepo.update(program.id, data);
-  req.flash('success', 'Programme mis à jour.');
+  const kind =
+    data.status === 'active' && program.status !== 'active'
+      ? 'activated'
+      : data.status === 'archived' && program.status !== 'archived'
+        ? 'archived'
+        : 'updated';
+  const mail = await notifyProgramChange(program.id, kind);
+  req.flash(
+    'success',
+    mail.sent ? 'Programme mis à jour. Le sportif a été informé par e-mail.' : 'Programme mis à jour.',
+  );
   return res.redirect(`/admin/programs/${program.id}`);
 });
 
@@ -125,7 +142,14 @@ export const setStatus = asyncHandler(async (req, res) => {
   const status = clean(req.body.status);
   if (!allowed.includes(status)) throw new HttpError(422, 'Statut invalide.');
   await programRepo.setStatus(req.params.id, status);
-  req.flash('success', 'Statut du programme mis à jour.');
+  const kind = status === 'active' ? 'activated' : status === 'archived' ? 'archived' : 'updated';
+  const mail = await notifyProgramChange(req.params.id, kind);
+  req.flash(
+    'success',
+    mail.sent
+      ? 'Statut du programme mis à jour. Le sportif a été informé par e-mail.'
+      : 'Statut du programme mis à jour.',
+  );
   return res.redirect(`/admin/programs/${req.params.id}`);
 });
 

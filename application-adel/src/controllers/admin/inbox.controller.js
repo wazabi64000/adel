@@ -104,11 +104,23 @@ export const createAccessFromRequest = asyncHandler(async (req, res) => {
 
   await accessRepo.linkAthlete(request.id, athleteId);
   await accessRepo.setStatus(request.id, 'approved');
-  await sendAthleteWelcome({ name: firstName, email, tempPassword });
+  const mail = await sendAthleteWelcome({ name: firstName, email, tempPassword });
 
-  req.flash(
-    'success',
-    `Accès créé pour ${firstName}. Mot de passe provisoire : ${tempPassword} (à changer à la première connexion).`,
-  );
+  if (mail.sent) {
+    req.flash(
+      'success',
+      `Accès créé pour ${firstName}. Identifiants envoyés à ${email}. Mot de passe provisoire : ${tempPassword}`,
+    );
+  } else if (mail.skipped) {
+    req.flash(
+      'info',
+      `Accès créé pour ${firstName} (e-mail non envoyé : SMTP non configuré). Mot de passe provisoire : ${tempPassword}`,
+    );
+  } else {
+    req.flash(
+      'error',
+      `Accès créé pour ${firstName}, mais l'e-mail a échoué. Mot de passe provisoire : ${tempPassword}`,
+    );
+  }
   return res.redirect(`/admin/athletes/${athleteId}`);
 });

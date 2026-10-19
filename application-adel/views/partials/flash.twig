@@ -1,7 +1,22 @@
 {% if flash and (flash.success or flash.error or flash.info) %}
-<div class="app-flash" role="status" aria-live="polite">
-  {% for msg in flash.success | default([]) %}<div class="app-flash__item app-flash__item--success">{{ msg }}</div>{% endfor %}
-  {% for msg in flash.info | default([]) %}<div class="app-flash__item app-flash__item--info">{{ msg }}</div>{% endfor %}
-  {% for msg in flash.error | default([]) %}<div class="app-flash__item app-flash__item--error">{{ msg }}</div>{% endfor %}
+<div class="app-flash" id="app-flash" role="status" aria-live="polite">
+  {% for msg in flash.success | default([]) %}
+  <div class="app-flash__item app-flash__item--success" data-toast>
+    <span>{{ msg }}</span>
+    <button type="button" class="app-flash__close" aria-label="Fermer">×</button>
+  </div>
+  {% endfor %}
+  {% for msg in flash.info | default([]) %}
+  <div class="app-flash__item app-flash__item--info" data-toast>
+    <span>{{ msg }}</span>
+    <button type="button" class="app-flash__close" aria-label="Fermer">×</button>
+  </div>
+  {% endfor %}
+  {% for msg in flash.error | default([]) %}
+  <div class="app-flash__item app-flash__item--error" data-toast>
+    <span>{{ msg }}</span>
+    <button type="button" class="app-flash__close" aria-label="Fermer">×</button>
+  </div>
+  {% endfor %}
 </div>
 {% endif %}
