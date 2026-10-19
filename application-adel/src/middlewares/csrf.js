@@ -7,7 +7,11 @@ const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS'];
  * Le jeton est exposé aux vues via `csrfToken`.
  */
 export function csrf(req, res, next) {
-  if (!req.session) next(); // sécurité : session requise
+  if (!req.session) return next(); // sécurité : session requise
+
+  // Cron interne authentifié par CRON_SECRET — hors CSRF navigateur.
+  const path = req.path || '';
+  if (path.startsWith('/internal/cron')) return next();
 
   if (!req.session.csrfToken) {
     req.session.csrfToken = crypto.randomBytes(32).toString('hex');

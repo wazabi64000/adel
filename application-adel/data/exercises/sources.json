@@ -20,8 +20,8 @@
       "volumes": {
         "announced": 1500,
         "verifiedApiTotal": 1500,
-        "verifiedLocalFiles": 0,
-        "notes": "GET /api/v1/exercises → meta.total=1500 (2026-10-19). HEAD échantillon gifUrl → Content-Type: image/gif."
+        "verifiedLocalFiles": 1324,
+        "notes": "Collecte 2026-10-19 : 1324 GIF valides / 176 manquants (404 CDN). Script scripts/exercises/collect-exercisedb-gifs.mjs. Free tier NON COMMERCIAL."
       },
       "dataLicense": "Terms AscendAPI / ExerciseDB free tier (non-commercial)",
       "mediaLicense": "Same free-tier restrictions; 180p only",
@@ -32,10 +32,10 @@
       "attribution": "Credit AscendAPI required",
       "redistributionAllowed": false,
       "commercialAllowed": false,
-      "rateLimits": "Strict (éditeur) — non mesurés ici",
-      "suitableForLocalCorpus": false,
+      "rateLimits": "Délais script ~400ms/GIF et ~1.1s/page",
+      "suitableForLocalCorpus": true,
       "suitableForAdelCommercial": false,
-      "recommendation": "exclude_without_paid_license"
+      "recommendation": "local_dev_non_commercial_only_upgrade_for_prod"
     },
     {
       "id": "exercisedb-paid",

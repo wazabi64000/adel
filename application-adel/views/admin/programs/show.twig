@@ -27,6 +27,7 @@
         <li><span>Objectif</span><b>{{ program.goal | default('—') }}</b></li>
         <li><span>Niveau</span><b>{{ label(program.level) }}</b></li>
         <li><span>Durée</span><b>{{ program.weeks }} semaine(s)</b></li>
+        <li><span>Séances / semaine</span><b>{{ program.sessions_per_week | default('—') }}</b></li>
         <li><span>Début / Fin</span><b>{{ date_fr(program.start_date) | default('—') }} → {{ date_fr(program.end_date) | default('—') }}</b></li>
       </ul>
       {% if program.description %}<p class="muted" style="margin-top:12px;white-space:pre-line">{{ program.description }}</p>{% endif %}
@@ -51,15 +52,13 @@
           {% endfor %}
         </tbody>
       </table>
-      {% else %}<p class="muted">Aucune journée planifiée pour l'instant.</p>{% endif %}
+      {% else %}<p class="muted">Aucune séance planifiée pour l'instant.</p>{% endif %}
     </div>
   </section>
 </div>
 
 <section class="panel">
-  <div class="panel-head">
-    <h2>Statut du programme</h2>
-  </div>
+  <div class="panel-head"><h2>Statut du programme</h2></div>
   <div class="panel-body">
     <form class="inline-form" method="post" action="/admin/programs/{{ program.id }}/status">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -73,7 +72,7 @@
   </div>
 </section>
 
-<h2 class="section-title">Journées & exercices</h2>
+<h2 class="section-title">Séances & exercices</h2>
 
 {% if days and days | length > 0 %}
 {% for day in days %}
@@ -85,24 +84,39 @@
       {% if day.is_rest_day %}<span class="tag tag-neutral">Repos</span>{% endif %}
     </h3>
     <div class="row-actions">
-      <form method="post" action="/admin/days/{{ day.id }}?_method=DELETE" data-confirm="Supprimer cette journée et ses exercices ?">
+      <span class="tag tag-neutral">{{ label(day.session_type | default('full_body')) }}{% if day.focus %} · {{ day.focus }}{% endif %}{% if day.scheduled_time %} · {{ day.scheduled_time|slice(0, 5) }}{% endif %}</span>
+      <form method="post" action="/admin/days/{{ day.id }}?_method=DELETE" data-confirm="Supprimer cette séance et ses exercices ?">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        <button class="btn btn-danger btn-sm" type="submit">Suppr. journée</button>
+        <button class="btn btn-danger btn-sm" type="submit">Suppr. séance</button>
       </form>
     </div>
   </div>
   <div class="panel-body">
     <details class="inline-edit">
-      <summary>Modifier l'en-tête de la journée</summary>
+      <summary>Modifier la séance</summary>
       <form class="app-form" method="post" action="/admin/days/{{ day.id }}?_method=PUT">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <div class="field-row">
-          <div class="field"><label>Titre</label><input type="text" name="title" value="{{ day.title | default('') }}"></div>
-          <div class="field"><label>Focus</label><input type="text" name="focus" value="{{ day.focus | default('') }}"></div>
+          <div class="field"><label>Titre (optionnel)</label><input type="text" name="title" value="{{ day.title | default('') }}" maxlength="190"></div>
+          <div class="field"><label>Partie du corps *</label>
+            {% set currentFocus = day.focus | default('Tout le corps') %}
+            <select name="focus" data-focus-input required>
+              {% for opt in bodyFocusOptions %}
+                <option value="{{ opt }}" {{ currentFocus == opt ? 'selected' : '' }}>{{ opt }}</option>
+              {% endfor %}
+            </select>
+            <input type="hidden" name="session_type" value="{{ day.session_type | default('full_body') }}" data-session-type>
+          </div>
+          <div class="field">
+            <label for="scheduled_time_{{ day.id }}">Heure de séance</label>
+            {% set st = day.scheduled_time | default('18:00:00') %}
+            <input id="scheduled_time_{{ day.id }}" name="scheduled_time" type="time" value="{{ st|slice(0, 5) }}" required>
+            <small class="muted">Rappel e-mail 1 h avant (fuseau Europe/Paris).</small>
+          </div>
         </div>
         <div class="field"><label>Notes</label><textarea name="notes" rows="2">{{ day.notes | default('') }}</textarea></div>
         <div class="field field-check"><label><input type="checkbox" name="is_rest_day" value="1" {{ day.is_rest_day ? 'checked' : '' }}> Journée de repos</label></div>
-        <button class="btn btn-secondary btn-sm" type="submit">Enregistrer la journée</button>
+        <button class="btn btn-secondary btn-sm" type="submit">Enregistrer la séance</button>
       </form>
     </details>
 
@@ -110,43 +124,36 @@
     <div class="exercise-list">
       {% for ex in day.exercises %}
       <article class="exercise-card">
-        {% if ex.image_url %}<img class="exercise-img" src="{{ ex.image_url }}" alt="{{ ex.name }}">{% else %}<div class="exercise-img placeholder">🏋️</div>{% endif %}
+        {% if ex.image_url %}<img class="exercise-img" src="{{ ex.image_url }}" alt="{{ ex.name }}">{% else %}<div class="exercise-img placeholder">GIF</div>{% endif %}
         <div class="exercise-info">
           <h4>{{ ex.name }}</h4>
-          <p class="muted">{{ ex.muscle_group | default('—') }} · {{ ex.equipment | default('—') }} · {{ ex.type }}</p>
-          <p class="exercise-metrics"><b>{{ ex.sets | default('—') }}</b> séries × <b>{{ ex.reps | default('—') }}</b> · repos {{ ex.rest_seconds | default(0) }}s {% if ex.weight %}· {{ ex.weight }}{% endif %}</p>
-          {% if ex.description %}<p class="muted">{{ ex.description }}</p>{% endif %}
+          <p class="exercise-metrics"><b>{{ ex.sets | default('—') }}</b> séries × <b>{{ ex.reps | default('—') }}</b> reps</p>
         </div>
         <div class="exercise-actions">
           <details class="inline-edit">
             <summary>Éditer</summary>
-            <form class="app-form" method="post" enctype="multipart/form-data" action="/admin/exercises/{{ ex.id }}?_method=PUT">
+            <form class="app-form catalog-exercise-form" method="post" action="/admin/exercises/{{ ex.id }}?_method=PUT"
+                  data-session-type="{{ day.session_type | default('full_body') }}" data-focus="{{ day.focus | default('') }}">
               <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-              <div class="field"><label>Nom</label><input type="text" name="name" value="{{ ex.name }}" required></div>
-              <div class="field"><label>Description</label><textarea name="description" rows="2">{{ ex.description | default('') }}</textarea></div>
-              <div class="field-row">
-                <div class="field"><label>Muscle</label><input type="text" name="muscle_group" value="{{ ex.muscle_group | default('') }}"></div>
-                <div class="field"><label>Matériel</label><input type="text" name="equipment" value="{{ ex.equipment | default('') }}"></div>
+              <input type="hidden" name="type" value="{{ ex.type | default('force') }}">
+              <input type="hidden" name="catalog_id" value="" data-catalog-id>
+              <div class="field">
+                <label>Famille</label>
+                <select data-catalog-family>
+                  <option value="">Toutes</option>
+                  {% for f in catalogFamilies %}<option value="{{ f.id }}">{{ f.label.fr }}</option>{% endfor %}
+                </select>
+              </div>
+              <div class="field">
+                <label>Exercice (catalogue — même partie du corps)</label>
+                <input type="search" data-catalog-search placeholder="Rechercher… (laisse vide pour garder {{ ex.name }})" autocomplete="off">
+                <div class="catalog-results" data-catalog-results hidden></div>
+                <p class="muted catalog-picked" data-catalog-picked>Actuel : {{ ex.name }}</p>
               </div>
               <div class="field-row">
-                <div class="field"><label>Type</label>
-                  <select name="type">
-                    {% for t in ['force','cardio','mobilite','gainage','etirement','autre'] %}
-                    <option value="{{ t }}" {{ ex.type == t ? 'selected' : '' }}>{{ t }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
                 <div class="field"><label>Séries</label><input type="number" name="sets" min="0" value="{{ ex.sets | default('') }}"></div>
-                <div class="field"><label>Répétitions</label><input type="text" name="reps" value="{{ ex.reps | default('') }}" placeholder="10-12 ou 30s"></div>
-                <div class="field"><label>Repos (s)</label><input type="number" name="rest_seconds" min="0" value="{{ ex.rest_seconds | default('') }}"></div>
+                <div class="field"><label>Répétitions (approx.)</label><input type="text" name="reps" value="{{ ex.reps | default('') }}" placeholder="8-12"></div>
               </div>
-              <div class="field-row">
-                <div class="field"><label>Charge</label><input type="text" name="weight" value="{{ ex.weight | default('') }}"></div>
-                <div class="field"><label>Vidéo (URL)</label><input type="url" name="video_url" value="{{ ex.video_url | default('') }}" placeholder="https://…"></div>
-              </div>
-              <div class="field"><label>Image — fichier</label><input type="file" name="image" accept="image/*"></div>
-              <div class="field"><label>Image — lien à coller</label><input type="url" name="image_url" value="{{ ex.image_url | default('') }}" placeholder="https://…/exercice.jpg"></div>
-              <p class="muted" style="margin-top:-6px;font-size:.85rem">Si tu envoies un fichier, il remplace le lien.</p>
               <button class="btn btn-primary btn-sm" type="submit">Enregistrer</button>
             </form>
           </details>
@@ -159,41 +166,35 @@
       {% endfor %}
     </div>
     {% else %}
-    <p class="muted">Aucun exercice pour cette journée.</p>
+    <p class="muted">Aucun exercice pour cette séance.</p>
     {% endif %}
 
     <details class="inline-edit add-block">
       <summary>+ Ajouter un exercice</summary>
-      <form class="app-form" method="post" enctype="multipart/form-data" action="/admin/days/{{ day.id }}/exercises">
+      <form class="app-form catalog-exercise-form" method="post" action="/admin/days/{{ day.id }}/exercises"
+            data-session-type="{{ day.session_type | default('full_body') }}" data-focus="{{ day.focus | default('') }}">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        <div class="field"><label>Nom *</label><input type="text" name="name" required></div>
-        <div class="field"><label>Description</label><textarea name="description" rows="2"></textarea></div>
-        <div class="field-row">
-          <div class="field"><label>Muscle</label><input type="text" name="muscle_group"></div>
-          <div class="field"><label>Matériel</label><input type="text" name="equipment"></div>
+        <input type="hidden" name="type" value="force">
+        <input type="hidden" name="catalog_id" value="" data-catalog-id required>
+        <input type="hidden" name="name" value="" data-catalog-name>
+        <div class="field">
+          <label>Famille</label>
+          <select data-catalog-family>
+            <option value="">Toutes</option>
+            {% for f in catalogFamilies %}<option value="{{ f.id }}">{{ f.label.fr }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label>Exercice du catalogue * (GIF de la partie du corps choisie)</label>
+          <input type="search" data-catalog-search placeholder="Rechercher dans cette catégorie…" autocomplete="off" required>
+          <div class="catalog-results" data-catalog-results hidden></div>
+          <p class="muted catalog-picked" data-catalog-picked hidden></p>
+          <img class="catalog-preview" data-catalog-preview data-gif-zoom hidden alt="" title="Survoler pour agrandir · cliquer pour ouvrir">
         </div>
         <div class="field-row">
-          <div class="field"><label>Type</label>
-            <select name="type">
-              <option value="force">force</option>
-              <option value="cardio">cardio</option>
-              <option value="mobilite">mobilité</option>
-              <option value="gainage">gainage</option>
-              <option value="etirement">étirement</option>
-              <option value="autre">autre</option>
-            </select>
-          </div>
-          <div class="field"><label>Séries</label><input type="number" name="sets" min="0"></div>
-          <div class="field"><label>Répétitions</label><input type="text" name="reps" placeholder="10-12 ou 30s"></div>
-          <div class="field"><label>Repos (s)</label><input type="number" name="rest_seconds" min="0"></div>
+          <div class="field"><label>Séries</label><input type="number" name="sets" min="0" value="3"></div>
+          <div class="field"><label>Répétitions (approx.)</label><input type="text" name="reps" placeholder="8-12" value="10"></div>
         </div>
-        <div class="field-row">
-          <div class="field"><label>Charge</label><input type="text" name="weight"></div>
-          <div class="field"><label>Vidéo (URL)</label><input type="url" name="video_url" placeholder="https://…"></div>
-        </div>
-        <div class="field"><label>Image — fichier</label><input type="file" name="image" accept="image/*"></div>
-        <div class="field"><label>Image — lien à coller</label><input type="url" name="image_url" placeholder="https://…/exercice.jpg"></div>
-        <p class="muted" style="margin-top:-6px;font-size:.85rem">Upload ou lien : si les deux sont remplis, le fichier l’emporte.</p>
         <button class="btn btn-primary btn-sm" type="submit">Ajouter l'exercice</button>
       </form>
     </details>
@@ -201,11 +202,11 @@
 </section>
 {% endfor %}
 {% else %}
-<p class="empty">Aucune journée. Ajoute une journée ci-dessous.</p>
+<p class="empty">Aucune séance. Ajoute-en une ci-dessous.</p>
 {% endif %}
 
 <section class="panel">
-  <div class="panel-head"><h2>Ajouter une journée</h2></div>
+  <div class="panel-head"><h2>Ajouter une séance</h2></div>
   <div class="panel-body">
     <form class="inline-form" method="post" action="/admin/programs/{{ program.id }}/days">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -216,7 +217,7 @@
           <option value="4">Jeudi</option><option value="5">Vendredi</option><option value="6">Samedi</option><option value="7">Dimanche</option>
         </select>
       </div>
-      <button class="btn btn-primary btn-sm" type="submit">+ Ajouter la journée</button>
+      <button class="btn btn-primary btn-sm" type="submit">+ Ajouter la séance</button>
     </form>
   </div>
 </section>

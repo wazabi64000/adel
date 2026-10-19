@@ -1,6 +1,7 @@
 import * as authService from '../services/auth.service.js';
 import * as userRepo from '../repositories/user.repo.js';
 import { validateLogin } from '../validators/index.js';
+import { securityLog } from '../middlewares/securityLog.js';
 import { asyncHandler } from '../utils/http.js';
 
 const safeNext = (value) => {
@@ -48,6 +49,7 @@ export const login = asyncHandler(async (req, res, next) => {
       return req.session.save(() => res.redirect(target));
     });
   } catch (err) {
+    securityLog('AUTH_FAIL', req, { reason: 'bad_credentials' });
     return res.status(err.status || 401).render('auth/login', {
       title: 'Connexion',
       layout: 'layouts/auth',

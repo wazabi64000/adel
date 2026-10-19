@@ -9,6 +9,7 @@ const __dirname = path.dirname(__filename);
 export const ROOT_DIR = path.resolve(__dirname, '..', '..');
 export const VIEWS_DIR = path.join(ROOT_DIR, 'views');
 export const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
+export const EXERCISE_MEDIA_DIR = path.join(ROOT_DIR, 'storage', 'exercises', 'media');
 
 // Charge le .env situé à la racine du projet.
 dotenv.config({ path: path.join(ROOT_DIR, '.env') });
@@ -95,6 +96,21 @@ const config = {
   uploads: {
     maxFileSize: 8 * 1024 * 1024, // 8 Mo
     allowedMime: ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'],
+  },
+
+  /** Fuseau pour les rappels de séance (heure locale coach / sportif). */
+  timezone: process.env.APP_TIMEZONE || 'Europe/Paris',
+
+  cors: {
+    origins: String(process.env.CORS_ORIGINS || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean),
+  },
+
+  cron: {
+    /** Secret Bearer / ?secret= pour /internal/cron/* (Vercel Cron + crontab). */
+    secret: process.env.CRON_SECRET || '',
   },
 };
 

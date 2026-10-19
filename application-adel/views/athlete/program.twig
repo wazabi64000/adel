@@ -25,6 +25,7 @@
         <li><span>Objectif</span><b>{{ program.goal | default('—') }}</b></li>
         <li><span>Niveau</span><b>{{ label(program.level) }}</b></li>
         <li><span>Durée</span><b>{{ program.weeks }} semaine(s)</b></li>
+        <li><span>Séances / semaine</span><b>{{ program.sessions_per_week | default('—') }}</b></li>
       </ul>
       {% if program.description %}<p class="muted" style="margin-top:10px">{{ program.description }}</p>{% endif %}
     </div>
@@ -55,7 +56,7 @@
 <section class="panel day-panel" id="day-{{ day.id }}">
   <div class="panel-head">
     <h3>Semaine {{ day.week_number }} — {{ day_name(day.day_of_week) }}{% if day.title %} · {{ day.title }}{% endif %}</h3>
-    {% if day.focus %}<span class="tag tag-neutral">{{ day.focus }}</span>{% endif %}
+    <span class="tag tag-neutral">{{ label(day.session_type | default('full_body')) }}{% if day.focus %} · {{ day.focus }}{% endif %}</span>
   </div>
   <div class="panel-body">
     {% if day.is_rest_day %}
@@ -68,8 +69,7 @@
         {% if ex.image_url %}<img class="exercise-img" src="{{ ex.image_url }}" alt="{{ ex.name }}" loading="lazy">{% else %}<div class="exercise-img placeholder">🏋️</div>{% endif %}
         <div class="exercise-info">
           <h4>{{ ex.name }} {% if done %}<span class="tag tag-published">Fait</span>{% endif %}</h4>
-          <p class="muted">{{ ex.muscle_group | default('—') }} · {{ ex.equipment | default('—') }} · {{ ex.type }}</p>
-          <p class="exercise-metrics"><b>{{ ex.sets | default('—') }}</b> séries × <b>{{ ex.reps | default('—') }}</b> · repos {{ ex.rest_seconds | default(0) }}s {% if ex.weight %}· {{ ex.weight }}{% endif %}</p>
+          <p class="exercise-metrics"><b>{{ ex.sets | default('—') }}</b> séries × <b>{{ ex.reps | default('—') }}</b> reps</p>
           {% if ex.description %}<p class="muted">{{ ex.description }}</p>{% endif %}
           {% if ex.video_url %}<p><a href="{{ ex.video_url }}" target="_blank" rel="noopener">Voir la vidéo ↗</a></p>{% endif %}
           {% if done %}<p class="muted">Dernière saisie ({{ date_fr(done.log_date) }}) : {{ done.sets_done | default('—') }} séries × {{ done.reps_done | default('—') }}{% if done.weight_used %} · {{ done.weight_used }}{% endif %}{% if done.rpe %} · RPE {{ done.rpe }}{% endif %}</p>{% endif %}

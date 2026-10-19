@@ -21,6 +21,7 @@ export async function notifyProgramChange(programId, kind) {
       name: athlete.first_name,
       email,
       programTitle: program.title,
+      programId: program.id,
       kind,
     });
   } catch (err) {

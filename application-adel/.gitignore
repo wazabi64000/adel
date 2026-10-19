@@ -10,6 +10,18 @@ node_modules/
 public/uploads/*
 !public/uploads/.gitkeep
 
+# Corpus GIF exercices (volumineux, hors Git)
+storage/exercises/media/
+storage/exercises/by-body-part/
+storage/exercises/by-equipment/
+storage/exercises/by-target-muscle/
+storage/exercises/download-progress.json
+storage/exercises/collect.log
+storage/exercises/indexes/*.json
+!storage/exercises/indexes/.gitkeep
+data/exercises/catalog.json
+# picker-index.json est versionnable s'il reste léger (~200 Ko)
+
 # Logs
 *.log
 npm-debug.log*

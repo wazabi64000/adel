@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS programs (
   goal        VARCHAR(255) NULL,
   level       ENUM('debutant','intermediaire','avance') NOT NULL DEFAULT 'debutant',
   weeks       TINYINT UNSIGNED NOT NULL DEFAULT 4,
+  sessions_per_week TINYINT UNSIGNED NOT NULL DEFAULT 3,
   start_date  DATE NULL,
   end_date    DATE NULL,
   status      ENUM('draft','active','archived') NOT NULL DEFAULT 'active',
@@ -105,6 +106,8 @@ CREATE TABLE IF NOT EXISTS program_days (
   day_of_week  TINYINT UNSIGNED NOT NULL, -- 1 = lundi ... 7 = dimanche
   title        VARCHAR(150) NULL,
   focus        VARCHAR(150) NULL,
+  session_type ENUM('full_body','body_part') NOT NULL DEFAULT 'full_body',
+  scheduled_time TIME NOT NULL DEFAULT '18:00:00',
   notes        TEXT NULL,
   is_rest_day  TINYINT(1) NOT NULL DEFAULT 0,
   created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -112,6 +115,23 @@ CREATE TABLE IF NOT EXISTS program_days (
   PRIMARY KEY (id),
   UNIQUE KEY uq_day (program_id, week_number, day_of_week),
   CONSTRAINT fk_days_program FOREIGN KEY (program_id) REFERENCES programs (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------
+--  Rappels e-mail 1 h avant séance (anti-doublon par jour)
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS session_reminders (
+  id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  program_day_id  INT UNSIGNED NOT NULL,
+  athlete_id      INT UNSIGNED NOT NULL,
+  session_date    DATE NOT NULL,
+  reminded_at     DATETIME NOT NULL,
+  created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_reminder_day_date (program_day_id, session_date),
+  KEY idx_reminders_athlete (athlete_id, session_date),
+  CONSTRAINT fk_reminders_day FOREIGN KEY (program_day_id) REFERENCES program_days (id) ON DELETE CASCADE,
+  CONSTRAINT fk_reminders_athlete FOREIGN KEY (athlete_id) REFERENCES athletes (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------

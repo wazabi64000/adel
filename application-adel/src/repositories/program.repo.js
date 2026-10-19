@@ -1,7 +1,7 @@
 import { query, queryOne, execute } from '../config/database.js';
 
 const FIELDS = `p.id, p.athlete_id, p.title, p.description, p.location, p.goal, p.level,
-  p.weeks, p.start_date, p.end_date, p.status, p.created_by, p.created_at, p.updated_at`;
+  p.weeks, p.sessions_per_week, p.start_date, p.end_date, p.status, p.created_by, p.created_at, p.updated_at`;
 
 export async function list({ athleteId, location, status, search = '', limit = 50, offset = 0 } = {}) {
   const where = [];
@@ -69,8 +69,8 @@ export async function findById(id) {
 export async function create(data) {
   const result = await execute(
     `INSERT INTO programs
-       (athlete_id, title, description, location, goal, level, weeks, start_date, end_date, status, created_by)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       (athlete_id, title, description, location, goal, level, weeks, sessions_per_week, start_date, end_date, status, created_by)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       data.athleteId,
       data.title,
@@ -79,6 +79,7 @@ export async function create(data) {
       data.goal ?? null,
       data.level ?? 'debutant',
       data.weeks ?? 4,
+      data.sessionsPerWeek ?? 3,
       data.startDate ?? null,
       data.endDate ?? null,
       data.status ?? 'active',
@@ -92,7 +93,7 @@ export async function update(id, data) {
   await execute(
     `UPDATE programs SET
        athlete_id = ?, title = ?, description = ?, location = ?, goal = ?, level = ?,
-       weeks = ?, start_date = ?, end_date = ?, status = ?
+       weeks = ?, sessions_per_week = ?, start_date = ?, end_date = ?, status = ?
      WHERE id = ?`,
     [
       data.athleteId,
@@ -102,6 +103,7 @@ export async function update(id, data) {
       data.goal ?? null,
       data.level ?? 'debutant',
       data.weeks ?? 4,
+      data.sessionsPerWeek ?? 3,
       data.startDate ?? null,
       data.endDate ?? null,
       data.status ?? 'active',
