@@ -21,11 +21,30 @@ const int = (v, fallback) => {
   return Number.isNaN(n) ? fallback : n;
 };
 
+/** URL publique : jamais localhost en prod (liens e-mails, canonical, sitemap). */
+function resolveAppUrl(port) {
+  const raw = String(process.env.APP_URL || '')
+    .trim()
+    .replace(/\/$/, '');
+  if (raw && !/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(raw)) {
+    return raw;
+  }
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${String(process.env.VERCEL_PROJECT_PRODUCTION_URL).replace(/\/$/, '')}`;
+  }
+  if ((process.env.NODE_ENV || 'development') === 'production') {
+    return 'https://adelcoaching.com';
+  }
+  return `http://localhost:${port}`;
+}
+
+const port = int(process.env.PORT, 3000);
+
 const config = {
   env: process.env.NODE_ENV || 'development',
   isProd: (process.env.NODE_ENV || 'development') === 'production',
-  port: int(process.env.PORT, 3000),
-  appUrl: process.env.APP_URL || `http://localhost:${int(process.env.PORT, 3000)}`,
+  port,
+  appUrl: resolveAppUrl(port),
   appName: process.env.APP_NAME || 'Coach Adel',
 
   session: {

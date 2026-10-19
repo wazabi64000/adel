@@ -127,13 +127,21 @@ export const account = asyncHandler(async (req, res) => {
 });
 
 export const updatePassword = asyncHandler(async (req, res) => {
+  const wasFirstLogin = Boolean(req.currentUser.must_change_password);
   try {
     await authService.changePassword(
       req.currentUser.id,
       req.body.current_password,
       req.body.new_password,
     );
-    req.flash('success', 'Mot de passe modifié.');
+    req.flash(
+      'success',
+      wasFirstLogin ? 'Mot de passe activé. Bienvenue dans ton espace !' : 'Mot de passe modifié.',
+    );
+    if (wasFirstLogin) {
+      const target = req.currentUser.role === 'admin' ? '/admin' : '/mon-espace';
+      return res.redirect(target);
+    }
   } catch (err) {
     req.flash('error', err.message);
   }

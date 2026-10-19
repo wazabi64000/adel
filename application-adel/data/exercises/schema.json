@@ -1,0 +1,261 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adelcoaching.com/schemas/exercise-catalog-entry.json",
+  "title": "Coach Adel — entrée catalogue exercice",
+  "description": "Schéma d'une entrée de bibliothèque d'exercices. Les médias absents ou non vérifiés doivent laisser media.path à null et status.availability à missing ou pending — jamais inventer un fichier.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "equipment",
+    "muscles",
+    "movement",
+    "level",
+    "media",
+    "rights",
+    "status",
+    "collectedAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 3,
+      "maxLength": 120,
+      "description": "Identifiant stable kebab-case, unique dans le catalogue."
+    },
+    "name": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fr"],
+      "properties": {
+        "fr": { "type": "string", "minLength": 1, "maxLength": 190 },
+        "original": { "type": ["string", "null"], "maxLength": 190 },
+        "aliases": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 190 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "description": { "type": ["string", "null"], "maxLength": 4000 },
+    "equipment": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "machine",
+          "smith-machine",
+          "cable",
+          "dumbbell",
+          "barbell",
+          "kettlebell",
+          "resistance-band",
+          "bodyweight",
+          "bench-rack",
+          "medicine-ball",
+          "suspension",
+          "mobility",
+          "other"
+        ]
+      }
+    },
+    "muscles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary"],
+      "properties": {
+        "primary": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/muscleId" }
+        },
+        "secondary": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/muscleId" }
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "false si les muscles n'ont pas été vérifiés (ne pas déduire du seul nom)."
+        }
+      }
+    },
+    "movement": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "push",
+          "pull",
+          "flexion",
+          "extension",
+          "abduction",
+          "adduction",
+          "rotation",
+          "anti-rotation",
+          "isometric",
+          "carry",
+          "jump",
+          "mobility",
+          "stretch",
+          "cardio",
+          "other"
+        ]
+      }
+    },
+    "level": {
+      "type": "string",
+      "enum": ["debutant", "intermediaire", "avance"],
+      "description": "Aligné sur l'ENUM applicatif athletes/programs."
+    },
+    "appType": {
+      "type": ["string", "null"],
+      "enum": ["force", "cardio", "mobilite", "gainage", "etirement", "autre", null],
+      "description": "Correspondance optionnelle avec exercises.type en base."
+    },
+    "laterality": {
+      "type": ["string", "null"],
+      "enum": ["bilateral", "unilateral", "either", null]
+    },
+    "kineticChain": {
+      "type": ["string", "null"],
+      "enum": ["open", "closed", "mixed", "unknown", null]
+    },
+    "instructions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Consignes d'exécution ; omettre ou laisser vide si non vérifiées."
+    },
+    "commonMistakes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "precautions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Précautions générales non médicales ; ne jamais inventer de contre-indications cliniques."
+    },
+    "variants": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      "description": "IDs d'autres entrées catalogue (variantes)."
+    },
+    "alternatives": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Points à vérifier (muscles, consignes, droits, média)."
+    },
+    "media": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "format", "verified"],
+      "properties": {
+        "path": {
+          "type": ["string", "null"],
+          "description": "Chemin relatif sous le root médias, ou null si absent. Pas d'URL inventée."
+        },
+        "format": {
+          "type": ["string", "null"],
+          "enum": ["gif", "png", "jpg", "jpeg", "webp", "svg", "mp4", "webm", null]
+        },
+        "mime": { "type": ["string", "null"] },
+        "width": { "type": ["integer", "null"], "minimum": 1 },
+        "height": { "type": ["integer", "null"], "minimum": 1 },
+        "durationMs": { "type": ["integer", "null"], "minimum": 0 },
+        "frameCount": { "type": ["integer", "null"], "minimum": 0 },
+        "bytes": { "type": ["integer", "null"], "minimum": 0 },
+        "sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "sourceUrl": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "URL d'origine du fichier si connue et autorisée."
+        },
+        "animated": {
+          "type": ["boolean", "null"],
+          "description": "true seulement si une animation a été décodée ; false pour image fixe."
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "true seulement après validation MIME + décodage + hash."
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceId", "license", "redistributionAllowed", "commercialAllowed"],
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "description": "Référence à sources.json → sources[].id"
+        },
+        "author": { "type": ["string", "null"] },
+        "license": { "type": "string", "minLength": 1 },
+        "licenseUrl": { "type": ["string", "null"], "format": "uri" },
+        "attribution": { "type": ["string", "null"] },
+        "redistributionAllowed": { "type": "boolean" },
+        "commercialAllowed": { "type": "boolean" },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["availability", "validation"],
+      "properties": {
+        "availability": {
+          "type": "string",
+          "enum": ["available", "missing", "pending", "blocked", "uncertain"]
+        },
+        "validation": {
+          "type": "string",
+          "enum": ["valid", "invalid", "unchecked", "quarantine"]
+        }
+      }
+    },
+    "collectedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "null tant qu'aucune collecte réelle n'a eu lieu pour cette entrée."
+    }
+  },
+  "$defs": {
+    "muscleId": {
+      "type": "string",
+      "enum": [
+        "pectorals",
+        "back",
+        "traps",
+        "shoulders",
+        "biceps",
+        "triceps",
+        "forearms",
+        "abs",
+        "lower-back",
+        "glutes",
+        "quads",
+        "hamstrings",
+        "adductors",
+        "abductors",
+        "calves",
+        "stabilizers",
+        "full-body",
+        "unknown"
+      ]
+    }
+  }
+}
