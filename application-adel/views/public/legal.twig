@@ -1,0 +1,15 @@
+{% extends 'layouts/public.twig' %}
+
+{% block content %}
+<section class="section" style="padding-top:48px">
+  <div class="container article-container legal">
+    <h1 class="page-title" style="text-align:left">{{ pageTitle }}</h1>
+    {% for block in blocks %}
+      <h2>{{ block.title }}</h2>
+      {% for paragraph in block.paragraphs %}
+        <p>{{ paragraph }}</p>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -39,10 +39,12 @@
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
   /* Modale pré-inscription (dialog natif) */
+  var lastModalOpener = null;
   document.querySelectorAll('[data-modal-open]').forEach(function(btn){
     btn.addEventListener('click', function(){
       var d = document.getElementById(btn.getAttribute('data-modal-open'));
       if (!d) return;
+      lastModalOpener = btn;
       if (typeof d.showModal === 'function') d.showModal();
       else d.setAttribute('open', '');
     });
@@ -52,8 +54,7 @@
     if (closeBtn) closeBtn.addEventListener('click', function(){ d.close(); });
     d.addEventListener('click', function(e){ if (e.target === d) d.close(); });
     d.addEventListener('close', function(){
-      var opener = document.querySelector('[data-modal-open="' + d.id + '"]');
-      if (opener) opener.focus();
+      if (lastModalOpener) lastModalOpener.focus();
     });
   });
   var els = document.querySelectorAll('.reveal');
@@ -70,13 +71,23 @@
     var io3 = new IntersectionObserver(function(es){
       es.forEach(function(e){
         if(e.isIntersecting){
-          var id = e.target.id;
+          var id = e.target.id === 'programme' ? 'accueil' : e.target.id;
+          if (!map[id]) return;
           Object.keys(map).forEach(function(k){ map[k].forEach(function(a){ a.removeAttribute('aria-current'); }); });
-          (map[id] || []).forEach(function(a){ a.setAttribute('aria-current','true'); });
+          map[id].forEach(function(a){ a.setAttribute('aria-current','true'); });
         }
       });
     }, {rootMargin:'-40% 0px -55% 0px'});
     ['accueil','programme','conseils','rejoindre'].forEach(function(id){ var s = document.getElementById(id); if(s) io3.observe(s); });
+  }
+  if (location.pathname !== '/') {
+    document.querySelectorAll('.bottomnav [data-nav]').forEach(function(el){ el.removeAttribute('aria-current'); });
+    var path = location.pathname;
+    var key = path.indexOf('/articles') === 0 ? 'conseils'
+      : (path.indexOf('/admin') === 0 || path.indexOf('/mon-espace') === 0 || path === '/login' || path.indexOf('/compte') === 0) ? 'espace'
+      : '';
+    var current = key && document.querySelector('.bottomnav [data-nav="' + key + '"]');
+    if (current) current.setAttribute('aria-current', 'true');
   }
   function fitTitles(){
     document.querySelectorAll('h1,h2').forEach(function(el){
@@ -96,4 +107,17 @@
   window.addEventListener('orientationchange',scheduleFit);
   if(document.fonts&&document.fonts.ready){document.fonts.ready.then(fitTitles);}
   fitTitles();
+  var banner = document.getElementById('cookie-banner');
+  var accept = document.getElementById('cookie-accept');
+  if (banner && accept) {
+    try {
+      if (!localStorage.getItem('adel-consent')) banner.hidden = false;
+    } catch (err) {
+      banner.hidden = false;
+    }
+    accept.addEventListener('click', function(){
+      try { localStorage.setItem('adel-consent', 'essential'); } catch (err) {}
+      banner.hidden = true;
+    });
+  }
 })();

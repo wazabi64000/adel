@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import flash from 'connect-flash';
 
 import config, { PUBLIC_DIR } from './config/env.js';
+import { PRIVATE_PREFIXES } from './services/policy.service.js';
 import { pool } from './config/database.js';
 import { configureViews, assertViewsPresent } from './config/twig.js';
 import routes from './routes/index.js';
@@ -42,13 +43,36 @@ export function createApp() {
           objectSrc: ["'none'"],
           frameAncestors: ["'self'"],
           formAction: ["'self'"],
-          upgradeInsecureRequests: null,
+          upgradeInsecureRequests: config.isProd ? [] : null,
         },
       },
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+      hsts: config.isProd
+        ? { maxAge: 31536000, includeSubDomains: true, preload: true }
+        : false,
       crossOriginEmbedderPolicy: false,
       crossOriginResourcePolicy: { policy: 'cross-origin' },
+      xFrameOptions: { action: 'sameorigin' },
     }),
   );
+
+  app.use((_req, res, next) => {
+    res.set(
+      'Permissions-Policy',
+      'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
+    );
+    next();
+  });
+
+  app.use((req, res, next) => {
+    const path = req.path || '';
+    const isPrivate = PRIVATE_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
+    if (isPrivate) {
+      res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+      res.set('Cache-Control', 'no-store');
+    }
+    next();
+  });
 
   /* -------------------------------- Parsing ------------------------------- */
   app.use(express.urlencoded({ extended: false, limit: '1mb' }));

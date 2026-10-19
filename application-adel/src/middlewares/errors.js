@@ -23,7 +23,9 @@ export function errorHandler(err, req, res, next) {
     status >= 500 ? 'Une erreur interne est survenue. Merci de réessayer plus tard.' : err.message;
 
   if (req.accepts(['html', 'json']) === 'json') {
-    return res.status(status).json({ error: message, details: err.details ?? undefined });
+    const body = { error: message };
+    if (status < 500 && err.details) body.details = err.details;
+    return res.status(status).json(body);
   }
 
   return res.status(status).render('errors/error', {

@@ -12,5 +12,12 @@ export function templateLocals(req, res, next) {
   res.locals.flash = typeof req.flash === 'function' ? req.flash() : {};
   res.locals.formErrors = {};
   res.locals.formData = {};
+  res.locals.seo = {
+    title: config.appName,
+    description:
+      'Coach sportif : accompagnement physique, nutrition et préparation mentale. Programme personnalisé, coaching à distance et préinscription gratuite avec Coach Adel.',
+    robots: 'index, follow, max-image-preview:large',
+    ogType: 'website',
+  };
   next();
 }

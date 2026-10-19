@@ -13,8 +13,13 @@ export const home = asyncHandler(async (req, res) => {
     articleRepo.listPublished(6),
     postRepo.listPublished(6),
   ]);
+  res.locals.seo = {
+    ...res.locals.seo,
+    title: 'Coach Adel — coach sportif, nutrition et préparation mentale',
+    description: 'Coach sportif : accompagnement physique, nutrition et préparation mentale. Programme personnalisé, coaching à distance et préinscription gratuite.',
+  };
   return res.render('public/home', {
-    title: 'Coach Adel — Accompagnement physique, nutritionnel et mental',
+    title: 'Coach Adel — coach sportif, nutrition et préparation mentale',
     articles,
     posts,
   });
@@ -23,7 +28,12 @@ export const home = asyncHandler(async (req, res) => {
 /** Liste complète des conseils (articles). */
 export const articlesList = asyncHandler(async (req, res) => {
   const { rows } = await articleRepo.list({ status: 'published', limit: 60, offset: 0 });
-  return res.render('public/articles', { title: 'Conseils — Coach Adel', articles: rows });
+  res.locals.seo = {
+    ...res.locals.seo,
+    title: 'Conseils sport, nutrition et mental — Coach Adel',
+    description: 'Conseils pour bouger régulièrement, mieux manger et renforcer son équilibre mental, avec Coach Adel.',
+  };
+  return res.render('public/articles', { title: 'Conseils sport, nutrition et mental — Coach Adel', articles: rows });
 });
 
 /** Détail d'un article. */
@@ -31,6 +41,18 @@ export const articleDetail = asyncHandler(async (req, res) => {
   const article = await articleRepo.findBySlug(req.params.slug);
   if (!article || article.status !== 'published') throw new HttpError(404, 'Article introuvable.');
   const { rows: related } = await articleRepo.list({ status: 'published', limit: 3, offset: 0 });
+  const image = article.cover_url
+    ? (/^https?:\/\//i.test(article.cover_url)
+      ? article.cover_url
+      : `${config.appUrl.replace(/\/$/, '')}${article.cover_url.startsWith('/') ? '' : '/'}${article.cover_url}`)
+    : '';
+  res.locals.seo = {
+    ...res.locals.seo,
+    title: `${article.title} — Coach Adel`,
+    description: article.excerpt || 'Conseil de Coach Adel : mouvement, nutrition et équilibre mental.',
+    ogType: 'article',
+    image,
+  };
   return res.render('public/article', {
     title: `${article.title} — Coach Adel`,
     article,
@@ -63,6 +85,10 @@ export const submitContact = asyncHandler(async (req, res) => {
 export const submitAccessRequest = asyncHandler(async (req, res) => {
   const fullName = clean(req.body.full_name);
   const email = clean(req.body.email);
+  if (req.body.consent !== '1') {
+    req.flash('error', 'Le consentement au traitement de tes données est obligatoire.');
+    return res.redirect('/#rejoindre');
+  }
   if (!fullName || !email) {
     req.flash('error', 'Nom et e-mail obligatoires.');
     return res.redirect('/#rejoindre');

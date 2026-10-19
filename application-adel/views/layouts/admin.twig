@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}{{ title | default('Admin') }}{% endblock %} — {{ appName }}</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
 {% include 'partials/pwa-head.twig' %}
 <link rel="stylesheet" href="/css/site.css">
 <link rel="stylesheet" href="/css/admin.css">
@@ -17,10 +18,11 @@
       <button class="admin-burger" id="admin-burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
       <h1 class="admin-page-title">{% block heading %}{{ title | default('Admin') }}{% endblock %}</h1>
       <div class="admin-user">
+        <a class="btn btn-primary btn-sm admin-site-link" href="/"><span class="admin-site-link__full">Site vitrine</span><span class="admin-site-link__short">Site</span></a>
         <a href="/compte" class="admin-user-name">{{ currentUser.name }}</a>
-        <form method="post" action="/logout">
+        <form class="admin-logout" method="post" action="/logout">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-          <button class="btn btn-ghost btn-sm" type="submit">Déconnexion</button>
+          <button class="btn btn-ghost btn-sm" type="submit"><span class="admin-logout__full">Déconnexion</span><span class="admin-logout__short">Quitter</span></button>
         </form>
       </div>
     </header>

@@ -1,0 +1,25 @@
+{% set seoTitle = seo.title | default(title | default('Coach Adel')) %}
+{% set seoDescription = seo.description | default("Coach sportif : accompagnement physique, nutrition et préparation mentale. Programme personnalisé, coaching à distance et préinscription gratuite avec Coach Adel.") %}
+{% set seoPath = currentPath == '/' ? '/' : currentPath %}
+<link rel="canonical" href="{{ appUrl }}{{ seoPath }}">
+<meta name="description" content="{{ seoDescription }}">
+<meta name="keywords" content="{{ seo.keywords | default('Coach Adel, coach sportif, coaching fitness, accompagnement physique, remise en forme, programme sportif personnalisé, nutrition, préparation mentale, coaching à distance, préinscription coaching, France') }}">
+<meta name="robots" content="{{ seo.robots | default('index, follow, max-image-preview:large') }}">
+<meta name="author" content="Coach Adel">
+<link rel="alternate" hreflang="fr" href="{{ appUrl }}{{ seoPath }}">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Coach Adel">
+<meta property="og:title" content="{{ seoTitle }}">
+<meta property="og:description" content="{{ seoDescription }}">
+<meta property="og:type" content="{{ seo.ogType | default('website') }}">
+<meta property="og:url" content="{{ appUrl }}{{ seoPath }}">
+{% if seo.image %}<meta property="og:image" content="{{ seo.image }}">{% endif %}
+<meta name="twitter:card" content="{{ seo.image ? 'summary_large_image' : 'summary' }}">
+<meta name="twitter:title" content="{{ seoTitle }}">
+<meta name="twitter:description" content="{{ seoDescription }}">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebSite","name":"Coach Adel","url":"{{ appUrl }}/","inLanguage":"fr-FR","description":"Accompagnement physique, nutrition et preparation mentale avec Coach Adel."},
+{"@type":"ProfessionalService","name":"Coach Adel","url":"{{ appUrl }}/","areaServed":"France","email":"annabelle.adel300@gmail.com","knowsAbout":["coaching sportif","nutrition","preparation mentale"]}
+]}
+</script>

@@ -4,11 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}{{ title | default('Coach Adel') }}{% endblock %}</title>
-<meta name="description" content="Un accompagnement global avec Coach Adel : activité physique, habitudes nutritionnelles, préparation mentale et plaisir de progresser à ton rythme.">
+{% include 'partials/seo-head.twig' %}
 {% include 'partials/pwa-head.twig' %}
-<meta property="og:title" content="Coach Adel | Corps, nutrition et mental">
-<meta property="og:description" content="Un accompagnement global fondé sur le mouvement, l'équilibre nutritionnel, la force mentale et le plaisir.">
-<meta property="og:type" content="website">
 <link rel="stylesheet" href="/css/site.css">
 {% block head %}{% endblock %}
 </head>
@@ -16,8 +13,6 @@
 {% set home = currentPath == '/' %}
 <a class="skip" href="#main">Aller au contenu</a>
 <div class="progress" id="progress" aria-hidden="true"></div>
-<div class="orbs" aria-hidden="true"><span class="orb orb-1"></span><span class="orb orb-2"></span><span class="orb orb-3"></span></div>
-<div class="grain" aria-hidden="true"></div>
 
 <div class="mobilebar">
   <a class="brand" href="{{ home ? '#accueil' : '/#accueil' }}" aria-label="Coach Adel — retour à l'accueil">COACH<span>ADEL</span></a>
@@ -27,11 +22,21 @@
   <a class="tiktok-nav" href="https://www.tiktok.com/@adel.cherif36" target="_blank" rel="noopener" aria-label="TikTok adel.cherif36">
     <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M14.1 3v11.2a4.4 4.4 0 1 1-3.8-4.36v2.76a1.8 1.8 0 1 0 1.2 1.7V3h2.6Zm0 0c.25 2.25 1.5 3.6 3.9 3.85v2.7c-1.5-.05-2.8-.5-3.9-1.35V3Z"/></svg>
   </a>
+  <a class="snapchat-nav" href="https://www.snapchat.com/@adelcoaching?share_id=Rv4zMyheqh4&locale=fr-FR" target="_blank" rel="noopener" aria-label="Snapchat adelcoaching">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2.4c-3.4 0-5.6 2.4-5.6 5.8 0 .5-.3.8-.7.8-1.3 0-2.2 1-2 2.2.1.5.5.8.9.9-.3.3-.5.7-.5 1.1 0 .8.7 1.4 1.5 1.5 0 1-.9 2.1-2.4 2.9-.4.2-.5.7-.2 1.1.5.7 1.8 1.2 3.1 1.4 0 .9.8 1.6 1.8 1.6.6 0 .9.4 1.2.8.4.6 1.3.9 2.3.9s1.9-.3 2.3-.9c.3-.4.6-.8 1.2-.8.9 0 1.8-.7 1.8-1.6 1.3-.2 2.6-.7 3.1-1.4.3-.4.2-.9-.2-1.1-1.5-.8-2.4-1.9-2.4-2.9.8-.1 1.5-.7 1.5-1.5 0-.4-.2-.8-.5-1.1.4-.1.8-.4.9-.9.2-1.2-.7-2.2-2-2.2-.4 0-.7-.3-.7-.8 0-3.4-2.2-5.8-5.6-5.8z"/><circle cx="9.3" cy="10.2" r="1.15" fill="#ffe600"/><circle cx="14.7" cy="10.2" r="1.15" fill="#ffe600"/></svg>
+  </a>
   <a class="whatsapp-nav" href="https://wa.me/33774923253?text=Bonjour%20Adel%2C%20je%20souhaite%20%C3%A9changer%20sur%20votre%20accompagnement." target="_blank" rel="noopener" aria-label="Écrire à Coach Adel sur WhatsApp">
     <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.1A8 8 0 1 1 20 11.5Z"/><path d="M8.8 8.2c.5 3.7 2.4 5.6 6.1 6.1l1.3-1.5"/></svg>
   </a>
   <button class="burger" id="burger" aria-expanded="false" aria-controls="mobilemenu" aria-label="Ouvrir le menu"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
 </div>
+{% if currentPath|slice(0, 15) != '/preinscription' %}
+<button class="preinscription-cta" type="button" data-modal-open="preinscription" aria-haspopup="dialog">
+  <svg class="preinscription-cta__ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+  <span class="preinscription-cta__long">Se préinscrire gratuitement</span>
+  <span class="preinscription-cta__short">S'inscrire gratuit</span>
+</button>
+{% endif %}
 <div class="mmenu" id="mobilemenu" role="dialog" aria-modal="true" aria-label="Menu de navigation" aria-hidden="true">
   <div class="mmenu-panel">
     <nav aria-label="Menu mobile">
@@ -55,6 +60,9 @@
       <a href="{{ home ? '#rejoindre' : '/#rejoindre' }}">Rejoindre</a>
       <a class="instagram-nav" href="https://www.instagram.com/adel.fitness.coaching/" target="_blank" rel="noopener" aria-label="Instagram adel.fitness.coaching">
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="snapchat-nav" href="https://www.snapchat.com/@adelcoaching?share_id=Rv4zMyheqh4&locale=fr-FR" target="_blank" rel="noopener" aria-label="Snapchat adelcoaching">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2.4c-3.4 0-5.6 2.4-5.6 5.8 0 .5-.3.8-.7.8-1.3 0-2.2 1-2 2.2.1.5.5.8.9.9-.3.3-.5.7-.5 1.1 0 .8.7 1.4 1.5 1.5 0 1-.9 2.1-2.4 2.9-.4.2-.5.7-.2 1.1.5.7 1.8 1.2 3.1 1.4 0 .9.8 1.6 1.8 1.6.6 0 .9.4 1.2.8.4.6 1.3.9 2.3.9s1.9-.3 2.3-.9c.3-.4.6-.8 1.2-.8.9 0 1.8-.7 1.8-1.6 1.3-.2 2.6-.7 3.1-1.4.3-.4.2-.9-.2-1.1-1.5-.8-2.4-1.9-2.4-2.9.8-.1 1.5-.7 1.5-1.5 0-.4-.2-.8-.5-1.1.4-.1.8-.4.9-.9.2-1.2-.7-2.2-2-2.2-.4 0-.7-.3-.7-.8 0-3.4-2.2-5.8-5.6-5.8z"/><circle cx="9.3" cy="10.2" r="1.15" fill="#ffe600"/><circle cx="14.7" cy="10.2" r="1.15" fill="#ffe600"/></svg>
       </a>
       <a class="whatsapp-nav" href="https://wa.me/33774923253?text=Bonjour%20Adel%2C%20je%20souhaite%20%C3%A9changer%20sur%20votre%20accompagnement." target="_blank" rel="noopener" aria-label="Écrire à Coach Adel sur WhatsApp">
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.1A8 8 0 1 1 20 11.5Z"/><path d="M8.8 8.2c.5 3.7 2.4 5.6 6.1 6.1l1.3-1.5"/></svg>
@@ -100,31 +108,32 @@
       <ul class="socials" aria-label="Réseaux sociaux de Coach Adel">
         <li><a href="https://www.instagram.com/adel.fitness.coaching/" target="_blank" rel="noopener">Instagram</a></li>
         <li><a href="https://www.tiktok.com/@adel.cherif36" target="_blank" rel="noopener">TikTok</a></li>
+        <li><a href="https://www.snapchat.com/@adelcoaching?share_id=Rv4zMyheqh4&locale=fr-FR" target="_blank" rel="noopener">Snapchat</a></li>
       </ul>
     </div>
   </div>
   <div class="container foot-legal">
     <span>© <span id="year">{{ year }}</span> <a class="foot-login" href="/login">adel coaching</a> — Accompagnement global.</span>
+    <nav class="foot-legal-nav" aria-label="Informations légales">
+      <a href="/mentions-legales">Mentions légales</a>
+      <a href="/confidentialite">Confidentialité</a>
+      <a href="/cookies">Cookies</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
     <span>Coaching non médical : ne remplace ni médecin, ni diététicien, ni psychologue.</span>
   </div>
 </footer>
 
-{% if currentPath|slice(0, 15) != '/preinscription' %}
-<button class="preinscription-cta" type="button" data-modal-open="preinscription" aria-haspopup="dialog">
-  <svg class="preinscription-cta__ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
-  <span class="preinscription-cta__long">Se préinscrire gratuitement</span>
-  <span class="preinscription-cta__short">S'inscrire gratuit</span>
-</button>
 {% include 'partials/preinscription-modal.twig' %}
-{% endif %}
 
 <nav class="bottomnav" aria-label="Navigation mobile">
-  <a href="{{ home ? '#accueil' : '/#accueil' }}"><span class="dot" aria-hidden="true"></span>Accueil</a>
-  <a href="{{ currentUser ? (currentUser.role == 'admin' ? '/admin' : '/mon-espace') : '/login' }}"><span class="dot" aria-hidden="true"></span>Espace</a>
-  <a href="/articles">Conseils</a>
-  <a href="{{ home ? '#rejoindre' : '/#rejoindre' }}" class="cta">Rejoindre</a>
+  <a href="{{ home ? '#accueil' : '/#accueil' }}" data-nav="accueil"{% if currentPath == '/' %} aria-current="true"{% endif %}>Accueil</a>
+  <a href="{{ currentUser ? (currentUser.role == 'admin' ? '/admin' : '/mon-espace') : '/login' }}" data-nav="espace"{% if currentPath == '/login' or currentPath starts with '/mon-espace' or currentPath starts with '/admin' or currentPath starts with '/compte' %} aria-current="true"{% endif %}>Espace</a>
+  <a href="/articles" data-nav="conseils"{% if currentPath == '/articles' or currentPath starts with '/articles/' %} aria-current="true"{% endif %}>Conseils</a>
+  <button type="button" data-nav="rejoindre" data-modal-open="preinscription" aria-haspopup="dialog">Rejoindre</button>
 </nav>
 <button class="totop" id="totop" aria-label="Remonter en haut de page"><span aria-hidden="true">↑</span> Top</button>
+{% include 'partials/cookie-banner.twig' %}
 {% include 'partials/pwa-install.twig' %}
 
 <script src="/js/site.js" defer></script>
