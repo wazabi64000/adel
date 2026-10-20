@@ -1,6 +1,6 @@
 import { query, queryOne, execute } from '../config/database.js';
 
-const FIELDS = `id, session_id, author_id, content, created_at`;
+const FIELDS = `pc.id, pc.session_id, pc.author_id, pc.content, pc.created_at`;
 
 /** Liste les commentaires d'une séance (propriétaire uniquement). */
 export async function listBySession(sessionId, authorId) {
