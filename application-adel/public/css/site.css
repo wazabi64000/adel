@@ -160,23 +160,22 @@ button.btn-primary:hover,
 .mobilebar .instagram-nav svg,.mobilebar .tiktok-nav svg,.mobilebar .snapchat-nav svg,.mobilebar .whatsapp-nav svg,.mobilebar .facebook-nav svg{width:16px;height:16px}
 .mobilebar .burger{width:36px;height:36px}
 @media(max-width:420px){
-  .mobilebar{gap:3px;padding-inline:6px}
-  .mobilebar .brand{font-size:1.05rem;max-width:28%}
+  .mobilebar{gap:2px;padding-inline:4px}
+  .mobilebar .brand{font-size:1rem;max-width:24%}
   .mobilebar .instagram-nav,
   .mobilebar .tiktok-nav,
   .mobilebar .snapchat-nav,
   .mobilebar .whatsapp-nav,
-  .mobilebar .facebook-nav{width:30px;height:30px}
+  .mobilebar .facebook-nav{width:28px;height:28px}
   .mobilebar .instagram-nav svg,
   .mobilebar .tiktok-nav svg,
   .mobilebar .snapchat-nav svg,
   .mobilebar .whatsapp-nav svg,
-  .mobilebar .facebook-nav svg{width:15px;height:15px}
-  .mobilebar .burger{width:32px;height:32px}
-  /* Garde Snapchat + Facebook visibles ; seul TikTok se replie si trop étroit */
-  .mobilebar .tiktok-nav{display:none}
+  .mobilebar .facebook-nav svg{width:14px;height:14px}
+  .mobilebar .burger{width:30px;height:30px}
 }
 @media(max-width:340px){
+  /* Sur très petit écran, WhatsApp passe après TikTok/Facebook/Snapchat */
   .mobilebar .whatsapp-nav{display:none}
 }
 @media(min-width:1024px){
@@ -192,7 +191,7 @@ button.btn-primary:hover,
   .nav-desk{display:flex;gap:1.25rem;align-items:center;margin-left:auto}
   .nav-desk a{
     text-decoration:none;color:var(--muted);
-    font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+    font-size:.82rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
     padding:8px 0;
   }
   .nav-desk a:hover,.nav-desk a[aria-current="true"]{color:var(--fg)}
@@ -274,7 +273,7 @@ button.btn-primary:hover,
   display:flex;align-items:center;justify-content:center;gap:6px;
   width:100%;min-height:40px;padding:10px 12px;margin:0;
   background:var(--brand);color:var(--ink-on-brand);border:0;border-radius:0;cursor:pointer;
-  font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
 }
 .preinscription-cta:hover{opacity:.9}
 .preinscription-cta__ico{width:14px;height:14px;flex:none}
@@ -416,9 +415,9 @@ button.btn-primary:hover,
 .sitefoot{
   background:var(--chrome);border-top:1px solid var(--line);
   padding:1.25rem 0 calc(6.5rem + env(safe-area-inset-bottom));
-  color:var(--muted);font-size:.75rem;
+  color:var(--muted);font-size:.82rem;
 }
-.sitefoot .brand{color:var(--fg);font-size:1.35rem}
+.sitefoot .brand{color:var(--fg);font-size:1.45rem}
 @media(min-width:1024px){.sitefoot{padding-bottom:1.5rem}}
 .foot-grid{
   display:grid;
@@ -429,26 +428,26 @@ button.btn-primary:hover,
 .foot-brand{grid-column:1 / -1}
 .foot-desc{
   color:var(--muted);margin-top:.45rem;max-width:42ch;
-  font-size:.72rem;line-height:1.45;
+  font-size:.8rem;line-height:1.5;
 }
 .foot-h{
-  font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--muted);font-weight:600;margin:0 0 .4rem;
+  font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin:0 0 .45rem;
 }
 .foot-nav,.foot-contact,.socials{list-style:none;display:grid;gap:0;margin:0;padding:0}
 .foot-nav a,.foot-contact a,.socials a{
   color:var(--muted);text-decoration:none;font-weight:500;
-  font-size:.78rem;line-height:1.3;
-  min-height:28px;display:inline-flex;align-items:center;
+  font-size:.88rem;line-height:1.35;
+  min-height:30px;display:inline-flex;align-items:center;
 }
 .foot-nav a:hover,.foot-contact a:hover,.socials a:hover{color:var(--brand)}
 .socials{gap:0}
 .social-facebook{
   display:inline-flex;align-items:center;gap:.4rem;
   color:var(--muted);text-decoration:none;font-weight:500;
-  font-size:.78rem;min-height:28px;
+  font-size:.88rem;min-height:30px;
 }
-.social-facebook svg{width:16px;height:16px;flex:none}
+.social-facebook svg{width:17px;height:17px;flex:none}
 .social-facebook:hover{color:var(--brand)}
 
 /* Contact + Réseaux mis en évidence */
@@ -461,13 +460,13 @@ button.btn-primary:hover,
 }
 .foot-aside .foot-h{
   color:var(--brand);
-  font-size:.68rem;letter-spacing:.14em;
+  font-size:.74rem;letter-spacing:.12em;
 }
 .foot-aside .foot-contact a,
 .foot-aside .socials a,
 .foot-aside .social-facebook{
   color:var(--fg);
-  font-size:.8rem;
+  font-size:.9rem;
 }
 .foot-aside .foot-contact a:hover,
 .foot-aside .socials a:hover,
@@ -479,10 +478,10 @@ button.btn-primary:hover,
     gap:1.25rem;
   }
   .foot-brand{grid-column:auto}
-  .foot-desc{font-size:.8rem;margin-top:.75rem;max-width:36ch}
-  .foot-h{font-size:.72rem;letter-spacing:.18em;margin-bottom:.55rem;color:var(--fg)}
+  .foot-desc{font-size:.88rem;margin-top:.75rem;max-width:36ch}
+  .foot-h{font-size:.78rem;letter-spacing:.16em;margin-bottom:.55rem;color:var(--fg)}
   .foot-nav a,.foot-contact a,.socials a,.social-facebook{
-    font-size:.85rem;min-height:36px;
+    font-size:.92rem;min-height:36px;
   }
   .foot-aside{padding:14px 16px;gap:1rem}
   .sitefoot .brand{font-size:inherit}
@@ -490,7 +489,7 @@ button.btn-primary:hover,
 
 .foot-legal{
   display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.72rem;
+  margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.78rem;
 }
 .foot-legal-nav{display:flex;flex-wrap:wrap;gap:8px 14px}
 .foot-legal-nav a{color:var(--muted);text-decoration:none}
@@ -629,7 +628,7 @@ button.btn-primary:hover,
   appearance:none;-webkit-appearance:none;
   display:flex;align-items:center;justify-content:center;
   width:100%;margin:0;cursor:pointer;text-decoration:none;
-  font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
   color:var(--fg);min-height:46px;border-radius:2px;padding:8px 4px;
   background:transparent;border:1px solid rgba(250,247,242,.22);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
