@@ -82,7 +82,7 @@ body.auth-body { background: var(--bg); color: var(--fg); }
   .admin-shell.nav-open::after {
     content: ""; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 35;
   }
-  .admin-top { padding: 8px 10px; gap: 8px; }
+  .admin-top { padding: 8px 10px; gap: 8px; z-index: 50; }
   .admin-page-title { font-size: .95rem; }
   .admin-content { padding: 12px; }
   .admin-user-name { display: none; }
@@ -970,6 +970,7 @@ body.auth-body{background:var(--bg);color:var(--fg);font-family:var(--font)}
   gap: 10px;
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 .athlete-brand {
   display: flex;
@@ -1039,7 +1040,56 @@ body.auth-body{background:var(--bg);color:var(--fg);font-family:var(--font)}
   margin-right: 8px;
   white-space: nowrap;
 }
-.athlete-cta__short,.athlete-cta__long-mobile{display:none}
+.athlete-header .athlete-cta__short{display:none}
+.athlete-header .admin-user{min-width:0}
+.athlete-header .athlete-user-name{
+  min-width:0;
+  max-width:9rem;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+@media (max-width: 900px) {
+  .athlete-header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "burger actions"
+      "identity identity";
+    align-items: center;
+    column-gap: 8px;
+    row-gap: 6px;
+    padding: 8px 10px;
+    overflow: hidden;
+    z-index: 50;
+  }
+  .athlete-header > .admin-burger { grid-area: burger; }
+  .athlete-header > .admin-user {
+    grid-area: actions;
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+    gap: 6px;
+    overflow: hidden;
+  }
+  .athlete-header > .athlete-header-center {
+    grid-area: identity;
+    width: 100%;
+    flex: none;
+  }
+  .athlete-header .athlete-cta__full { display: none; }
+  .athlete-header .athlete-cta__short { display: inline; }
+  .athlete-header .athlete-cta-site,
+  .athlete-header .athlete-cta-quit {
+    letter-spacing: .04em;
+    padding: 6px 10px;
+    font-size: .68rem;
+    min-height: 32px;
+    gap: 0;
+    flex: none;
+  }
+  .athlete-header .admin-logout { flex: none; }
+}
 
 /* =========================================================
    État vide — suivi photographique

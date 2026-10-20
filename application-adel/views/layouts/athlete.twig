@@ -28,7 +28,7 @@
         <a href="/compte" class="athlete-user-name">{{ currentAthlete ? currentAthlete.first_name : currentUser.name }}</a>
         <form class="admin-logout" method="post" action="/logout">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-          <button class="btn btn-ghost btn-sm athlete-cta-quit" type="submit"><span class="athlete-cta__full">Quitter</span><span class="athlete-cta__short">Quitter</span></button>
+          <button class="btn btn-ghost btn-sm athlete-cta-quit" type="submit"><span class="athlete-cta__full">Quitter</span><span class="athlete-cta__short">Quit</span></button>
         </form>
       </div>
     </header>
