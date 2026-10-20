@@ -1,5 +1,5 @@
 /* Coach Adel — service worker (mises à jour forcées) */
-const VERSION = 'adel-pwa-v27';
+const VERSION = 'adel-pwa-v28';
 const PRECACHE = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 
