@@ -159,10 +159,25 @@ button.btn-primary:hover,
 .mobilebar .instagram-nav,.mobilebar .tiktok-nav,.mobilebar .snapchat-nav,.mobilebar .whatsapp-nav,.mobilebar .facebook-nav{width:32px;height:32px}
 .mobilebar .instagram-nav svg,.mobilebar .tiktok-nav svg,.mobilebar .snapchat-nav svg,.mobilebar .whatsapp-nav svg,.mobilebar .facebook-nav svg{width:16px;height:16px}
 .mobilebar .burger{width:36px;height:36px}
-@media(max-width:380px){
-  .mobilebar{gap:4px;padding-inline:8px}
-  .mobilebar .brand{font-size:1.1rem}
+@media(max-width:420px){
+  .mobilebar{gap:3px;padding-inline:6px}
+  .mobilebar .brand{font-size:1.05rem;max-width:28%}
+  .mobilebar .instagram-nav,
+  .mobilebar .tiktok-nav,
+  .mobilebar .snapchat-nav,
+  .mobilebar .whatsapp-nav,
+  .mobilebar .facebook-nav{width:30px;height:30px}
+  .mobilebar .instagram-nav svg,
+  .mobilebar .tiktok-nav svg,
+  .mobilebar .snapchat-nav svg,
+  .mobilebar .whatsapp-nav svg,
+  .mobilebar .facebook-nav svg{width:15px;height:15px}
+  .mobilebar .burger{width:32px;height:32px}
+  /* Garde Snapchat + Facebook visibles ; seul TikTok se replie si trop étroit */
   .mobilebar .tiktok-nav{display:none}
+}
+@media(max-width:340px){
+  .mobilebar .whatsapp-nav{display:none}
 }
 @media(min-width:1024px){
   .mobilebar{display:none}
@@ -212,7 +227,7 @@ button.btn-primary:hover,
 .tiktok-nav{color:#fff;background:linear-gradient(145deg,#252525,#050505)}
 .whatsapp-nav{color:#fff;background:linear-gradient(145deg,#35e676,#10a94e)}
 .snapchat-nav{color:#141210;background:linear-gradient(145deg,#fff970,#ffe600)}
-.facebook-nav{color:#fff;background:#3b5998}
+.facebook-nav{color:#fff;background:#1877F2}
 
 /* Mobilebar : même taille que le desktop pour l’uniformité visuelle */
 .mobilebar .instagram-nav,.mobilebar .tiktok-nav,.mobilebar .snapchat-nav,.mobilebar .whatsapp-nav,.mobilebar .facebook-nav{
@@ -400,37 +415,84 @@ button.btn-primary:hover,
 /* ---------- Pied de page ---------- */
 .sitefoot{
   background:var(--chrome);border-top:1px solid var(--line);
-  padding:1.5rem 0 calc(6.5rem + env(safe-area-inset-bottom));
-  color:var(--muted);font-size:.8rem;
+  padding:1.25rem 0 calc(6.5rem + env(safe-area-inset-bottom));
+  color:var(--muted);font-size:.75rem;
 }
-.sitefoot .brand{color:var(--fg)}
+.sitefoot .brand{color:var(--fg);font-size:1.35rem}
 @media(min-width:1024px){.sitefoot{padding-bottom:1.5rem}}
-.foot-grid{display:grid;gap:1.25rem}
-@media(min-width:1024px){.foot-grid{grid-template-columns:2fr 1fr 1fr 1fr}}
-.foot-desc{color:var(--muted);margin-top:.75rem;max-width:36ch}
-.foot-h{
-  font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--fg);font-weight:600;margin-bottom:.6rem;
+.foot-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.85rem 1rem;
+  align-items:start;
 }
-.foot-nav,.foot-contact,.socials{list-style:none;display:grid}
+.foot-brand{grid-column:1 / -1}
+.foot-desc{
+  color:var(--muted);margin-top:.45rem;max-width:42ch;
+  font-size:.72rem;line-height:1.45;
+}
+.foot-h{
+  font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin:0 0 .4rem;
+}
+.foot-nav,.foot-contact,.socials{list-style:none;display:grid;gap:0;margin:0;padding:0}
 .foot-nav a,.foot-contact a,.socials a{
   color:var(--muted);text-decoration:none;font-weight:500;
-  min-height:40px;display:inline-flex;align-items:center;
+  font-size:.78rem;line-height:1.3;
+  min-height:28px;display:inline-flex;align-items:center;
 }
 .foot-nav a:hover,.foot-contact a:hover,.socials a:hover{color:var(--brand)}
 .socials{gap:0}
 .social-facebook{
-  display:inline-flex;align-items:center;gap:.5rem;
+  display:inline-flex;align-items:center;gap:.4rem;
   color:var(--muted);text-decoration:none;font-weight:500;
-  min-height:40px;
+  font-size:.78rem;min-height:28px;
 }
-.social-facebook svg{width:20px;height:20px;flex:none}
+.social-facebook svg{width:16px;height:16px;flex:none}
 .social-facebook:hover{color:var(--brand)}
+
+/* Contact + Réseaux mis en évidence */
+.foot-aside{
+  display:grid;gap:.85rem;
+  padding:10px 12px;
+  background:rgba(239,138,44,.08);
+  border:1px solid rgba(239,138,44,.35);
+  border-radius:2px;
+}
+.foot-aside .foot-h{
+  color:var(--brand);
+  font-size:.68rem;letter-spacing:.14em;
+}
+.foot-aside .foot-contact a,
+.foot-aside .socials a,
+.foot-aside .social-facebook{
+  color:var(--fg);
+  font-size:.8rem;
+}
+.foot-aside .foot-contact a:hover,
+.foot-aside .socials a:hover,
+.foot-aside .social-facebook:hover{color:var(--brand)}
+
+@media(min-width:1024px){
+  .foot-grid{
+    grid-template-columns:2fr 1fr 1.35fr;
+    gap:1.25rem;
+  }
+  .foot-brand{grid-column:auto}
+  .foot-desc{font-size:.8rem;margin-top:.75rem;max-width:36ch}
+  .foot-h{font-size:.72rem;letter-spacing:.18em;margin-bottom:.55rem;color:var(--fg)}
+  .foot-nav a,.foot-contact a,.socials a,.social-facebook{
+    font-size:.85rem;min-height:36px;
+  }
+  .foot-aside{padding:14px 16px;gap:1rem}
+  .sitefoot .brand{font-size:inherit}
+}
+
 .foot-legal{
   display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--line);font-size:.8rem;
+  margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.72rem;
 }
-.foot-legal-nav{display:flex;flex-wrap:wrap;gap:8px 16px}
+.foot-legal-nav{display:flex;flex-wrap:wrap;gap:8px 14px}
 .foot-legal-nav a{color:var(--muted);text-decoration:none}
 .foot-legal-nav a:hover{color:var(--brand)}
 .foot-login{color:inherit;text-decoration:none}
@@ -754,6 +816,11 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62)}
 }
 .pwa-install__btn:hover{background:#178a48}
 .pwa-install__btn:disabled{opacity:.75;cursor:wait}
+.pwa-install__btn--ghost{
+  background:#fff;color:#146c3a;
+  border:1px solid rgba(31,157,85,.45);
+}
+.pwa-install__btn--ghost:hover{background:#e8f8ef}
 
 @keyframes pwa-spin{to{transform:rotate(360deg)}}
 @keyframes pwa-spin-rev{to{transform:rotate(-360deg)}}
