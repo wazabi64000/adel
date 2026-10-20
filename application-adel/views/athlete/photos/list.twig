@@ -1,0 +1,56 @@
+{% extends 'layouts/athlete.twig' %}
+
+{% block heading %}Suivi photographique{% endblock %}
+
+{% block content %}
+{% if sessions and sessions | length > 0 %}
+<div class="toolbar">
+  <a class="btn btn-primary btn-sm" href="/mon-espace/photos/new">+ Nouvelle séance</a>
+  <a class="btn btn-secondary btn-sm" href="/mon-espace/photos/compare">Comparer des dates</a>
+</div>
+
+<div class="photo-session-grid">
+  {% for s in sessions %}
+  <article class="photo-session-card">
+    <div class="photo-session-header">
+      <span class="photo-session-date">{{ s.session_date }}</span>
+      {% if s.notes %}<span class="photo-session-notes">{{ s.notes }}</span>{% endif %}
+    </div>
+    <div class="photo-session-thumbs">
+      {% for v in ['devant','dos','profil_gauche','profil_droit','complementaire'] %}
+      {% set p = null %}
+      {% for photo in s.photos %}
+      {% if photo.view_key == v %}{% set p = photo %}{% endif %}
+      {% endfor %}
+      <div class="photo-session-thumb">
+        {% if p %}
+        <img src="{{ p.image_url }}" alt="{{ v }}" loading="lazy">
+        <span class="photo-view-badge">{{ v }}</span>
+        {% else %}
+        <span class="photo-session-empty">—</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="photo-session-actions">
+      <a class="btn btn-secondary btn-sm" href="/mon-espace/photos/{{ s.id }}">Voir</a>
+      <form method="post" action="/mon-espace/photos/{{ s.id }}?_method=DELETE" data-confirm="Supprimer cette séance et ses photos ?">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <button class="btn btn-danger btn-sm" type="submit">Suppr.</button>
+      </form>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="photo-empty-state">
+  <div class="photo-empty-icon">📸</div>
+  <h2 class="photo-empty-title">Aucune séance photo pour l'instant</h2>
+  <p class="photo-empty-desc">Commencez votre suivi photographique en prenant une photo par partie du corps : devant, dos, profils et complémentaire.</p>
+  <a class="btn btn-primary btn-lg" href="/mon-espace/photos/new">
+    <span>+ Créer ma première séance</span>
+  </a>
+  <p class="photo-empty-hint">Vos photos restent privées et ne sont visibles que par vous.</p>
+</div>
+{% endif %}
+{% endblock %}

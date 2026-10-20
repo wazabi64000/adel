@@ -451,5 +451,49 @@ export function validateProgramDay(body) {
   };
 }
 
+export function validatePhotoSession(body) {
+  const { ok, errors, data } = parseWithZod(
+    z.object({
+      session_date: z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/, { message: msg.date })
+        .optional(),
+      notes: optionalString(5000),
+    }),
+    body,
+  );
+  if (!ok) return { ok, errors, data: null };
+  return {
+    ok: true,
+    errors: {},
+    data: {
+      sessionDate: data.session_date ?? new Date().toISOString().slice(0, 10),
+      notes: data.notes ?? null,
+    },
+  };
+}
+
+export function validateGallery(body) {
+  const { ok, errors, data } = parseWithZod(
+    z.object({
+      title: optionalString(220),
+      status: z.preprocess(
+        (v) => emptyToNull(v) ?? 'published',
+        z.enum(['draft', 'published'], { errorMap: () => ({ message: msg.choice }) }),
+      ),
+    }),
+    body,
+  );
+  if (!ok) return { ok, errors, data: null };
+  return {
+    ok: true,
+    errors: {},
+    data: {
+      title: data.title ?? null,
+      status: data.status ?? 'published',
+    },
+  };
+}
+
 // Réexport utilitaires legacy utilisés ailleurs
 export { clean, toInt, toFloat };

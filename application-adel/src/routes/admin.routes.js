@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { requireAdmin } from '../middlewares/auth.js';
 import { adminBadges } from '../middlewares/badges.js';
-import { single } from '../middlewares/upload.js';
+import { single, anyFiles } from '../middlewares/upload.js';
 import { csrfCheck } from '../middlewares/csrf.js';
 import { apiLimiter } from '../middlewares/rateLimit.js';
 import * as catalogApi from '../controllers/admin/catalog.controller.js';
@@ -14,6 +14,7 @@ import * as program from '../controllers/admin/program.controller.js';
 import * as day from '../controllers/admin/day.controller.js';
 import * as exercise from '../controllers/admin/exercise.controller.js';
 import * as inbox from '../controllers/admin/inbox.controller.js';
+import * as gallery from '../controllers/admin/gallery.controller.js';
 
 const router = Router();
 
@@ -72,6 +73,12 @@ router.delete('/days/:dayId', day.remove);
 router.post('/days/:dayId/exercises', csrfCheck, exercise.create);
 router.put('/exercises/:id', csrfCheck, exercise.update);
 router.delete('/exercises/:id', exercise.remove);
+
+/* ---------------------------------- Galerie ---------------------------------- */
+router.get('/gallery', gallery.list);
+router.get('/gallery/new', gallery.newForm);
+router.post('/gallery', anyFiles(), csrfCheck, gallery.create);
+router.delete('/gallery/:id', gallery.remove);
 
 /* --------------------------- Messages & demandes ------------------------------ */
 router.get('/messages', inbox.messages);

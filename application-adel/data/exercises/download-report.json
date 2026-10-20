@@ -1,0 +1,761 @@
+{
+  "startedAt": "2026-10-19T14:53:31.921Z",
+  "source": "exercisedb-free",
+  "commercialAllowed": false,
+  "attribution": "AscendAPI / ExerciseDB",
+  "requested": 1500,
+  "downloaded": 1306,
+  "skipped": 18,
+  "failed": 176,
+  "errors": [
+    {
+      "id": "0I5fUyn",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "0MlxeMn",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "1IFV9h3",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "1oE78pm",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "1RIkUHT",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "1TVoin7",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "1u36hhy",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "1YUWDNZ",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "2Ty4idJ",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "3nvEbbF",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "3pqGMQj",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "3QgteDK",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "4H86mXM",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "4QqYaJW",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "58rdhvL",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "5ipN0iE",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "5lE7XRz",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "6vcvsLS",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "6Wr0F3W",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "7858za8",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "79AmJsI",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "7AnZtSv",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "7i4msxz",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "7R4NIjL",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "7WcQgkm",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "7y9JIMj",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "89HVjEp",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "8gQo5Ss",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "8IbNZwc",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "8yBgwBS",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "9fCHfSc",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "9tvVVM9",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "9vz4JlC",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "9Z23cLE",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "9ZGnq1w",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "A3P4O0R",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "AdxxqfF",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "afv0ZAS",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Aj9vWh7",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "AwAIlSo",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "b5uBMv2",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "BeReYBf",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "C8Crfa4",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "cuC7529",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "CUmLRTA",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "dAJscVq",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "DICPHtq",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "DoEYq4s",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "drfGhTV",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "dVeWXf2",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Dx2RIva",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "echClj7",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "EnPivTL",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "EpKrFiv",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "EqHIIjJ",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "eZ79rbI",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "F56Xpw3",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "fBnPpzd",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "fF6GKVh",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "fjjY3N4",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "FSF9WOs",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "G1qWW6M",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "gdPIyyO",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "gMyx3Qn",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "gSO0KpB",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "gTGciXz",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Gu2ENkm",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "gWcZD4q",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "hjWjJEm",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "hTLtkXL",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "hVzPY5j",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "HZgQPxh",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "I6Ca0a7",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "IBj3nsn",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "iCPqbki",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "iDGtjyi",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "iFsqlCD",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "IH2kr7n",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "iqH55N8",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "IU4QNJ6",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "IxsFgRT",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "J1vH2X0",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "j6uIfep",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "jCBOdh0",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "jvEXp4N",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "JxrY9mC",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "KenZJQV",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "kk39rUy",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "kKYTkjJ",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "kLiIFdB",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "KQfySvS",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "KWyEjtI",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "L68dTQj",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "lFBTISi",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "LFIOery",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "LlSe9IK",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "lRcrlH8",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "LzX8YEz",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "M8IolhQ",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "mAYqY4M",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "MDFxU4b",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "mpYUPkA",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "MqNdIbe",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Mr8d4KA",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "MRaFiZP",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "myJeTAe",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "N3EirIW",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "N6dZN2I",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "nFHk9fU",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "ninBEOY",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "ntjtCfu",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "numr601",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "O3INw8V",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "o6LqKKP",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "o80Xu9C",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "OJFgZJ0",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "omsF3RN",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "oMwyl17",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "ookVu2D",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "p0OCXGb",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "p5v6rdT",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "P7zSvul",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "PCUYOMs",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "PDHE73u",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "pFuK3by",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "pgIdT6i",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "PKlXuJW",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "pNIKolI",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "qBl14UC",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "qFHvMnv",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Qj0HRAZ",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Ql4g5s8",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "qlZUaZ8",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "QoSZo2Y",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "QQwxa8g",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "qU8bYp7",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "r4RZKpF",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Rsxr3xl",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Sa8mzWc",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "sJElUUI",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "syUwUKY",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "TBNaSNs",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "tuIZFDt",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "u1iHcoD",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "u3UuCZu",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "UI81amT",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Ul5OFSV",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Um8xUAc",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "UOphC6N",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "UoX77uR",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Uywa4S5",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "v6EKk0O",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "V7rWsT5",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "vN5HB0s",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "vNPJbDA",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "vobtVkm",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "vocve3e",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "vpleANJ",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "VRBGPHB",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "VsopqcV",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "W1p7BND",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "w44vFvP",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "w7obpWd",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "W7yh3Yo",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "WFucoe6",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "WM6TvvW",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "woLo1QN",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "xcLntTC",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Xd65M9w",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "XE93sQZ",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "xmWQIlT",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "xOXZJRZ",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "XqYQ9JA",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "Y8dOJlH",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "YA2HKGz",
+      "error": "GIF HTTP 404"
+    },
+    {
+      "id": "znf7t8E",
+      "error": "GIF HTTP 404"
+    }
+  ],
+  "finishedAt": "2026-10-19T15:06:35.481Z",
+  "byBodyPartCounts": {
+    "back": 203,
+    "waist": 169,
+    "upper arms": 292,
+    "upper legs": 227,
+    "chest": 163,
+    "shoulders": 143,
+    "lower legs": 59,
+    "cardio": 29,
+    "lower arms": 37,
+    "neck": 2
+  },
+  "byEquipmentCounts": {
+    "bodyweight": 324,
+    "assisted": 15,
+    "cable": 158,
+    "barbell": 154,
+    "dumbbell": 295,
+    "roller": 8,
+    "weighted": 36,
+    "smith machine": 48,
+    "resistance band": 62,
+    "sled machine": 15,
+    "leverage machine": 81,
+    "EZ bar": 23,
+    "stability ball": 77,
+    "rope": 10,
+    "bosu ball": 3,
+    "kettlebell": 41,
+    "suspension trainer": 5,
+    "medicine ball": 13,
+    "towel": 1,
+    "tennis ball": 1,
+    "stationary bike": 1,
+    "stepmill machine": 1,
+    "trap bar": 1,
+    "ab wheel": 2,
+    "olympic barbell": 2,
+    "tire": 1,
+    "upper body ergometer": 1,
+    "hammer": 1,
+    "elliptical machine": 1,
+    "ski ergometer": 1
+  }
+}

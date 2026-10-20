@@ -1,0 +1,105 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}{{ photo ? 'Éditer une photo' : 'Ajouter des photos à la galerie' }}{% endblock %}
+
+{% block content %}
+{% if formErrors.global %}
+  <div class="alert alert-error">{{ formErrors.global }}</div>
+{% endif %}
+
+<form class="app-form panel" method="post" enctype="multipart/form-data" action="/admin/gallery" id="gallery-form">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+  <div class="field">
+    <label for="title">Titre commun (optionnel)</label>
+    <input id="title" name="title" type="text" value="{{ old(formData, 'title') }}" maxlength="220" placeholder="Ex: Séance cardio — course à pied">
+    <span class="field-hint">Un même titre sera appliqué à toutes les photos sélectionnées. Vous pourrez les renommer individuellement plus tard.</span>
+    {% if formErrors.title %}<small class="field-error">{{ formErrors.title }}</small>{% endif %}
+  </div>
+
+  <div class="field">
+    <label for="status">Statut</label>
+    <select id="status" name="status">
+      <option value="published" {{ old(formData, 'status') == 'published' ? 'selected' : '' }}>Publié (visible sur le site)</option>
+      <option value="draft" {{ old(formData, 'status') == 'draft' ? 'selected' : '' }}>Brouillon (masqué)</option>
+    </select>
+  </div>
+
+  <div class="field field--images">
+    <label for="image">Photos *</label>
+    <input id="image" name="image" type="file" accept="image/*" multiple required>
+    {% if formErrors.image %}<small class="field-error">{{ formErrors.image }}</small>{% endif %}
+    <span class="field-hint">Sélectionnez plusieurs photos à la fois. Formats acceptés : JPG, PNG, WebP, GIF (max 8 Mo chacune).</span>
+
+    <div class="image-preview" id="image-preview" role="listbox" aria-label="Aperçu des photos sélectionnées"></div>
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit" id="gallery-submit">
+      {{ formData and formData.status == 'draft' ? 'Enregistrer en brouillon' : 'Publier les photos' }}
+    </button>
+    <a class="btn btn-secondary" href="/admin/gallery">Annuler</a>
+  </div>
+</form>
+
+<script>
+(function(){
+  var input = document.getElementById('image');
+  var preview = document.getElementById('image-preview');
+  if (!input || !preview) return;
+
+  function renderPreview(){
+    preview.innerHTML = '';
+    var files = Array.from(input.files || []);
+    if (!files.length) return;
+    files.forEach(function(file, idx){
+      if (!file.type.startsWith('image/')) return;
+      var url = URL.createObjectURL(file);
+      var wrap = document.createElement('div');
+      wrap.className = 'image-preview-item';
+      wrap.style.position = 'relative';
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = file.name;
+      img.className = 'image-preview-thumb';
+      var del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'image-preview-remove';
+      del.setAttribute('aria-label', 'Retirer ' + file.name);
+      del.innerHTML = '×';
+      del.addEventListener('click', function(){
+        var dt = new DataTransfer();
+        input.files = (function(){
+          var remaining = Array.from(input.files).filter(function(_, i){ return i !== idx; });
+          remaining.forEach(function(f){ dt.items.add(f); });
+          return dt.files;
+        })();
+        renderPreview();
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+      wrap.appendChild(img);
+      wrap.appendChild(del);
+      preview.appendChild(wrap);
+    });
+  }
+  input.addEventListener('change', renderPreview);
+
+  // Empêche l'envoi si aucune image
+  var form = document.getElementById('gallery-form');
+  form.addEventListener('submit', function(e){
+    if (!input.files || input.files.length === 0) {
+      e.preventDefault();
+      var err = document.getElementById('image-error');
+      if (!err) {
+        err = document.createElement('small');
+        err.id = 'image-error';
+        err.className = 'field-error';
+        err.textContent = 'Au moins une image est obligatoire.';
+        input.parentNode.appendChild(err);
+      }
+      input.focus();
+    }
+  });
+})();
+</script>
+{% endblock %}

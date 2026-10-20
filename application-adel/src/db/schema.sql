@@ -227,6 +227,70 @@ CREATE TABLE IF NOT EXISTS posts (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------
+--  Galerie photo publique (gérée uniquement par l'admin / coach)
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS gallery_photos (
+  id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  title           VARCHAR(220) NULL,
+  image_url       VARCHAR(500) NOT NULL,
+  image_public_id VARCHAR(255) NULL,
+  status          ENUM('draft','published') NOT NULL DEFAULT 'published',
+  created_by      INT UNSIGNED NULL,
+  created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_gallery_status (status, created_at),
+  CONSTRAINT fk_gallery_author FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------
+--  Suivi photographique privé du sportif
+--  Une séance = une date + une photo par partie du corps.
+--  Les photos restent privées : seul le sportif y accède.
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS photo_sessions (
+  id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  athlete_id      INT UNSIGNED NOT NULL,
+  session_date    DATE NOT NULL,
+  notes           TEXT NULL,
+  created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_sessions_athlete_date (athlete_id, session_date),
+  CONSTRAINT fk_session_athlete FOREIGN KEY (athlete_id) REFERENCES athletes (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS session_photos (
+  id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  session_id      INT UNSIGNED NOT NULL,
+  view_key        ENUM('devant','dos','profil_gauche','profil_droit','complementaire') NOT NULL,
+  image_url       VARCHAR(500) NOT NULL,
+  image_public_id VARCHAR(255) NULL,
+  mime_type       VARCHAR(60) NOT NULL,
+  file_size       INT UNSIGNED NOT NULL,
+  created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_session_view (session_id, view_key),
+  KEY idx_photos_session (session_id),
+  CONSTRAINT fk_photo_session FOREIGN KEY (session_id) REFERENCES photo_sessions (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------
+--  Commentaires sur les séances photo (sportif uniquement)
+-- ---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS photo_comments (
+  id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  session_id  INT UNSIGNED NOT NULL,
+  author_id   INT UNSIGNED NOT NULL,
+  content     TEXT NOT NULL,
+  created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_comments_session (session_id),
+  CONSTRAINT fk_comment_session FOREIGN KEY (session_id) REFERENCES photo_sessions (id) ON DELETE CASCADE,
+  CONSTRAINT fk_comment_author FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------
 --  Messages du formulaire de contact (landing)
 -- ---------------------------------------------------------
 CREATE TABLE IF NOT EXISTS contact_messages (

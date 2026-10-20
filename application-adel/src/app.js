@@ -40,7 +40,7 @@ export function createApp() {
           scriptSrc: ["'self'"],
           // La landing utilise des attributs style inline — autorisés via 'unsafe-inline'.
           styleSrc: ["'self'", "'unsafe-inline'"],
-          imgSrc: ["'self'", 'data:', 'https://res.cloudinary.com'],
+          imgSrc: ["'self'", 'data:', 'blob:', 'https://res.cloudinary.com'],
           fontSrc: ["'self'", 'data:'],
           connectSrc: ["'self'"],
           workerSrc: ["'self'"],
