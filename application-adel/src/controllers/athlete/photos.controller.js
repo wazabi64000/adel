@@ -17,10 +17,11 @@ export const list = asyncHandler(async (req, res) => {
   const sessionIds = sessions.map((s) => s.id);
   const photosBySession = {};
   if (sessionIds.length) {
+    const placeholders = sessionIds.map(() => '?').join(', ');
     const photos = await query(
       `SELECT id, session_id, view_key, image_url, image_public_id, mime_type, file_size, created_at
-       FROM session_photos WHERE session_id IN (?) ORDER BY session_id, view_key`,
-      [sessionIds],
+       FROM session_photos WHERE session_id IN (${placeholders}) ORDER BY session_id, view_key`,
+      sessionIds,
     );
     for (const p of photos) {
       if (!photosBySession[p.session_id]) photosBySession[p.session_id] = [];
