@@ -110,8 +110,17 @@ export function createApp() {
   /* ------------------------------ Fichiers statiques ---------------------- */
   app.use(
     express.static(PUBLIC_DIR, {
-      maxAge: config.isProd ? '7d' : 0,
       etag: true,
+      setHeaders(res, filePath) {
+        const isShell =
+          /\.(?:css|js)$/i.test(filePath) ||
+          /(?:^|\/)(?:sw\.js|manifest\.webmanifest|offline\.html)$/i.test(filePath);
+        if (isShell) {
+          res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+          return;
+        }
+        if (config.isProd) res.setHeader('Cache-Control', 'public, max-age=604800');
+      },
     }),
   );
   // GIF catalogue exercices (storage/ hors public/)

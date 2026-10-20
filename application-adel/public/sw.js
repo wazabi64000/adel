@@ -1,5 +1,5 @@
 /* Coach Adel — service worker (mises à jour forcées) */
-const VERSION = 'adel-pwa-v24';
+const VERSION = 'adel-pwa-v26';
 const PRECACHE = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 
@@ -17,9 +17,26 @@ const PRECACHE_URLS = [
   '/icons/apple-touch-icon.png',
 ];
 
-/* Pas de skipWaiting ici : le client affiche un modal bloquant, puis envoie SKIP_WAITING. */
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(PRECACHE).then((cache) => cache.addAll(PRECACHE_URLS)));
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(PRECACHE);
+      await Promise.all(
+        PRECACHE_URLS.map((url) =>
+          cache.add(url).catch((err) => {
+            console.warn('[sw] precache fail', url, err);
+          }),
+        ),
+      );
+      // Notifie seulement s'il y a déjà un SW actif (vraie mise à jour)
+      if (self.registration.active) {
+        const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+        clients.forEach((client) => {
+          client.postMessage({ type: 'SW_WAITING', version: VERSION });
+        });
+      }
+    })(),
+  );
 });
 
 self.addEventListener('activate', (event) => {
@@ -68,16 +85,15 @@ async function networkFirst(request) {
   }
 }
 
-async function staleWhileRevalidate(request) {
+async function networkFirstAsset(request) {
   const cache = await caches.open(RUNTIME);
-  const cached = await cache.match(request);
-  const networkPromise = fetch(request)
-    .then((response) => {
-      if (response && response.ok) cache.put(request, response.clone());
-      return response;
-    })
-    .catch(() => cached);
-  return cached || networkPromise;
+  try {
+    const response = await fetch(request, { cache: 'no-store' });
+    if (response && response.ok) cache.put(request, response.clone());
+    return response;
+  } catch {
+    return (await cache.match(request)) || caches.match(request);
+  }
 }
 
 self.addEventListener('fetch', (event) => {
@@ -93,13 +109,26 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // CSS/JS : réseau d'abord pour que les mises à jour arrivent vite
+  if (
+    url.pathname.startsWith('/css/') ||
+    url.pathname.startsWith('/js/') ||
+    url.pathname.endsWith('.webmanifest')
+  ) {
+    event.respondWith(networkFirstAsset(request));
+    return;
+  }
+
   if (isStaticAsset(url)) {
-    event.respondWith(staleWhileRevalidate(request));
+    event.respondWith(networkFirstAsset(request));
   }
 });
 
 self.addEventListener('message', (event) => {
   if (event.data === 'SKIP_WAITING' || event.data?.type === 'SKIP_WAITING') {
     self.skipWaiting();
+  }
+  if (event.data === 'GET_VERSION' || event.data?.type === 'GET_VERSION') {
+    event.source?.postMessage({ type: 'SW_VERSION', version: VERSION });
   }
 });

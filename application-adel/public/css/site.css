@@ -159,11 +159,25 @@ button.btn-primary:hover,
 .mobilebar .instagram-nav,.mobilebar .tiktok-nav,.mobilebar .snapchat-nav,.mobilebar .whatsapp-nav,.mobilebar .facebook-nav{width:32px;height:32px}
 .mobilebar .instagram-nav svg,.mobilebar .tiktok-nav svg,.mobilebar .snapchat-nav svg,.mobilebar .whatsapp-nav svg,.mobilebar .facebook-nav svg{width:16px;height:16px}
 .mobilebar .burger{width:36px;height:36px}
-@media(max-width:380px){
-  .mobilebar{gap:4px;padding-inline:8px}
-  .mobilebar .brand{font-size:1.1rem}
+@media(max-width:420px){
+  .mobilebar{gap:3px;padding-inline:6px}
+  .mobilebar .brand{font-size:1.05rem;max-width:28%}
+  .mobilebar .instagram-nav,
   .mobilebar .tiktok-nav,
-  .mobilebar .snapchat-nav{display:none}
+  .mobilebar .snapchat-nav,
+  .mobilebar .whatsapp-nav,
+  .mobilebar .facebook-nav{width:30px;height:30px}
+  .mobilebar .instagram-nav svg,
+  .mobilebar .tiktok-nav svg,
+  .mobilebar .snapchat-nav svg,
+  .mobilebar .whatsapp-nav svg,
+  .mobilebar .facebook-nav svg{width:15px;height:15px}
+  .mobilebar .burger{width:32px;height:32px}
+  /* Garde Snapchat + Facebook visibles ; seul TikTok se replie si trop étroit */
+  .mobilebar .tiktok-nav{display:none}
+}
+@media(max-width:340px){
+  .mobilebar .whatsapp-nav{display:none}
 }
 @media(min-width:1024px){
   .mobilebar{display:none}
