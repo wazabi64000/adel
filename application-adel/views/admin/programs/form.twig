@@ -3,81 +3,188 @@
 {% block heading %}{{ program ? 'Éditer un programme' : 'Nouveau programme' }}{% endblock %}
 
 {% block content %}
-<form class="app-form panel" method="post"
-      action="{{ program ? '/admin/programs/' ~ program.id ~ '?_method=PUT' : '/admin/programs' }}">
-  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+{% set isCreate = not program %}
 
+{% if isCreate %}
+<form class="app-form panel program-wizard" method="post" action="/admin/programs" id="program-builder" novalidate lang="fr">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+  <input type="hidden" name="sessions_per_week" id="sessions_per_week" value="{{ old(formData, 'sessions_per_week') | default(3) }}" data-sessions-count>
+
+  <nav class="wizard-steps" aria-label="Étapes du programme" data-wizard-progress>
+    <div class="wizard-step is-active" data-progress-step="0">
+      <span class="wizard-step__num" aria-hidden="true">1</span>
+      <span class="wizard-step__txt">Infos</span>
+    </div>
+    <div class="wizard-step" data-progress-step="sessions">
+      <span class="wizard-step__num" aria-hidden="true">2</span>
+      <span class="wizard-step__txt">Séances</span>
+    </div>
+    <div class="wizard-step" data-progress-step="review">
+      <span class="wizard-step__num" aria-hidden="true">3</span>
+      <span class="wizard-step__txt">Valider</span>
+    </div>
+  </nav>
+
+  {% if formErrors.sessions %}<p class="field-error">{{ formErrors.sessions }}</p>{% endif %}
+
+  <section class="wizard-pane is-active" data-wizard-pane="infos">
+    <header class="wizard-header">
+      <h2 class="wizard-title">Le programme</h2>
+      <p class="wizard-help">Qui, combien, puis on construit chaque séance.</p>
+    </header>
+
+    <div class="wizard-group">
+      <h3 class="wizard-group__title">Essentiel</h3>
+      <div class="field">
+        <label for="title">Titre *</label>
+        <input id="title" name="title" type="text" value="{{ old(formData, 'title') }}" required maxlength="190" autocomplete="off" placeholder="Ex. Force 4 semaines — Mohammed">
+        {% if formErrors.title %}<small class="field-error">{{ formErrors.title }}</small>{% endif %}
+      </div>
+      <div class="field">
+        <label for="athlete_id">Sportif *</label>
+        <select id="athlete_id" name="athlete_id" required>
+          <option value="">— Choisir —</option>
+          {% for a in athletes %}
+            {% set selected = (old(formData, 'athlete_id') | default(presetAthleteId | default(''))) %}
+            <option value="{{ a.id }}" {{ selected == a.id ? 'selected' : '' }}>{{ a.first_name }} {{ a.last_name }}</option>
+          {% endfor %}
+        </select>
+        {% if formErrors.athlete_id %}<small class="field-error">{{ formErrors.athlete_id }}</small>{% endif %}
+      </div>
+    </div>
+
+    <div class="wizard-group">
+      <h3 class="wizard-group__title">Planning</h3>
+      <div class="field-stack field-stack--2">
+        <div class="field">
+          <label for="weeks">Durée (semaines) *</label>
+          <input id="weeks" name="weeks" type="number" min="1" max="52" inputmode="numeric" value="{{ old(formData, 'weeks') | default(4) }}" required>
+        </div>
+        <div class="field">
+          <label for="sessions_per_week_ui">Séances par semaine *</label>
+          <input id="sessions_per_week_ui" type="number" min="1" max="7" inputmode="numeric" value="{{ old(formData, 'sessions_per_week') | default(3) }}" data-sessions-ui required>
+        </div>
+      </div>
+      <p class="wizard-hint">Ensuite : une séance à la fois, avec possibilité de la dupliquer.</p>
+      <div class="field-stack field-stack--2 field-stack--dates">
+        <div class="field field--date">
+          <label for="start_date">Date de début</label>
+          <input id="start_date" name="start_date" type="date" lang="fr" value="{{ old(formData, 'start_date') }}">
+          <small class="field-hint">Pour les rappels e-mail 1 h avant.</small>
+        </div>
+        <div class="field field--date">
+          <label for="end_date">Date de fin</label>
+          <input id="end_date" name="end_date" type="date" lang="fr" value="{{ old(formData, 'end_date') }}">
+        </div>
+      </div>
+    </div>
+
+    <div class="wizard-group">
+      <h3 class="wizard-group__title">Cadre</h3>
+      <div class="field-stack field-stack--3">
+        <div class="field">
+          <label for="location">Lieu</label>
+          <select id="location" name="location">
+            <option value="salle" {{ old(formData, 'location') == 'salle' ? 'selected' : '' }}>Salle</option>
+            <option value="home" {{ old(formData, 'location') == 'home' ? 'selected' : '' }}>À la maison</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="level">Niveau</label>
+          <select id="level" name="level">
+            <option value="debutant" {{ old(formData, 'level') == 'debutant' ? 'selected' : '' }}>Débutant</option>
+            <option value="intermediaire" {{ old(formData, 'level') == 'intermediaire' ? 'selected' : '' }}>Intermédiaire</option>
+            <option value="avance" {{ old(formData, 'level') == 'avance' ? 'selected' : '' }}>Avancé</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="status">Statut</label>
+          <select id="status" name="status">
+            <option value="active" {{ old(formData, 'status') == 'active' ? 'selected' : '' }}>Actif</option>
+            <option value="draft" {{ old(formData, 'status') == 'draft' ? 'selected' : '' }}>Brouillon</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="goal">Objectif</label>
+        <input id="goal" name="goal" type="text" value="{{ old(formData, 'goal') }}" maxlength="255" placeholder="Ex. Prise de muscle, reprise…">
+      </div>
+      <div class="field">
+        <label for="description">Notes <span class="label-opt">(optionnel)</span></label>
+        <textarea id="description" name="description" rows="2" placeholder="Consignes, matériel dispo…">{{ old(formData, 'description') }}</textarea>
+      </div>
+    </div>
+
+    <div class="wizard-nav">
+      <a class="btn btn-secondary" href="/admin/programs">Annuler</a>
+      <button type="button" class="btn btn-primary" data-wizard-next>Continuer → Séances</button>
+    </div>
+  </section>
+
+  <div id="sessions-root" class="wizard-sessions" hidden></div>
+
+  <section class="wizard-pane" data-wizard-pane="review" hidden>
+    <header class="wizard-header">
+      <h2 class="wizard-title">Récapitulatif</h2>
+      <p class="wizard-help">Vérifie puis crée. Le sportif reçoit un e-mail avec le lien.</p>
+    </header>
+    <div class="wizard-summary" data-wizard-summary></div>
+    <div class="wizard-nav">
+      <button type="button" class="btn btn-secondary" data-wizard-prev>← Retour</button>
+      <button type="submit" class="btn btn-primary">Créer le programme</button>
+    </div>
+  </section>
+
+  <script type="application/json" id="program-focus-options">{{ bodyFocusOptionsJson|raw }}</script>
+  <script type="application/json" id="catalog-families">{{ catalogFamiliesJson|raw }}</script>
+  <script type="application/json" id="catalog-regions">{{ catalogRegionsJson|raw }}</script>
+</form>
+
+{% else %}
+<form class="app-form panel" method="post" action="/admin/programs/{{ program.id }}?_method=PUT" lang="fr">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
   <div class="field">
     <label for="title">Titre *</label>
     <input id="title" name="title" type="text" value="{{ old(formData, 'title') }}" required maxlength="190">
-    {% if formErrors.title %}<small class="field-error">{{ formErrors.title }}</small>{% endif %}
   </div>
-
-  <div class="field-row">
+  <div class="field-stack field-stack--3">
     <div class="field">
       <label for="athlete_id">Sportif *</label>
       <select id="athlete_id" name="athlete_id" required>
-        <option value="">— Choisir —</option>
         {% for a in athletes %}
-          {% set selected = (old(formData, 'athlete_id') | default(presetAthleteId | default(''))) %}
-          <option value="{{ a.id }}" {{ selected == a.id ? 'selected' : '' }}>{{ a.first_name }} {{ a.last_name }}</option>
+          <option value="{{ a.id }}" {{ old(formData, 'athlete_id') == a.id ? 'selected' : '' }}>{{ a.first_name }} {{ a.last_name }}</option>
         {% endfor %}
       </select>
-      {% if formErrors.athlete_id %}<small class="field-error">{{ formErrors.athlete_id }}</small>{% endif %}
     </div>
     <div class="field">
-      <label for="location">Lieu</label>
-      <select id="location" name="location">
-        <option value="salle" {{ old(formData, 'location') == 'salle' ? 'selected' : '' }}>Salle</option>
-        <option value="home" {{ old(formData, 'location') == 'home' ? 'selected' : '' }}>À la maison (home)</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="level">Niveau</label>
-      <select id="level" name="level">
-        <option value="debutant" {{ old(formData, 'level') == 'debutant' ? 'selected' : '' }}>Débutant</option>
-        <option value="intermediaire" {{ old(formData, 'level') == 'intermediaire' ? 'selected' : '' }}>Intermédiaire</option>
-        <option value="avance" {{ old(formData, 'level') == 'avance' ? 'selected' : '' }}>Avancé</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="status">Statut</label>
-      <select id="status" name="status">
-        <option value="active" {{ old(formData, 'status') == 'active' ? 'selected' : '' }}>Actif</option>
-        <option value="draft" {{ old(formData, 'status') == 'draft' ? 'selected' : '' }}>Brouillon</option>
-        <option value="archived" {{ old(formData, 'status') == 'archived' ? 'selected' : '' }}>Archivé</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="field">
-    <label for="goal">Objectif</label>
-    <input id="goal" name="goal" type="text" value="{{ old(formData, 'goal') }}" maxlength="255">
-  </div>
-
-  <div class="field">
-    <label for="description">Description</label>
-    <textarea id="description" name="description" rows="4">{{ old(formData, 'description') }}</textarea>
-  </div>
-
-  <div class="field-row">
-    <div class="field">
-      <label for="weeks">Nombre de semaines</label>
+      <label for="weeks">Durée (semaines)</label>
       <input id="weeks" name="weeks" type="number" min="1" max="52" value="{{ old(formData, 'weeks') | default(4) }}">
     </div>
     <div class="field">
-      <label for="start_date">Date de début</label>
-      <input id="start_date" name="start_date" type="date" value="{{ old(formData, 'start_date') }}">
-    </div>
-    <div class="field">
-      <label for="end_date">Date de fin</label>
-      <input id="end_date" name="end_date" type="date" value="{{ old(formData, 'end_date') }}">
+      <label for="sessions_per_week">Séances / semaine</label>
+      <input id="sessions_per_week" name="sessions_per_week" type="number" min="1" max="7" value="{{ old(formData, 'sessions_per_week') | default(3) }}">
     </div>
   </div>
-
+  <div class="field-stack field-stack--2 field-stack--dates">
+    <div class="field field--date">
+      <label for="start_date">Date de début</label>
+      <input id="start_date" name="start_date" type="date" lang="fr" value="{{ old(formData, 'start_date') }}">
+    </div>
+    <div class="field field--date">
+      <label for="end_date">Date de fin</label>
+      <input id="end_date" name="end_date" type="date" lang="fr" value="{{ old(formData, 'end_date') }}">
+    </div>
+  </div>
+  <input type="hidden" name="location" value="{{ old(formData, 'location') | default('salle') }}">
+  <input type="hidden" name="level" value="{{ old(formData, 'level') | default('debutant') }}">
+  <input type="hidden" name="status" value="{{ old(formData, 'status') | default('active') }}">
+  <input type="hidden" name="goal" value="{{ old(formData, 'goal') }}">
+  <input type="hidden" name="description" value="{{ old(formData, 'description') }}">
+  <p class="muted">Les séances s’éditent sur la <a href="/admin/programs/{{ program.id }}">fiche programme</a> (pas de régénération auto).</p>
   <div class="form-actions">
-    <button class="btn btn-primary" type="submit">{{ program ? 'Enregistrer' : 'Créer le programme' }}</button>
-    <a class="btn btn-secondary" href="{{ program ? '/admin/programs/' ~ program.id : '/admin/programs' }}">Annuler</a>
+    <button class="btn btn-primary" type="submit">Enregistrer</button>
+    <a class="btn btn-secondary" href="/admin/programs/{{ program.id }}">Annuler</a>
   </div>
 </form>
+{% endif %}
 {% endblock %}

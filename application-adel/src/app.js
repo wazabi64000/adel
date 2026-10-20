@@ -5,15 +5,18 @@ import methodOverride from 'method-override';
 import helmet from 'helmet';
 import flash from 'connect-flash';
 
-import config, { PUBLIC_DIR } from './config/env.js';
+import config, { PUBLIC_DIR, EXERCISE_MEDIA_DIR } from './config/env.js';
 import { PRIVATE_PREFIXES } from './services/policy.service.js';
 import { pool } from './config/database.js';
 import { configureViews, assertViewsPresent } from './config/twig.js';
 import routes from './routes/index.js';
+import cronRoutes from './routes/cron.routes.js';
 import { attachUser } from './middlewares/auth.js';
 import { csrf } from './middlewares/csrf.js';
 import { templateLocals } from './middlewares/locals.js';
-import { globalLimiter } from './middlewares/rateLimit.js';
+import { globalLimiter, globalSlowDown } from './middlewares/rateLimit.js';
+import { createCorsMiddleware } from './middlewares/cors.js';
+import { securityResponseLogger } from './middlewares/securityLog.js';
 import { notFound, errorHandler } from './middlewares/errors.js';
 
 export function createApp() {
@@ -25,6 +28,8 @@ export function createApp() {
   if (config.isProd) app.set('trust proxy', 1);
 
   /* ------------------------------- Sécurité ------------------------------- */
+  app.use(securityResponseLogger);
+  app.use(createCorsMiddleware());
   app.use(
     helmet({
       contentSecurityPolicy: {
@@ -35,7 +40,7 @@ export function createApp() {
           scriptSrc: ["'self'"],
           // La landing utilise des attributs style inline — autorisés via 'unsafe-inline'.
           styleSrc: ["'self'", "'unsafe-inline'"],
-          imgSrc: ["'self'", 'data:', 'https://res.cloudinary.com'],
+          imgSrc: ["'self'", 'data:', 'blob:', 'https://res.cloudinary.com'],
           fontSrc: ["'self'", 'data:'],
           connectSrc: ["'self'"],
           workerSrc: ["'self'"],
@@ -51,10 +56,16 @@ export function createApp() {
         ? { maxAge: 31536000, includeSubDomains: true, preload: true }
         : false,
       crossOriginEmbedderPolicy: false,
-      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      crossOriginResourcePolicy: { policy: 'same-site' },
+      crossOriginOpenerPolicy: { policy: 'same-origin' },
       xFrameOptions: { action: 'sameorigin' },
+      noSniff: true,
+      xssFilter: true,
+      hidePoweredBy: true,
     }),
   );
+
+  app.disable('x-powered-by');
 
   app.use((_req, res, next) => {
     res.set(
@@ -101,6 +112,15 @@ export function createApp() {
     express.static(PUBLIC_DIR, {
       maxAge: config.isProd ? '7d' : 0,
       etag: true,
+    }),
+  );
+  // GIF catalogue exercices (storage/ hors public/)
+  app.use(
+    '/media/exercises',
+    express.static(EXERCISE_MEDIA_DIR, {
+      maxAge: config.isProd ? '7d' : 0,
+      etag: true,
+      fallthrough: false,
     }),
   );
 
@@ -153,9 +173,12 @@ export function createApp() {
   app.use(csrf);
 
   /* --------------------------------- Limites ------------------------------ */
+  // Soft: ralentit sans bloquer — puis plafond dur.
+  app.use(globalSlowDown);
   app.use(globalLimiter);
 
   /* ---------------------------------- Routes ------------------------------ */
+  app.use('/internal/cron', cronRoutes);
   app.use('/', routes);
 
   /* -------------------------------- Erreurs ------------------------------- */

@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { requireAdmin } from '../middlewares/auth.js';
 import { adminBadges } from '../middlewares/badges.js';
-import { single } from '../middlewares/upload.js';
+import { single, anyFiles } from '../middlewares/upload.js';
 import { csrfCheck } from '../middlewares/csrf.js';
+import { apiLimiter } from '../middlewares/rateLimit.js';
+import * as catalogApi from '../controllers/admin/catalog.controller.js';
 
 import * as dashboard from '../controllers/admin/dashboard.controller.js';
 import * as article from '../controllers/admin/article.controller.js';
@@ -12,6 +14,7 @@ import * as program from '../controllers/admin/program.controller.js';
 import * as day from '../controllers/admin/day.controller.js';
 import * as exercise from '../controllers/admin/exercise.controller.js';
 import * as inbox from '../controllers/admin/inbox.controller.js';
+import * as gallery from '../controllers/admin/gallery.controller.js';
 
 const router = Router();
 
@@ -51,9 +54,12 @@ router.post('/athletes/:id/photos', single('photo'), csrfCheck, athlete.uploadPh
 router.delete('/athletes/:id/photos/:photoId', athlete.deletePhoto);
 
 /* --------------------------------- Programmes --------------------------------- */
+router.get('/api/exercise-catalog', apiLimiter, catalogApi.search);
+router.get('/api/exercise-catalog/body-parts', apiLimiter, catalogApi.bodyParts);
+
 router.get('/programs', program.list);
 router.get('/programs/new', program.newForm);
-router.post('/programs', program.create);
+router.post('/programs', csrfCheck, program.create);
 router.get('/programs/:id', program.show);
 router.get('/programs/:id/edit', program.editForm);
 router.put('/programs/:id', program.update);
@@ -64,9 +70,15 @@ router.post('/programs/:id/days', day.ensure);
 /* ------------------------------ Jours & exercices ----------------------------- */
 router.put('/days/:dayId', day.update);
 router.delete('/days/:dayId', day.remove);
-router.post('/days/:dayId/exercises', single('image'), csrfCheck, exercise.create);
-router.put('/exercises/:id', single('image'), csrfCheck, exercise.update);
+router.post('/days/:dayId/exercises', csrfCheck, exercise.create);
+router.put('/exercises/:id', csrfCheck, exercise.update);
 router.delete('/exercises/:id', exercise.remove);
+
+/* ---------------------------------- Galerie ---------------------------------- */
+router.get('/gallery', gallery.list);
+router.get('/gallery/new', gallery.newForm);
+router.post('/gallery', anyFiles(), csrfCheck, gallery.create);
+router.delete('/gallery/:id', gallery.remove);
 
 /* --------------------------- Messages & demandes ------------------------------ */
 router.get('/messages', inbox.messages);

@@ -1,0 +1,238 @@
+{
+  "version": 1,
+  "verifiedAt": "2026-10-19",
+  "task": "T-EX-000 / T-EX-001",
+  "disclaimer": "Matrice issue de vérifications documentaires et d'appels API en lecture seule. Aucun corpus média n'a été téléchargé. Les volumes « verified » sont des comptes API ou des annonces éditeur ; ne pas les confondre avec des fichiers locaux validés.",
+  "decisionNeeded": [
+    "Confirmer si Adelcoaching est un usage commercial / monétisé.",
+    "Choisir la voie GIF : achat licence (ExerciseDB ou Gym visual), production maison, ou images CC uniquement en attendant.",
+    "Ne pas collecter le tier gratuit ExerciseDB pour un usage commercial."
+  ],
+  "sources": [
+    {
+      "id": "exercisedb-free",
+      "name": "ExerciseDB API (tier gratuit)",
+      "officialUrl": "https://oss.exercisedb.dev/docs",
+      "access": "api",
+      "auth": "none_for_free_tier",
+      "formats": ["gif"],
+      "gifAvailable": true,
+      "volumes": {
+        "announced": 1500,
+        "verifiedApiTotal": 1500,
+        "verifiedLocalFiles": 1324,
+        "notes": "Collecte 2026-10-19 : 1324 GIF valides / 176 manquants (404 CDN). Script scripts/exercises/collect-exercisedb-gifs.mjs. Free tier NON COMMERCIAL."
+      },
+      "dataLicense": "Terms AscendAPI / ExerciseDB free tier (non-commercial)",
+      "mediaLicense": "Same free-tier restrictions; 180p only",
+      "licenseUrls": [
+        "https://oss.exercisedb.dev/docs",
+        "https://docs.ascendapi.com/products/edb-v1/overview"
+      ],
+      "attribution": "Credit AscendAPI required",
+      "redistributionAllowed": false,
+      "commercialAllowed": false,
+      "rateLimits": "Délais script ~400ms/GIF et ~1.1s/page",
+      "suitableForLocalCorpus": true,
+      "suitableForAdelCommercial": false,
+      "recommendation": "local_dev_non_commercial_only_upgrade_for_prod"
+    },
+    {
+      "id": "exercisedb-paid",
+      "name": "ExerciseDB / AscendAPI (plan payant ou package)",
+      "officialUrl": "https://exercisedb.io/terms",
+      "access": "purchase_or_rapidapi",
+      "auth": "RapidAPI key or downloaded package after purchase",
+      "envVarHint": "RAPIDAPI_KEY or vendor-specific credentials after purchase — ne pas inventer de clé",
+      "formats": ["gif", "json"],
+      "gifAvailable": true,
+      "volumes": {
+        "announced": "1500+ (V1) / higher on other plans",
+        "verifiedApiTotal": null,
+        "verifiedLocalFiles": 0,
+        "notes": "Volumes payants non vérifiés sans abonnement. Terms: usage in own product OK; no resale/redistribution as raw dataset/API."
+      },
+      "dataLicense": "Purchased limited license (non-exclusive)",
+      "mediaLicense": "Limited-use access license for GIFs with data; not ownership transfer",
+      "licenseUrls": [
+        "https://exercisedb.io/terms",
+        "https://docs.ascendapi.com/products/edb-v1/overview"
+      ],
+      "attribution": "Selon contrat / plan",
+      "redistributionAllowed": false,
+      "commercialAllowed": true,
+      "rateLimits": "Selon plan",
+      "suitableForLocalCorpus": true,
+      "suitableForAdelCommercial": true,
+      "recommendation": "preferred_paid_gif_path_if_budget",
+      "caveats": [
+        "Relire le contrat exact du canal d'achat avant tout téléchargement.",
+        "Certains termes API RapidAPI historiques interdisent le stockage permanent — vérifier le plan retenu."
+      ]
+    },
+    {
+      "id": "gymvisual-via-github-dataset",
+      "name": "hasaneyldrm/exercises-dataset (médias Gym visual)",
+      "officialUrl": "https://github.com/hasaneyldrm/exercises-dataset",
+      "access": "git_clone",
+      "auth": "none",
+      "formats": ["gif", "png", "json"],
+      "gifAvailable": true,
+      "volumes": {
+        "announced": 1324,
+        "verifiedApiTotal": null,
+        "verifiedLocalFiles": 0,
+        "notes": "Volume annoncé par le README upstream. Médias 180×180. NOTICE.md : médias © Gym visual ; clone ≠ licence pour réutilisation projet."
+      },
+      "dataLicense": "MIT (metadata / instructions)",
+      "mediaLicense": "© Gym visual — governed by Gym visual Terms; attribution required",
+      "licenseUrls": [
+        "https://github.com/hasaneyldrm/exercises-dataset/blob/main/NOTICE.md",
+        "https://gymvisual.com/content/3-terms-and-conditions-of-use"
+      ],
+      "attribution": "© Gym visual — https://gymvisual.com/",
+      "redistributionAllowed": false,
+      "commercialAllowed": false,
+      "rateLimits": "n/a (git)",
+      "suitableForLocalCorpus": false,
+      "suitableForAdelCommercial": false,
+      "recommendation": "exclude_unless_own_gymvisual_license"
+    },
+    {
+      "id": "musclewiki-api",
+      "name": "MuscleWiki API",
+      "officialUrl": "https://api.musclewiki.com/api-terms",
+      "access": "api",
+      "auth": "API subscription / key",
+      "envVarHint": "Vendor API key from MuscleWiki dashboard",
+      "formats": ["video", "thumbnail", "json"],
+      "gifAvailable": false,
+      "volumes": {
+        "announced": "1900+ exercises / 7700+ videos (éditeur)",
+        "verifiedApiTotal": null,
+        "verifiedLocalFiles": 0,
+        "notes": "Terms (2026-10-08) : interdiction téléchargement / stockage permanent / re-host CDN / scraping."
+      },
+      "dataLicense": "Limited API license (metadata display)",
+      "mediaLicense": "Stream/display only; no permanent storage",
+      "licenseUrls": ["https://api.musclewiki.com/api-terms"],
+      "attribution": "Required legal disclosure: Exercise data and videos provided by MuscleWiki.com",
+      "redistributionAllowed": false,
+      "commercialAllowed": true,
+      "rateLimits": "Plan-based",
+      "suitableForLocalCorpus": false,
+      "suitableForAdelCommercial": false,
+      "recommendation": "exclude_for_local_gif_library",
+      "caveats": [
+        "Peut servir d'affichage streamé plus tard, pas de corpus local."
+      ]
+    },
+    {
+      "id": "wger",
+      "name": "wger Workout Manager (API publique)",
+      "officialUrl": "https://wger.de/api/v2/",
+      "docsUrl": "https://wger.readthedocs.io/en/latest/api/api.html",
+      "access": "api",
+      "auth": "none_for_public_endpoints",
+      "formats": ["png", "json", "mp4"],
+      "gifAvailable": false,
+      "volumes": {
+        "announced": null,
+        "verifiedApiTotal": {
+          "exerciseinfo": 932,
+          "exerciseimage": 383,
+          "video": 78
+        },
+        "verifiedLocalFiles": 0,
+        "notes": "Comptes GET API 2026-10-19. Images surtout PNG ; licences par entrée."
+      },
+      "dataLicense": "Per-entry Creative Commons (see /api/v2/license/)",
+      "mediaLicense": "Per-entry CC (BY-SA 3, BY-SA 4, BY 4, CC0, etc.)",
+      "licenseUrls": [
+        "https://wger.de/api/v2/license/",
+        "https://github.com/wger-project/wger"
+      ],
+      "attribution": "Required per CC entry (author fields on API objects)",
+      "redistributionAllowed": true,
+      "commercialAllowed": true,
+      "rateLimits": "Be polite; no published hard limit verified here",
+      "suitableForLocalCorpus": true,
+      "suitableForAdelCommercial": true,
+      "recommendation": "use_for_catalog_and_static_images_with_per_entry_license_check",
+      "caveats": [
+        "ShareAlike si CC BY-SA : adaptations sous même licence.",
+        "Pas un corpus GIF."
+      ]
+    },
+    {
+      "id": "everkinetic",
+      "name": "Everkinetic data",
+      "officialUrl": "https://github.com/everkinetic/data",
+      "access": "git_clone",
+      "auth": "none",
+      "formats": ["svg", "json"],
+      "gifAvailable": false,
+      "volumes": {
+        "announced": null,
+        "verifiedApiTotal": null,
+        "verifiedLocalFiles": 0,
+        "notes": "Licence SPDX CC-BY-SA-4.0 via GitHub API (2026-10-19). Illustrations vectorielles, pas GIF."
+      },
+      "dataLicense": "CC-BY-SA-4.0",
+      "mediaLicense": "CC-BY-SA-4.0",
+      "licenseUrls": [
+        "https://creativecommons.org/licenses/by-sa/4.0/",
+        "https://github.com/everkinetic/data"
+      ],
+      "attribution": "Everkinetic / Greg Priday (credit required)",
+      "redistributionAllowed": true,
+      "commercialAllowed": true,
+      "rateLimits": "n/a (git)",
+      "suitableForLocalCorpus": true,
+      "suitableForAdelCommercial": true,
+      "recommendation": "use_for_static_illustrations_and_taxonomy_support",
+      "caveats": ["ShareAlike on adaptations (e.g. recolored SVG)."]
+    },
+    {
+      "id": "free-exercise-db",
+      "name": "yuhonas/free-exercise-db",
+      "officialUrl": "https://github.com/yuhonas/free-exercise-db",
+      "access": "git_clone",
+      "auth": "none",
+      "formats": ["json", "jpg", "png"],
+      "gifAvailable": false,
+      "volumes": {
+        "announced": "800+",
+        "verifiedApiTotal": null,
+        "verifiedLocalFiles": 0,
+        "notes": "Unlicense (SPDX) via GitHub API 2026-10-19. Photos + JSON — pas GIF."
+      },
+      "dataLicense": "Unlicense (public domain)",
+      "mediaLicense": "Unlicense (public domain)",
+      "licenseUrls": ["https://unlicense.org/", "https://github.com/yuhonas/free-exercise-db"],
+      "attribution": "Not required; recommended courtesy credit",
+      "redistributionAllowed": true,
+      "commercialAllowed": true,
+      "rateLimits": "n/a (git)",
+      "suitableForLocalCorpus": true,
+      "suitableForAdelCommercial": true,
+      "recommendation": "preferred_open_catalog_base"
+    }
+  ],
+  "matrixSummary": {
+    "openRedistributableCommercialWithGif": [],
+    "openRedistributableCommercialWithoutGif": ["wger", "everkinetic", "free-exercise-db"],
+    "paidPossibleLocalGif": ["exercisedb-paid"],
+    "explicitlyExcludedForLocalCorpus": ["exercisedb-free", "musclewiki-api", "gymvisual-via-github-dataset"]
+  },
+  "allowedDownloadDomainsDraft": {
+    "status": "draft_only_activate_after_owner_choice",
+    "domains": [
+      "wger.de",
+      "raw.githubusercontent.com",
+      "github.com",
+      "static.exercisedb.dev"
+    ],
+    "notes": "static.exercisedb.dev uniquement après licence payante confirmée. Jamais d'IP privées / localhost comme cible de collecte."
+  }
+}

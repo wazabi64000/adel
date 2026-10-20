@@ -121,7 +121,7 @@ export function sendPasswordReset({ email, resetUrl }) {
  * Informe le sportif d'un changement sur son programme.
  * @param {'created'|'updated'|'activated'|'archived'|'content'} kind
  */
-export function sendProgramUpdate({ name, email, programTitle, kind }) {
+export function sendProgramUpdate({ name, email, programTitle, programId, kind }) {
   const copy = {
     created: {
       subject: `Nouveau programme : ${programTitle}`,
@@ -154,6 +154,10 @@ export function sendProgramUpdate({ name, email, programTitle, kind }) {
     lead: `Une mise à jour concerne <strong style="color:#f5f1ea">${programTitle}</strong>.`,
   };
 
+  const programUrl = programId
+    ? `${config.appUrl}/mon-espace/programme/${programId}`
+    : `${config.appUrl}/mon-espace`;
+
   return sendMail({
     to: email,
     subject: copy.subject,
@@ -161,10 +165,48 @@ export function sendProgramUpdate({ name, email, programTitle, kind }) {
       title: copy.title,
       body: `<p style="${pStyle}">Bonjour ${name},</p>
         <p style="${pStyle}">${copy.lead}</p>
-        <p style="${pStyle}">Connecte-toi pour voir le détail jour par jour.</p>
-        <p style="${pStyle};margin-top:16px"><a href="${config.appUrl}/mon-espace" style="${btnStyle}">Ouvrir mon espace</a></p>`,
+        <p style="${pStyle}">Ouvre ton programme pour voir le détail séance par séance.</p>
+        <p style="${pStyle};margin-top:16px"><a href="${programUrl}" style="${btnStyle}">Voir mon programme</a></p>`,
     }),
-    text: `Bonjour ${name}. ${copy.title} — ${programTitle}. Espace : ${config.appUrl}/mon-espace`,
+    text: `Bonjour ${name}. ${copy.title} — ${programTitle}. Programme : ${programUrl}`,
+  });
+}
+
+/**
+ * Rappel 1 h avant la séance.
+ */
+export function sendSessionReminder({
+  name,
+  email,
+  programTitle,
+  programId,
+  dayTitle,
+  focus,
+  sessionDate,
+  sessionTime,
+  dayName,
+}) {
+  const programUrl = programId
+    ? `${config.appUrl}/mon-espace/programme/${programId}`
+    : `${config.appUrl}/mon-espace`;
+  const when = [dayName, sessionDate, sessionTime ? `à ${sessionTime}` : '']
+    .filter(Boolean)
+    .join(' · ');
+  const focusLine = focus ? `<p style="${pStyle}">Focus : <strong style="color:#f5f1ea">${focus}</strong></p>` : '';
+
+  return sendMail({
+    to: email,
+    subject: `Rappel — séance dans 1 h (${sessionTime || 'bientôt'})`,
+    html: layout({
+      title: 'Ta séance commence dans 1 heure',
+      body: `<p style="${pStyle}">Bonjour ${name},</p>
+        <p style="${pStyle}">Rappel pour <strong style="color:#f5f1ea">${programTitle}</strong>.</p>
+        <p style="${pStyle}"><strong style="color:#f5f1ea">${dayTitle || 'Séance'}</strong><br>${when}</p>
+        ${focusLine}
+        <p style="${pStyle}">Prépare ton matériel et ouvre ta séance pour suivre les exercices.</p>
+        <p style="${pStyle};margin-top:16px"><a href="${programUrl}" style="${btnStyle}">Voir ma séance</a></p>`,
+    }),
+    text: `Bonjour ${name}. Rappel : ${dayTitle || 'séance'} (${when}) — programme ${programTitle}. Lien : ${programUrl}`,
   });
 }
 
@@ -175,4 +217,5 @@ export default {
   sendAthleteWelcome,
   sendPasswordReset,
   sendProgramUpdate,
+  sendSessionReminder,
 };

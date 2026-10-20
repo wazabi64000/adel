@@ -14,15 +14,21 @@
 <div class="admin-shell">
   {% include 'partials/athlete-nav.twig' %}
   <div class="admin-main">
-    <header class="admin-top">
+    <header class="admin-top athlete-header">
       <button class="admin-burger" id="admin-burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
-      <h1 class="admin-page-title">{% block heading %}{{ title | default('Mon espace') }}{% endblock %}</h1>
+      <div class="athlete-header-center">
+        <div class="athlete-brand">
+          <img class="athlete-brand-mark" src="/image/logo.png" alt="" width="28" height="28">
+          <span class="athlete-brand-name">COACH<span class="athlete-brand-accent">ADEL</span></span>
+        </div>
+        <h1 class="athlete-page-title">{% block heading %}{{ title | default('Mon espace') }}{% endblock %}</h1>
+      </div>
       <div class="admin-user">
-        <a class="btn btn-primary btn-sm admin-site-link" href="/"><span class="admin-site-link__full">Site vitrine</span><span class="admin-site-link__short">Site</span></a>
-        <a href="/compte" class="admin-user-name">{{ currentAthlete ? currentAthlete.first_name : currentUser.name }}</a>
+        <a class="btn btn-primary btn-sm athlete-cta-site" href="/"><span class="athlete-cta__full">Site vitrine</span><span class="athlete-cta__short">Site</span></a>
+        <a href="/compte" class="athlete-user-name">{{ currentAthlete ? currentAthlete.first_name : currentUser.name }}</a>
         <form class="admin-logout" method="post" action="/logout">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-          <button class="btn btn-ghost btn-sm" type="submit"><span class="admin-logout__full">Déconnexion</span><span class="admin-logout__short">Quitter</span></button>
+          <button class="btn btn-ghost btn-sm athlete-cta-quit" type="submit"><span class="athlete-cta__full">Quitter</span><span class="athlete-cta__short">Quit</span></button>
         </form>
       </div>
     </header>
@@ -32,6 +38,8 @@
     </main>
   </div>
 </div>
+{% include 'partials/pwa-install.twig' %}
+{% include 'partials/pwa-update.twig' %}
 <script src="/js/admin.js" defer></script>
 <script src="/js/pwa.js" defer></script>
 {% block scripts %}{% endblock %}

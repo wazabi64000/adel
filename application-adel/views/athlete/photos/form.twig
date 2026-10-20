@@ -1,0 +1,166 @@
+{% extends 'layouts/athlete.twig' %}
+
+{% block heading %}{{ session ? 'Modifier la séance' : 'Nouvelle séance photo' }}{% endblock %}
+
+{% block content %}
+{% if formErrors.global %}
+  <div class="alert alert-error">{{ formErrors.global }}</div>
+{% endif %}
+
+<form class="app-form panel" method="post" enctype="multipart/form-data" action="{{ session ? '/mon-espace/photos/' ~ session.id ~ '?_method=PUT' : '/mon-espace/photos' }}" id="photo-form">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+  <div class="field">
+    <label for="session_date">Date de la séance *</label>
+    <input id="session_date" name="session_date" type="date" value="{{ old(formData, 'session_date') }}" required>
+    {% if formErrors.session_date %}<small class="field-error">{{ formErrors.session_date }}</small>{% endif %}
+  </div>
+
+  <div class="field">
+    <label for="notes">Notes (optionnel)</label>
+    <textarea id="notes" name="notes" rows="2" placeholder="Ex: séance après 4 semaines d'entraînement">{{ old(formData, 'notes') }}</textarea>
+  </div>
+
+  <div class="field fieldset">
+    <label>Une photo par partie du corps</label>
+    <p class="field-hint">Pour chaque partie, choisissez : prendre une photo avec l’appareil photo, ou importer une image depuis votre galerie. Vous pouvez recadrer l’aperçu avant d’enregistrer.</p>
+
+    <div class="photo-capture-grid">
+      {% for view in views %}
+      <div class="photo-capture-item">
+        <div class="photo-capture-header">
+          <span class="photo-capture-view">{{ view }}</span>
+        </div>
+
+        <!-- Choix 1 : Appareil photo -->
+        <label class="photo-action-btn photo-action-camera" for="cam_{{ view }}">
+          <span class="photo-action-icon">📷</span>
+          <span class="photo-action-label">Appareil photo</span>
+        </label>
+        <input id="cam_{{ view }}" name="photo_{{ view }}" type="file" accept="image/*" capture="environment" data-view="{{ view }}" data-source="camera" class="photo-file-input">
+
+        <!-- Choix 2 : Importer depuis la galerie -->
+        <label class="photo-action-btn photo-action-upload" for="up_{{ view }}">
+          <span class="photo-action-icon">📁</span>
+          <span class="photo-action-label">Importer une image</span>
+        </label>
+        <input id="up_{{ view }}" name="photo_{{ view }}" type="file" accept="image/*" data-view="{{ view }}" data-source="upload" class="photo-file-input">
+
+        {% if formErrors.photo %}<small class="field-error">{{ formErrors.photo }}</small>{% endif %}
+
+        <!-- Prévisualisation + recadrage -->
+        <div class="photo-preview-wrap" id="preview-wrap_{{ view }}" data-view="{{ view }}" style="display:none">
+          <div class="photo-preview-crop">
+            <img id="preview_{{ view }}" class="photo-preview-img" alt="{{ view }}" draggable="false">
+            <div class="crop-corner crop-corner--tl"></div>
+            <div class="crop-corner crop-corner--tr"></div>
+            <div class="crop-corner crop-corner--bl"></div>
+            <div class="crop-corner crop-corner--br"></div>
+          </div>
+          <div class="photo-controls">
+            <label class="crop-control">
+              <span>Position X</span>
+              <input type="range" min="0" max="100" value="50" data-view="{{ view }}" data-axis="x" class="crop-range">
+            </label>
+            <label class="crop-control">
+              <span>Position Y</span>
+              <input type="range" min="0" max="100" value="50" data-view="{{ view }}" data-axis="y" class="crop-range">
+            </label>
+            <button type="button" class="btn btn-danger btn-sm photo-remove" data-view="{{ view }}">Retirer</button>
+          </div>
+          <input type="hidden" name="crop_{{ view }}" value="50% 50%" class="crop-data">
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">{{ session ? 'Enregistrer la séance' : 'Enregistrer la séance' }}</button>
+    <a class="btn btn-secondary" href="/mon-espace/photos">Annuler</a>
+  </div>
+</form>
+
+<script>
+(function(){
+  var VIEWS = ['devant','dos','profil_gauche','profil_droit','complementaire'];
+
+  VIEWS.forEach(function(view){
+    var camInput = document.getElementById('cam_' + view);
+    var upInput = document.getElementById('up_' + view);
+    var previewWrap = document.getElementById('preview-wrap_' + view);
+    var previewImg = document.getElementById('preview_' + view);
+    var cropData = document.querySelector('.crop-data[data-view="' + view + '"]') || document.querySelector('input[name="crop_' + view + '"]');
+    var rangeX = document.querySelector('.crop-range[data-view="' + view + '"][data-axis="x"]');
+    var rangeY = document.querySelector('.crop-range[data-view="' + view + '"][data-axis="y"]');
+
+    if (!camInput || !upInput || !previewWrap || !previewImg) return;
+
+    // Ouvre l'appareil photo
+    document.querySelector('.photo-action-camera[for="cam_' + view + '"]').addEventListener('click', function(e){
+      e.preventDefault();
+      upInput.value = '';
+      camInput.click();
+    });
+
+    // Ouvre la galerie (upload)
+    document.querySelector('.photo-action-upload[for="up_' + view + '"]').addEventListener('click', function(e){
+      e.preventDefault();
+      camInput.value = '';
+      upInput.click();
+    });
+
+    function handleInput(input){
+      return function(){
+        var file = input.files && input.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+          alert('Format invalide.');
+          input.value = '';
+          return;
+        }
+        // L'autre input de la même vue est vidé (une seule photo par partie)
+        var other = (input === camInput) ? upInput : camInput;
+        other.value = '';
+
+        var url = URL.createObjectURL(file);
+        previewImg.src = url;
+        previewWrap.style.display = 'block';
+
+        // Reset recadrage au centre
+        previewImg.style.objectPosition = '50% 50%';
+        if (rangeX) rangeX.value = 50;
+        if (rangeY) rangeY.value = 50;
+        if (cropData) cropData.value = '50% 50%';
+      };
+    }
+    camInput.addEventListener('change', handleInput(camInput));
+    upInput.addEventListener('change', handleInput(upInput));
+
+    // Contrôles de recadrage (object-position)
+    function updateCrop(){
+      var x = rangeX ? rangeX.value : 50;
+      var y = rangeY ? rangeY.value : 50;
+      previewImg.style.objectPosition = x + '% ' + y + '%';
+      if (cropData) cropData.value = x + '% ' + y + '%';
+    }
+    if (rangeX) rangeX.addEventListener('input', updateCrop);
+    if (rangeY) rangeY.addEventListener('input', updateCrop);
+
+    // Retirer la photo
+    var removeBtn = previewWrap.querySelector('.photo-remove');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', function(){
+        previewWrap.style.display = 'none';
+        previewImg.src = '';
+        camInput.value = '';
+        upInput.value = '';
+        if (cropData) cropData.value = '50% 50%';
+        if (rangeX) rangeX.value = 50;
+        if (rangeY) rangeY.value = 50;
+      });
+    }
+  });
+})();
+</script>
+{% endblock %}

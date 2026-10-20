@@ -1,5 +1,6 @@
 import * as articleRepo from '../repositories/article.repo.js';
 import * as postRepo from '../repositories/post.repo.js';
+import * as galleryRepo from '../repositories/gallery.repo.js';
 import * as contactRepo from '../repositories/contact.repo.js';
 import * as accessRepo from '../repositories/accessRequest.repo.js';
 import { sendContactNotification, sendAccessRequestNotification } from '../services/mail.service.js';
@@ -13,6 +14,13 @@ export const home = asyncHandler(async (req, res) => {
     articleRepo.listPublished(6),
     postRepo.listPublished(6),
   ]);
+  let galleryPhotos = [];
+  try {
+    galleryPhotos = await galleryRepo.listPublished();
+  } catch {
+    // Table pas encore créée (db:setup non réexécuté) : galerie vide en attendant.
+    galleryPhotos = [];
+  }
   res.locals.seo = {
     ...res.locals.seo,
     title: 'Coach Adel — coach sportif, nutrition et préparation mentale',
@@ -22,6 +30,7 @@ export const home = asyncHandler(async (req, res) => {
     title: 'Coach Adel — coach sportif, nutrition et préparation mentale',
     articles,
     posts,
+    galleryPhotos,
   });
 });
 

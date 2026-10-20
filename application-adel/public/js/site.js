@@ -135,4 +135,60 @@
     var delay = toast.classList.contains('app-flash__item--error') ? 9000 : 5200;
     window.setTimeout(dismiss, delay);
   });
+
+  /* Galerie photo 3D + modale par photo */
+  (function(){
+    var track = document.getElementById('gallery-track');
+    if (!track) return;
+    var items = Array.from(track.querySelectorAll('.gallery3d-photo'));
+    var prev = document.querySelector('.gallery3d-prev');
+    var next = document.querySelector('.gallery3d-next');
+    var counter = document.getElementById('gallery-counter');
+    var n = items.length;
+    if (!n || !prev || !next || !counter) return;
+    var size = Math.min(track.clientWidth || 300, 340);
+    var radius = Math.max(220, (size / 2) / Math.tan(Math.PI / n));
+    var index = 0;
+
+    function place(){
+      var step = 360 / n;
+      items.forEach(function(item, i){
+        var ry = (i - index) * step;
+        item.style.setProperty('--ry', ry + 'deg');
+        item.style.setProperty('--tz', radius + 'px');
+        item.style.setProperty('--opacity', ry === 0 ? '1' : '0.5');
+        item.classList.toggle('center', ry === 0);
+        item.setAttribute('aria-current', ry === 0 ? 'true' : 'false');
+      });
+      counter.textContent = (index + 1) + ' sur ' + n;
+    }
+    function rotate(delta){
+      index = (index + delta + n) % n;
+      place();
+    }
+    prev.addEventListener('click', function(){ rotate(-1); });
+    next.addEventListener('click', function(){ rotate(1); });
+    track.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowLeft'){ rotate(-1); }
+      else if (e.key === 'ArrowRight'){ rotate(1); }
+    });
+    place();
+
+    /* Modale : clic sur n'importe quelle photo l'ouvre en grand */
+    var modal = document.getElementById('gallery-modal');
+    var modalImg = document.getElementById('gallery-modal-img');
+    var modalCaption = document.getElementById('gallery-modal-caption');
+    if (modal && modalImg && modalCaption) {
+      items.forEach(function(item){
+        item.addEventListener('click', function(){
+          lastModalOpener = item;
+          modalImg.src = item.getAttribute('data-src');
+          modalImg.alt = item.getAttribute('aria-label');
+          modalCaption.textContent = item.getAttribute('data-legend');
+          if (typeof modal.showModal === 'function') modal.showModal();
+          else modal.setAttribute('open', '');
+        });
+      });
+    }
+  })();
 })();

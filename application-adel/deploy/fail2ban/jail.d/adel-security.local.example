@@ -1,0 +1,18 @@
+# Exemple de jail Fail2Ban pour Coach Adel.
+# Copier vers /etc/fail2ban/jail.d/adel-security.local et adapter logpath.
+#
+# 1. Copier aussi filter.d/adel-security.conf vers /etc/fail2ban/filter.d/
+# 2. Pointer logpath vers le fichier où tourne l'app (journald → file, pm2, etc.)
+# 3. fail2ban-client reload
+
+[adel-security]
+enabled  = true
+filter   = adel-security
+# Exemple journald (systemd) :
+# backend  = systemd
+# journalmatch = _SYSTEMD_UNIT=adel.service
+logpath  = /var/log/adel/app.log
+maxretry = 8
+findtime = 15m
+bantime  = 1h
+action   = %(action_)s

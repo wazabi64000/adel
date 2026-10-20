@@ -50,6 +50,21 @@ const COLUMN_MIGRATIONS = [
     column: 'athlete_id',
     ddl: 'ALTER TABLE access_requests ADD COLUMN athlete_id INT UNSIGNED NULL AFTER approved_at',
   },
+  {
+    table: 'programs',
+    column: 'sessions_per_week',
+    ddl: 'ALTER TABLE programs ADD COLUMN sessions_per_week TINYINT UNSIGNED NOT NULL DEFAULT 3 AFTER weeks',
+  },
+  {
+    table: 'program_days',
+    column: 'session_type',
+    ddl: "ALTER TABLE program_days ADD COLUMN session_type ENUM('full_body','body_part') NOT NULL DEFAULT 'full_body' AFTER focus",
+  },
+  {
+    table: 'program_days',
+    column: 'scheduled_time',
+    ddl: "ALTER TABLE program_days ADD COLUMN scheduled_time TIME NOT NULL DEFAULT '18:00:00' AFTER session_type",
+  },
 ];
 
 const INDEX_MIGRATIONS = [
@@ -64,6 +79,79 @@ const INDEX_MIGRATIONS = [
     ddl: 'ALTER TABLE access_requests ADD KEY idx_requests_athlete (athlete_id)',
   },
 ];
+
+const TABLE_MIGRATIONS = [
+  {
+    table: 'photo_sessions',
+    ddl: `CREATE TABLE IF NOT EXISTS photo_sessions (
+      id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+      athlete_id      INT UNSIGNED NOT NULL,
+      session_date    DATE NOT NULL,
+      notes           TEXT NULL,
+      created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      PRIMARY KEY (id),
+      KEY idx_sessions_athlete_date (athlete_id, session_date),
+      CONSTRAINT fk_session_athlete FOREIGN KEY (athlete_id) REFERENCES athletes (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+  },
+  {
+    table: 'session_photos',
+    ddl: `CREATE TABLE IF NOT EXISTS session_photos (
+      id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+      session_id      INT UNSIGNED NOT NULL,
+      view_key        ENUM('devant','dos','profil_gauche','profil_droit','complementaire') NOT NULL,
+      image_url       VARCHAR(500) NOT NULL,
+      image_public_id VARCHAR(255) NULL,
+      mime_type       VARCHAR(60) NOT NULL,
+      file_size       INT UNSIGNED NOT NULL,
+      created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (id),
+      UNIQUE KEY uq_session_view (session_id, view_key),
+      KEY idx_photos_session (session_id),
+      CONSTRAINT fk_photo_session FOREIGN KEY (session_id) REFERENCES photo_sessions (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+  },
+  {
+    table: 'photo_comments',
+    ddl: `CREATE TABLE IF NOT EXISTS photo_comments (
+      id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+      session_id  INT UNSIGNED NOT NULL,
+      author_id   INT UNSIGNED NOT NULL,
+      content     TEXT NOT NULL,
+      created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (id),
+      KEY idx_comments_session (session_id),
+      CONSTRAINT fk_comment_session FOREIGN KEY (session_id) REFERENCES photo_sessions (id) ON DELETE CASCADE,
+      CONSTRAINT fk_comment_author FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+  },
+  {
+    table: 'session_reminders',
+    ddl: `CREATE TABLE IF NOT EXISTS session_reminders (
+      id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+      program_day_id  INT UNSIGNED NOT NULL,
+      athlete_id      INT UNSIGNED NOT NULL,
+      session_date    DATE NOT NULL,
+      reminded_at     DATETIME NOT NULL,
+      created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (id),
+      UNIQUE KEY uq_reminder_day_date (program_day_id, session_date),
+      KEY idx_reminders_athlete (athlete_id, session_date),
+      CONSTRAINT fk_reminders_day FOREIGN KEY (program_day_id) REFERENCES program_days (id) ON DELETE CASCADE,
+      CONSTRAINT fk_reminders_athlete FOREIGN KEY (athlete_id) REFERENCES athletes (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+  },
+];
+
+async function tableExists(conn, database, table) {
+  const [rows] = await conn.query(
+    `SELECT 1 FROM information_schema.TABLES
+     WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? LIMIT 1`,
+    [database, table],
+  );
+  return rows.length > 0;
+}
 
 async function columnExists(conn, database, table, column) {
   const [rows] = await conn.query(
@@ -102,6 +190,12 @@ export async function migrate(conn) {
         // Index déjà présent sous un autre nom : on ignore.
         if (err.code !== 'ER_DUP_KEYNAME') throw err;
       }
+    }
+  }
+  for (const m of TABLE_MIGRATIONS) {
+    if (!(await tableExists(conn, db, m.table))) {
+      await conn.query(m.ddl);
+      applied += 1;
     }
   }
   return applied;

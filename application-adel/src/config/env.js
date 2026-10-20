@@ -9,6 +9,7 @@ const __dirname = path.dirname(__filename);
 export const ROOT_DIR = path.resolve(__dirname, '..', '..');
 export const VIEWS_DIR = path.join(ROOT_DIR, 'views');
 export const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
+export const EXERCISE_MEDIA_DIR = path.join(ROOT_DIR, 'storage', 'exercises', 'media');
 
 // Charge le .env situé à la racine du projet.
 dotenv.config({ path: path.join(ROOT_DIR, '.env') });
@@ -21,11 +22,30 @@ const int = (v, fallback) => {
   return Number.isNaN(n) ? fallback : n;
 };
 
+/** URL publique : jamais localhost en prod (liens e-mails, canonical, sitemap). */
+function resolveAppUrl(port) {
+  const raw = String(process.env.APP_URL || '')
+    .trim()
+    .replace(/\/$/, '');
+  if (raw && !/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(raw)) {
+    return raw;
+  }
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${String(process.env.VERCEL_PROJECT_PRODUCTION_URL).replace(/\/$/, '')}`;
+  }
+  if ((process.env.NODE_ENV || 'development') === 'production') {
+    return 'https://adelcoaching.com';
+  }
+  return `http://localhost:${port}`;
+}
+
+const port = int(process.env.PORT, 3000);
+
 const config = {
   env: process.env.NODE_ENV || 'development',
   isProd: (process.env.NODE_ENV || 'development') === 'production',
-  port: int(process.env.PORT, 3000),
-  appUrl: process.env.APP_URL || `http://localhost:${int(process.env.PORT, 3000)}`,
+  port,
+  appUrl: resolveAppUrl(port),
   appName: process.env.APP_NAME || 'Coach Adel',
 
   session: {
@@ -76,6 +96,21 @@ const config = {
   uploads: {
     maxFileSize: 8 * 1024 * 1024, // 8 Mo
     allowedMime: ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'],
+  },
+
+  /** Fuseau pour les rappels de séance (heure locale coach / sportif). */
+  timezone: process.env.APP_TIMEZONE || 'Europe/Paris',
+
+  cors: {
+    origins: String(process.env.CORS_ORIGINS || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean),
+  },
+
+  cron: {
+    /** Secret Bearer / ?secret= pour /internal/cron/* (Vercel Cron + crontab). */
+    secret: process.env.CRON_SECRET || '',
   },
 };
 

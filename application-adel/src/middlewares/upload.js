@@ -21,19 +21,42 @@ export const upload = multer({
   limits: { fileSize: config.uploads.maxFileSize, files: 4 },
 });
 
+/** Upload multi-fichiers (builder programme : plusieurs GIF d'exercices). */
+export const uploadMany = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: config.uploads.maxFileSize, files: 40 },
+});
+
+function handleMulterError(err, next) {
+  if (err instanceof multer.MulterError) {
+    const msg =
+      err.code === 'LIMIT_FILE_SIZE'
+        ? `Image trop volumineuse (max ${Math.round(config.uploads.maxFileSize / 1024 / 1024)} Mo).`
+        : err.code === 'LIMIT_FILE_COUNT'
+          ? 'Trop de fichiers envoyés d’un coup.'
+          : `Erreur d'upload : ${err.message}`;
+    return next(new HttpError(422, msg));
+  }
+  return next(err);
+}
+
 /** Wrapper qui convertit les erreurs multer en HttpError lisibles. */
 export function single(field) {
   return (req, res, next) => {
     upload.single(field)(req, res, (err) => {
       if (!err) return next();
-      if (err instanceof multer.MulterError) {
-        const msg =
-          err.code === 'LIMIT_FILE_SIZE'
-            ? `Image trop volumineuse (max ${Math.round(config.uploads.maxFileSize / 1024 / 1024)} Mo).`
-            : `Erreur d'upload : ${err.message}`;
-        return next(new HttpError(422, msg));
-      }
-      return next(err);
+      return handleMulterError(err, next);
+    });
+  };
+}
+
+/** Accepte plusieurs fichiers (noms libres, ex. gif_0_1). */
+export function anyFiles() {
+  return (req, res, next) => {
+    uploadMany.any()(req, res, (err) => {
+      if (!err) return next();
+      return handleMulterError(err, next);
     });
   };
 }

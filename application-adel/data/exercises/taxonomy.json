@@ -1,0 +1,162 @@
+{
+  "version": 2,
+  "updatedAt": "2026-10-19",
+  "project": "application-adel",
+  "notes": [
+    "Taxonomie multi-niveaux : un GIF unique, plusieurs labels (famille, muscle, matériel).",
+    "Les 12 familles guident la recherche ; pas de copies physiques du média."
+  ],
+  "families": [
+    {
+      "id": "machines",
+      "label": { "fr": "Machines guidées", "en": "Guided machines" },
+      "examples": ["presse à pectoraux", "leg extension", "presse à cuisses"]
+    },
+    {
+      "id": "free-weights",
+      "label": { "fr": "Poids libres", "en": "Free weights" },
+      "examples": ["haltères", "barres", "kettlebells"]
+    },
+    {
+      "id": "bodyweight",
+      "label": { "fr": "Poids du corps", "en": "Bodyweight" },
+      "examples": ["pompes", "tractions", "fentes"]
+    },
+    {
+      "id": "cables",
+      "label": { "fr": "Poulies et câbles", "en": "Cables" },
+      "examples": ["face pull", "écartés poulie", "tirage horizontal"]
+    },
+    {
+      "id": "bands",
+      "label": { "fr": "Élastiques", "en": "Resistance bands" },
+      "examples": ["tirage élastique", "mini-band"]
+    },
+    {
+      "id": "compound",
+      "label": { "fr": "Polyarticulaires", "en": "Compound" },
+      "examples": ["squat", "soulevé de terre", "développé couché"]
+    },
+    {
+      "id": "isolation",
+      "label": { "fr": "Isolation", "en": "Isolation" },
+      "examples": ["curl biceps", "élévations latérales"]
+    },
+    {
+      "id": "core",
+      "label": { "fr": "Gainage et sangle abdominale", "en": "Core" },
+      "examples": ["planche", "crunch", "pallof press"]
+    },
+    {
+      "id": "functional",
+      "label": { "fr": "Fonctionnels et explosifs", "en": "Functional / explosive" },
+      "examples": ["kettlebell swing", "box jump", "médecine-ball"]
+    },
+    {
+      "id": "conditioning",
+      "label": { "fr": "Conditionnement musculaire", "en": "Conditioning" },
+      "examples": ["battle ropes", "farmer walk", "sled"]
+    },
+    {
+      "id": "mobility",
+      "label": { "fr": "Mobilité et préparation", "en": "Mobility" },
+      "examples": ["mobilité hanches", "échauffement dynamique"]
+    },
+    {
+      "id": "stretch",
+      "label": { "fr": "Étirements et retour au calme", "en": "Stretching" },
+      "examples": ["étirement quadriceps", "étirement pectoraux"]
+    }
+  ],
+  "muscleRegions": [
+    {
+      "id": "upper",
+      "label": { "fr": "Haut du corps", "en": "Upper body" },
+      "muscles": ["pectorals", "back", "traps", "shoulders", "biceps", "triceps", "forearms"]
+    },
+    {
+      "id": "core",
+      "label": { "fr": "Tronc", "en": "Core / trunk" },
+      "muscles": ["abs", "obliques", "lower-back"]
+    },
+    {
+      "id": "lower",
+      "label": { "fr": "Bas du corps", "en": "Lower body" },
+      "muscles": ["glutes", "quads", "hamstrings", "adductors", "abductors", "calves"]
+    },
+    {
+      "id": "full-body",
+      "label": { "fr": "Corps entier", "en": "Full body" },
+      "muscles": ["full-body"]
+    }
+  ],
+  "muscles": [
+    { "id": "pectorals", "label": { "fr": "Pectoraux", "en": "Chest" }, "region": "upper" },
+    { "id": "back", "label": { "fr": "Dos", "en": "Back" }, "region": "upper" },
+    { "id": "traps", "label": { "fr": "Trapèzes", "en": "Traps" }, "region": "upper" },
+    { "id": "shoulders", "label": { "fr": "Épaules", "en": "Shoulders" }, "region": "upper" },
+    { "id": "biceps", "label": { "fr": "Biceps", "en": "Biceps" }, "region": "upper" },
+    { "id": "triceps", "label": { "fr": "Triceps", "en": "Triceps" }, "region": "upper" },
+    { "id": "forearms", "label": { "fr": "Avant-bras", "en": "Forearms" }, "region": "upper" },
+    { "id": "abs", "label": { "fr": "Abdominaux", "en": "Abs" }, "region": "core" },
+    { "id": "obliques", "label": { "fr": "Obliques", "en": "Obliques" }, "region": "core" },
+    { "id": "lower-back", "label": { "fr": "Lombaires", "en": "Lower back" }, "region": "core" },
+    { "id": "glutes", "label": { "fr": "Fessiers", "en": "Glutes" }, "region": "lower" },
+    { "id": "quads", "label": { "fr": "Quadriceps", "en": "Quads" }, "region": "lower" },
+    { "id": "hamstrings", "label": { "fr": "Ischio-jambiers", "en": "Hamstrings" }, "region": "lower" },
+    { "id": "adductors", "label": { "fr": "Adducteurs", "en": "Adductors" }, "region": "lower" },
+    { "id": "abductors", "label": { "fr": "Abducteurs", "en": "Abductors" }, "region": "lower" },
+    { "id": "calves", "label": { "fr": "Mollets", "en": "Calves" }, "region": "lower" },
+    { "id": "full-body", "label": { "fr": "Corps entier", "en": "Full body" }, "region": "full-body" },
+    { "id": "unknown", "label": { "fr": "À vérifier", "en": "Unknown" }, "region": null }
+  ],
+  "equipment": [
+    { "id": "machine", "label": { "fr": "Machine", "en": "Machine" }, "family": "machines" },
+    { "id": "smith-machine", "label": { "fr": "Smith", "en": "Smith" }, "family": "machines" },
+    { "id": "cable", "label": { "fr": "Poulie", "en": "Cable" }, "family": "cables" },
+    { "id": "dumbbell", "label": { "fr": "Haltères", "en": "Dumbbells" }, "family": "free-weights" },
+    { "id": "barbell", "label": { "fr": "Barre", "en": "Barbell" }, "family": "free-weights" },
+    { "id": "kettlebell", "label": { "fr": "Kettlebell", "en": "Kettlebell" }, "family": "free-weights" },
+    { "id": "resistance-band", "label": { "fr": "Élastique", "en": "Band" }, "family": "bands" },
+    { "id": "bodyweight", "label": { "fr": "Aucun (poids du corps)", "en": "None" }, "family": "bodyweight" },
+    { "id": "medicine-ball", "label": { "fr": "Médecine-ball", "en": "Med ball" }, "family": "functional" },
+    { "id": "other", "label": { "fr": "Autre", "en": "Other" }, "family": null }
+  ],
+  "movement": [
+    { "id": "push", "label": { "fr": "Poussée", "en": "Push" } },
+    { "id": "pull", "label": { "fr": "Tirage", "en": "Pull" } },
+    { "id": "squat", "label": { "fr": "Squat", "en": "Squat" } },
+    { "id": "hinge", "label": { "fr": "Charnière de hanche", "en": "Hinge" } },
+    { "id": "rotation", "label": { "fr": "Rotation", "en": "Rotation" } },
+    { "id": "carry", "label": { "fr": "Portage", "en": "Carry" } },
+    { "id": "isometric", "label": { "fr": "Gainage", "en": "Isometric" } },
+    { "id": "mobility", "label": { "fr": "Mobilité", "en": "Mobility" } },
+    { "id": "stretch", "label": { "fr": "Étirement", "en": "Stretch" } },
+    { "id": "cardio", "label": { "fr": "Cardio", "en": "Cardio" } },
+    { "id": "other", "label": { "fr": "Autre", "en": "Other" } }
+  ],
+  "level": [
+    { "id": "debutant", "label": { "fr": "Débutant", "en": "Beginner" } },
+    { "id": "intermediaire", "label": { "fr": "Intermédiaire", "en": "Intermediate" } },
+    { "id": "avance", "label": { "fr": "Avancé", "en": "Advanced" } }
+  ],
+  "sessionFocusOptions": [
+    { "id": "full_body", "label": "Tout le corps", "sessionType": "full_body", "bodyParts": [] },
+    { "id": "pectoraux", "label": "Pectoraux", "sessionType": "body_part", "bodyParts": ["chest"] },
+    { "id": "dos", "label": "Dos", "sessionType": "body_part", "bodyParts": ["back"] },
+    { "id": "epaules", "label": "Épaules", "sessionType": "body_part", "bodyParts": ["shoulders"] },
+    { "id": "bras", "label": "Bras", "sessionType": "body_part", "bodyParts": ["upper arms", "lower arms"] },
+    { "id": "jambes", "label": "Jambes", "sessionType": "body_part", "bodyParts": ["upper legs", "lower legs"] },
+    { "id": "fessiers", "label": "Fessiers", "sessionType": "body_part", "bodyParts": ["upper legs"] },
+    { "id": "abdos", "label": "Abdominaux", "sessionType": "body_part", "bodyParts": ["waist"] },
+    { "id": "haut", "label": "Haut du corps", "sessionType": "body_part", "bodyParts": ["chest", "back", "shoulders", "upper arms", "neck"] },
+    { "id": "bas", "label": "Bas du corps", "sessionType": "body_part", "bodyParts": ["upper legs", "lower legs"] }
+  ],
+  "mediaRootProposal": {
+    "git": false,
+    "localDev": "storage/exercises/media/",
+    "publicUrl": "/media/exercises/{sourceId}.gif",
+    "indexes": ["by-body-part", "by-equipment", "by-target-muscle"],
+    "rationale": "Un fichier GIF unique ; les familles/muscles sont des labels dans le catalogue."
+  }
+}

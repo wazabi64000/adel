@@ -1,0 +1,58 @@
+{% extends 'layouts/athlete.twig' %}
+
+{% block heading %}Comparatif par date{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <a class="btn btn-secondary btn-sm" href="/mon-espace/photos">← Retour à la galerie</a>
+</div>
+
+<form class="app-form panel compare-filter" method="get" action="/mon-espace/photos/compare/result">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+  <div class="field-row">
+    <div class="field">
+      <label for="view">Partie du corps</label>
+      <select id="view" name="view" required>
+        {% for v in views %}
+        <option value="{{ v }}" {{ selectedView == v ? 'selected' : '' }}>{{ v }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="date1">Du (plus ancien)</label>
+      <input id="date1" name="date1" type="date" value="{{ date1 }}">
+    </div>
+    <div class="field">
+      <label for="date2">Au (plus récent)</label>
+      <input id="date2" name="date2" type="date" value="{{ date2 }}">
+    </div>
+    <div class="field field-actions">
+      <button class="btn btn-primary" type="submit">Voir le comparatif</button>
+    </div>
+  </div>
+</form>
+
+{% if photos is defined %}
+{% if photos and photos | length > 0 %}
+<div class="compare-notice">
+  Photos du plus ancien au plus récent pour <strong>{{ selectedView }}</strong>.
+</div>
+<div class="compare-container">
+  {% for p in photos %}
+  <div class="compare-side">
+    <div class="compare-date">{{ p.session_date }}</div>
+    {% if p.image_url %}
+    <img src="{{ p.image_url }}" alt="{{ selectedView }} - {{ p.session_date }}" loading="lazy" class="compare-image">
+    {% else %}
+    <span class="compare-empty">—</span>
+    {% endif %}
+    {% if p.notes %}<div class="compare-notes">{{ p.notes }}</div>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">Aucune photo trouvée pour ces critères.</p>
+{% endif %}
+{% endif %}
+{% endblock %}

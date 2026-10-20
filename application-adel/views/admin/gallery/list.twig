@@ -1,0 +1,38 @@
+{% extends 'layouts/admin.twig' %}
+
+{% block heading %}Galerie photo{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <a class="btn btn-primary btn-sm" href="/admin/gallery/new">+ Ajouter des photos</a>
+</div>
+
+{% if photos and photos | length > 0 %}
+<div class="gallery-admin-grid">
+  {% for p in photos %}
+  <article class="gallery-admin-item">
+    <div class="gallery-admin-thumb">
+      {% if p.image_url %}
+      <img src="{{ p.image_url }}" alt="{{ p.title | default('Photo') }}" loading="lazy">
+      {% else %}
+      <span class="gallery-admin-empty">—</span>
+      {% endif %}
+      <span class="gallery-admin-status tag tag-{{ p.status }}">{{ p.status == 'published' ? 'Publié' : 'Brouillon' }}</span>
+    </div>
+    <div class="gallery-admin-body">
+      <div class="gallery-admin-title">{{ p.title | default('Sans titre') }}</div>
+      <div class="gallery-admin-meta">{{ date_fr(p.created_at) }}</div>
+    </div>
+    <div class="gallery-admin-actions">
+      <form method="post" action="/admin/gallery/{{ p.id }}?_method=DELETE" data-confirm="Supprimer cette photo de la galerie ?">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <button class="btn btn-danger btn-sm" type="submit">Suppr.</button>
+      </form>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">Aucune photo dans la galerie. <a href="/admin/gallery/new">Ajouter la première photo</a>.</p>
+{% endif %}
+{% endblock %}

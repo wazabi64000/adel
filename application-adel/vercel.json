@@ -3,12 +3,18 @@
   "regions": ["cdg1"],
   "functions": {
     "src/app.js": {
-      "includeFiles": "{views,public}/**",
+      "includeFiles": "{views,public,data,storage}/**",
       "maxDuration": 30
     },
     "src/server.js": {
-      "includeFiles": "{views,public}/**",
+      "includeFiles": "{views,public,data,storage}/**",
       "maxDuration": 30
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/internal/cron/session-reminders",
+      "schedule": "*/10 * * * *"
+    }
+  ]
 }

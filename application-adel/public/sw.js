@@ -1,5 +1,5 @@
 /* Coach Adel — service worker (mises à jour forcées) */
-const VERSION = 'adel-pwa-v16';
+const VERSION = 'adel-pwa-v21';
 const PRECACHE = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 
@@ -17,13 +17,9 @@ const PRECACHE_URLS = [
   '/icons/apple-touch-icon.png',
 ];
 
+/* Pas de skipWaiting ici : le client affiche un modal bloquant, puis envoie SKIP_WAITING. */
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches
-      .open(PRECACHE)
-      .then((cache) => cache.addAll(PRECACHE_URLS))
-      .then(() => self.skipWaiting()),
-  );
+  event.waitUntil(caches.open(PRECACHE).then((cache) => cache.addAll(PRECACHE_URLS)));
 });
 
 self.addEventListener('activate', (event) => {

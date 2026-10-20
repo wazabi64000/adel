@@ -1,6 +1,7 @@
 import * as authService from '../services/auth.service.js';
 import * as userRepo from '../repositories/user.repo.js';
 import { validateLogin } from '../validators/index.js';
+import { securityLog } from '../middlewares/securityLog.js';
 import { asyncHandler } from '../utils/http.js';
 
 const safeNext = (value) => {
@@ -48,6 +49,7 @@ export const login = asyncHandler(async (req, res, next) => {
       return req.session.save(() => res.redirect(target));
     });
   } catch (err) {
+    securityLog('AUTH_FAIL', req, { reason: 'bad_credentials' });
     return res.status(err.status || 401).render('auth/login', {
       title: 'Connexion',
       layout: 'layouts/auth',
@@ -127,13 +129,21 @@ export const account = asyncHandler(async (req, res) => {
 });
 
 export const updatePassword = asyncHandler(async (req, res) => {
+  const wasFirstLogin = Boolean(req.currentUser.must_change_password);
   try {
     await authService.changePassword(
       req.currentUser.id,
       req.body.current_password,
       req.body.new_password,
     );
-    req.flash('success', 'Mot de passe modifié.');
+    req.flash(
+      'success',
+      wasFirstLogin ? 'Mot de passe activé. Bienvenue dans ton espace !' : 'Mot de passe modifié.',
+    );
+    if (wasFirstLogin) {
+      const target = req.currentUser.role === 'admin' ? '/admin' : '/mon-espace';
+      return res.redirect(target);
+    }
   } catch (err) {
     req.flash('error', err.message);
   }

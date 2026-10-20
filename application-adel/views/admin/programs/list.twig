@@ -29,7 +29,7 @@
 {% if programs and programs | length > 0 %}
 <div class="table-wrap">
 <table class="table">
-  <thead><tr><th>Titre</th><th>Sportif</th><th>Lieu</th><th>Statut</th><th>Jours</th><th>Exercices</th><th></th></tr></thead>
+  <thead><tr><th>Titre</th><th>Sportif</th><th>Lieu</th><th>Statut</th><th>Semaines</th><th>Séances</th><th>Exercices</th><th></th></tr></thead>
   <tbody>
     {% for p in programs %}
     <tr>
@@ -37,6 +37,7 @@
       <td>{{ p.first_name }} {{ p.last_name }}</td>
       <td><span class="tag tag-neutral">{{ label(p.location) }}</span></td>
       <td><span class="tag tag-{{ p.status }}">{{ label(p.status) }}</span></td>
+      <td>{{ p.weeks }}</td>
       <td>{{ p.days_count }}</td>
       <td>{{ p.exercises_count }}</td>
       <td class="row-actions">

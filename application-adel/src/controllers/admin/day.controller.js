@@ -1,6 +1,11 @@
 import * as programDayRepo from '../../repositories/programDay.repo.js';
 import * as programRepo from '../../repositories/program.repo.js';
 import { notifyActiveProgramContent } from '../../services/notify.service.js';
+import {
+  normalizeSessionFocus,
+  sessionTypeFromFocus,
+} from '../../services/programBuilder.service.js';
+import { validateProgramDay } from '../../validators/index.js';
 import { asyncHandler, toInt, clean, HttpError } from '../../utils/http.js';
 
 /** Crée (ou récupère) une journée de programme. */
@@ -27,11 +32,19 @@ export const ensure = asyncHandler(async (req, res) => {
 export const update = asyncHandler(async (req, res) => {
   const day = await programDayRepo.findById(req.params.dayId);
   if (!day) throw new HttpError(404, 'Journée introuvable.');
+  const { ok, errors, data } = validateProgramDay(req.body);
+  if (!ok) {
+    req.flash('error', Object.values(errors)[0] || 'Données de séance invalides.');
+    return res.redirect(`/admin/programs/${day.program_id}#day-${day.id}`);
+  }
+  const focus = normalizeSessionFocus(data.focus ?? req.body.focus);
   await programDayRepo.update(day.id, {
-    title: clean(req.body.title),
-    focus: clean(req.body.focus),
-    notes: clean(req.body.notes),
-    isRestDay: req.body.is_rest_day === '1' || req.body.is_rest_day === 'on',
+    title: data.title,
+    focus,
+    sessionType: sessionTypeFromFocus(focus, data.sessionType ?? req.body.session_type),
+    scheduledTime: data.scheduledTime || '18:00:00',
+    notes: data.notes,
+    isRestDay: data.isRestDay,
   });
   await notifyActiveProgramContent(day.program_id);
   req.flash('success', 'Journée mise à jour.');

@@ -80,6 +80,40 @@
   </div>
 </section>
 
+<!-- GALERIE PHOTO -->
+<section class="section section-alt" id="galerie" aria-labelledby="h-galerie">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Galerie</p>
+      <h2 id="h-galerie">Galerie photo</h2>
+      <p>Extraits des séances et du parcours. Cliquez sur une photo pour l'agrandir en modale ; utilisez les flèches pour parcourir la galerie en 3D.</p>
+    </div>
+    <div class="gallery3d reveal" aria-label="Galerie photo défilante en 3D">
+      <div class="gallery3d-stage">
+        <div class="gallery3d-track" id="gallery-track">
+          {% for photo in galleryPhotos %}
+          <button class="gallery3d-photo" type="button" role="button" aria-label="{{ photo.title | default('Photo') }}" data-src="{{ photo.image_url }}" data-legend="{{ photo.title | default('Photo') }}" tabindex="0">
+            <img src="{{ photo.image_url }}" width="400" height="400" alt="{{ photo.title | default('Photo') }}" loading="lazy" fetchpriority="{% if loop.first %}high{% else %}auto{% endif %}">
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+      <button class="gallery3d-nav gallery3d-prev" type="button" aria-label="Photo précédente">&#8249;</button>
+      <button class="gallery3d-nav gallery3d-next" type="button" aria-label="Photo suivante">&#8250;</button>
+      <p class="gallery3d-counter" id="gallery-counter" aria-live="polite">1 sur {{ galleryPhotos | length }}</p>
+    </div>
+  </div>
+</section>
+
+<!-- Modale photo (réutilise les styles dialog.modal existants) -->
+<dialog class="modal" id="gallery-modal" aria-label="Agrandissement photo">
+  <button class="modal__close" data-modal-close aria-label="Fermer la photo">×</button>
+  <div class="modal__panel">
+    <img id="gallery-modal-img" src="" alt="">
+    <p id="gallery-modal-caption" class="modal__sub"></p>
+  </div>
+</dialog>
+
 <!-- REJOINDRE LE PROGRAMME -->
 <section class="section" id="rejoindre" aria-labelledby="h-rejoindre">
   <div class="container">

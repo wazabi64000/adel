@@ -1,0 +1,7 @@
+ExerciseDB free tier media
+===========================
+Source: https://oss.exercisedb.dev/docs
+Attribution: AscendAPI / ExerciseDB
+License: NON-COMMERCIAL use only (free tier). Attribution required.
+Commercial / SaaS use requires a paid ExerciseDB / RapidAPI plan.
+Collected: 2026-10-19T15:06:35.481Z

@@ -1,0 +1,70 @@
+{% extends 'layouts/athlete.twig' %}
+
+{% block heading %}Séance du {{ session.session_date }}{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <a class="btn btn-secondary btn-sm" href="/mon-espace/photos">← Retour à la galerie</a>
+  {% if session.notes %}<span class="photo-session-notes">{{ session.notes }}</span>{% endif %}
+</div>
+
+<div class="photo-session-detail">
+  {% for view in views %}
+  <div class="photo-detail-item">
+    <div class="photo-detail-header">
+      <span class="photo-view-badge">{{ view }}</span>
+    </div>
+    <div class="photo-detail-thumb">
+      {% if photosByView[view] %}
+      <img
+        src="/mon-espace/photos/{{ session.id }}/file/{{ view }}?token={{ photosByView[view].accessToken }}"
+        alt="{{ view }}"
+        loading="lazy"
+      >
+      {% else %}
+      <span class="photo-session-empty">Aucune photo</span>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Commentaires du sportif sur cette séance -->
+<div class="photo-comments" style="margin-top:24px">
+  <h3 style="font-size:1rem;margin-bottom:10px;color:var(--fg)">Vos commentaires</h3>
+  {% if comments and comments | length > 0 %}
+  <ul class="comment-list">
+    {% for c in comments %}
+    <li class="comment-item">
+      <div class="comment-content">{{ c.content }}</div>
+      <div class="comment-meta">
+        <span class="comment-author">{{ c.author_name }}</span>
+        <span class="comment-date">{{ c.created_at }}</span>
+      </div>
+      <form method="post" action="/mon-espace/photos/{{ session.id }}/comments/{{ c.id }}?_method=DELETE" data-confirm="Supprimer ce commentaire ?" style="display:inline;margin-top:4px">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <button class="btn btn-danger btn-sm" type="submit">Suppr.</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="empty" style="padding:10px">Aucun commentaire pour l'instant.</p>
+  {% endif %}
+
+  <form class="app-form panel" method="post" action="/mon-espace/photos/{{ session.id }}/comments" style="margin-top:12px">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div class="field">
+      <label for="comment_content">Ajouter un commentaire</label>
+      <textarea id="comment_content" name="content" rows="2" placeholder="Écrivez votre commentaire…" required></div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">Ajouter</button>
+    </div>
+  </form>
+</div>
+
+<form method="post" action="/mon-espace/photos/{{ session.id }}?_method=DELETE" data-confirm="Supprimer cette séance et toutes ses photos ?" style="margin-top:16px">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+  <button class="btn btn-danger btn-sm" type="submit">Supprimer la séance</button>
+</form>
+{% endblock %}

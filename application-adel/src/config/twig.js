@@ -77,6 +77,8 @@ const STATUS_LABELS = {
   archived: 'Archivé',
   salle: 'Salle',
   home: 'À la maison (home)',
+  full_body: 'Tout le corps',
+  body_part: 'Partie du corps',
 };
 Twig.extendFunction('label', (value) => STATUS_LABELS[value] || value || '');
 
