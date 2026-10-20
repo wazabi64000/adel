@@ -61,6 +61,7 @@
       <a href="{{ home ? '#programme' : '/#programme' }}">Le programme</a>
       <a href="/articles">Conseils</a>
       <a href="{{ home ? '#rejoindre' : '/#rejoindre' }}">Rejoindre</a>
+      <a href="{{ currentUser ? (currentUser.role == 'admin' ? '/admin' : '/mon-espace') : '/login' }}"{% if currentPath == '/login' or currentPath starts with '/mon-espace' or currentPath starts with '/admin' or currentPath starts with '/compte' %} aria-current="true"{% endif %}>Mon espace</a>
       <a class="instagram-nav" href="https://www.instagram.com/adel.fitness.coaching/" target="_blank" rel="noopener" aria-label="Instagram adel.fitness.coaching">
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none"/></svg>
       </a>
@@ -144,7 +145,7 @@
 
 <nav class="bottomnav" aria-label="Navigation mobile">
   <a href="{{ home ? '#accueil' : '/#accueil' }}" data-nav="accueil"{% if currentPath == '/' %} aria-current="true"{% endif %}>Accueil</a>
-  <a href="{{ currentUser ? (currentUser.role == 'admin' ? '/admin' : '/mon-espace') : '/login' }}" data-nav="espace"{% if currentPath == '/login' or currentPath starts with '/mon-espace' or currentPath starts with '/admin' or currentPath starts with '/compte' %} aria-current="true"{% endif %}>Espace</a>
+  <a class="bottomnav-cta" href="{{ currentUser ? (currentUser.role == 'admin' ? '/admin' : '/mon-espace') : '/login' }}" data-nav="espace"{% if currentPath == '/login' or currentPath starts with '/mon-espace' or currentPath starts with '/admin' or currentPath starts with '/compte' %} aria-current="true"{% endif %}>Mon espace</a>
   <a href="/articles" data-nav="conseils"{% if currentPath == '/articles' or currentPath starts with '/articles/' %} aria-current="true"{% endif %}>Conseils</a>
   <button type="button" data-nav="rejoindre" data-modal-open="preinscription" aria-haspopup="dialog">Rejoindre</button>
 </nav>

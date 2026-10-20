@@ -4,6 +4,11 @@
 
 {% block content %}
 {% set isCreate = not program %}
+{% if presetAthleteId %}
+<div class="toolbar">
+  <a class="btn btn-ghost btn-sm" href="/admin?athlete={{ presetAthleteId }}">← Retour à l'athlète</a>
+</div>
+{% endif %}
 
 {% if isCreate %}
 <form class="app-form panel program-wizard" method="post" action="/admin/programs" id="program-builder" novalidate lang="fr">
@@ -135,9 +140,9 @@
     </div>
   </section>
 
-  <script type="application/json" id="program-focus-options">{{ bodyFocusOptionsJson|raw }}</script>
-  <script type="application/json" id="catalog-families">{{ catalogFamiliesJson|raw }}</script>
-  <script type="application/json" id="catalog-regions">{{ catalogRegionsJson|raw }}</script>
+  <script type="application/json" id="program-focus-options" nonce="{{ cspNonce }}">{{ bodyFocusOptionsJson|raw }}</script>
+  <script type="application/json" id="catalog-families" nonce="{{ cspNonce }}">{{ catalogFamiliesJson|raw }}</script>
+  <script type="application/json" id="catalog-regions" nonce="{{ cspNonce }}">{{ catalogRegionsJson|raw }}</script>
 </form>
 
 {% else %}

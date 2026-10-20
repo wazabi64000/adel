@@ -2,6 +2,18 @@ import { query, queryOne, execute } from '../config/database.js';
 
 const FIELDS = `id, athlete_id, session_date, notes, created_at, updated_at`;
 
+/** Photos envoyées par les sportifs, de la plus récente à la plus ancienne. */
+export async function listAllSent() {
+  return query(
+    `SELECT ps.id AS session_id, ps.athlete_id, ps.session_date, ps.notes,
+            sp.view_key, sp.image_url, pr.status AS report_status
+       FROM photo_sessions ps
+       JOIN session_photos sp ON sp.session_id = ps.id
+       LEFT JOIN photo_reports pr ON pr.session_id = ps.id
+      ORDER BY ps.session_date DESC, ps.id DESC, sp.view_key ASC`,
+  );
+}
+
 /** Liste les séances photo d'un sportif (les siennes uniquement). */
 export async function listByAthlete(athleteId) {
   return query(
@@ -12,6 +24,11 @@ export async function listByAthlete(athleteId) {
       ORDER BY ps.session_date DESC, ps.id DESC`,
     [athleteId],
   );
+}
+
+/** Retourne une séance photo. */
+export async function findById(id) {
+  return queryOne(`SELECT ${FIELDS} FROM photo_sessions WHERE id = ? LIMIT 1`, [id]);
 }
 
 /** Retourne une séance avec vérification d'appartenance au sportif. */

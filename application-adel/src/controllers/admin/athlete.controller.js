@@ -3,6 +3,7 @@ import * as athleteRepo from '../../repositories/athlete.repo.js';
 import * as programRepo from '../../repositories/program.repo.js';
 import * as userRepo from '../../repositories/user.repo.js';
 import * as progressRepo from '../../repositories/progressPhoto.repo.js';
+import * as photoReportRepo from '../../repositories/photoReport.repo.js';
 import * as authService from '../../services/auth.service.js';
 import * as logRepo from '../../repositories/log.repo.js';
 import { uploadImage, destroyImage } from '../../services/upload.service.js';
@@ -34,11 +35,12 @@ export const list = asyncHandler(async (req, res) => {
 export const show = asyncHandler(async (req, res) => {
   const athlete = await athleteRepo.findById(req.params.id);
   if (!athlete) throw new HttpError(404, 'Profil introuvable.');
-  const [programs, stats, logs, photos] = await Promise.all([
+  const [programs, stats, logs, photos, photoReports] = await Promise.all([
     programRepo.findByAthlete(athlete.id),
     athleteStats(athlete.id),
     logRepo.listByAthlete(athlete.id, { limit: 15, offset: 0 }),
     progressRepo.listByAthlete(athlete.id),
+    photoReportRepo.listValidatedByAthlete(athlete.id),
   ]);
   return res.render('admin/athletes/show', {
     title: `${athlete.first_name} ${athlete.last_name}`,
@@ -47,6 +49,7 @@ export const show = asyncHandler(async (req, res) => {
     stats,
     logs,
     photos,
+    photoReports,
     today: isoToday(),
   });
 });

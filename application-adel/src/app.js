@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import express from 'express';
 import session from 'express-session';
 import MySQLStoreFactory from 'express-mysql-session';
@@ -30,6 +31,10 @@ export function createApp() {
   /* ------------------------------- Sécurité ------------------------------- */
   app.use(securityResponseLogger);
   app.use(createCorsMiddleware());
+  app.use((req, res, next) => {
+    res.locals.cspNonce = crypto.randomBytes(16).toString('base64');
+    next();
+  });
   app.use(
     helmet({
       contentSecurityPolicy: {
@@ -37,9 +42,12 @@ export function createApp() {
         directives: {
           defaultSrc: ["'self'"],
           baseUri: ["'self'"],
-          scriptSrc: ["'self'"],
-          // La landing utilise des attributs style inline — autorisés via 'unsafe-inline'.
-          styleSrc: ["'self'", "'unsafe-inline'"],
+          scriptSrc: ["'self'", (_req, res) => `'nonce-${res.locals.cspNonce}'`],
+          // 'unsafe-inline' reste sur les attributs style uniquement.
+          // Le mettre aussi dans style-src fait échouer l'analyse Firefox
+          // (« duplicate source » / « invalid host »).
+          styleSrc: ["'self'"],
+          styleSrcAttr: ["'unsafe-inline'"],
           imgSrc: ["'self'", 'data:', 'blob:', 'https://res.cloudinary.com'],
           fontSrc: ["'self'", 'data:'],
           connectSrc: ["'self'"],

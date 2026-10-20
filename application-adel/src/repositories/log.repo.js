@@ -128,6 +128,24 @@ export async function recentActivity(days = 30) {
   );
 }
 
+/**
+ * Séances (jours distincts) de chaque sportif, dont celles des 28 derniers jours.
+ * Sert au suivi du tableau de bord coach.
+ */
+export async function sessionStatsByAthlete() {
+  return query(
+    `SELECT a.id, a.first_name, a.last_name, a.is_active,
+        COUNT(DISTINCT l.log_date) AS sessions_count,
+        COUNT(DISTINCT CASE
+          WHEN l.log_date >= DATE_SUB(CURDATE(), INTERVAL 28 DAY) THEN l.log_date
+        END) AS sessions_28,
+        MAX(l.log_date) AS last_log
+      FROM athletes a
+      LEFT JOIN exercise_logs l ON l.athlete_id = a.id
+      GROUP BY a.id, a.first_name, a.last_name, a.is_active`,
+  );
+}
+
 /** Top athlètes par nombre de réalisations. */
 export async function topAthletes(limit = 5) {
   return query(

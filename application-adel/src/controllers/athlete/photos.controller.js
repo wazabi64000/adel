@@ -4,6 +4,7 @@ import { createImageAccessToken } from '../../services/photoSecurity.js';
 import * as photoSessionRepo from '../../repositories/photoSession.repo.js';
 import * as sessionPhotoRepo from '../../repositories/sessionPhoto.repo.js';
 import * as photoCommentRepo from '../../repositories/photoComment.repo.js';
+import * as photoReportRepo from '../../repositories/photoReport.repo.js';
 import { uploadImage, destroyImage } from '../../services/upload.service.js';
 import { validatePhotoSession } from '../../validators/index.js';
 import { asyncHandler, HttpError } from '../../utils/http.js';
@@ -29,10 +30,12 @@ export const list = asyncHandler(async (req, res) => {
     }
   }
   for (const s of sessions) s.photos = photosBySession[s.id] || [];
+  const reports = await photoReportRepo.listValidatedByAthlete(athlete.id);
   return res.render('athlete/photos/list', {
     title: 'Suivi photographique',
     athlete,
     sessions,
+    reports,
   });
 });
 
@@ -111,13 +114,17 @@ export const show = asyncHandler(async (req, res) => {
     p.accessToken = createImageAccessToken(athlete.id, session.id, p.view_key);
     photosByView[p.view_key] = p;
   }
-  const comments = await photoCommentRepo.listBySession(session.id, athlete.id);
+  const [comments, report] = await Promise.all([
+    photoCommentRepo.listAllBySession(session.id),
+    photoReportRepo.findBySession(session.id),
+  ]);
   return res.render('athlete/photos/show', {
     title: 'Séance photo',
     athlete,
     session,
     photosByView,
     comments,
+    report: report && report.status === 'validated' ? report : null,
     views: VIEWS,
   });
 });
@@ -170,7 +177,7 @@ export const addComment = asyncHandler(async (req, res) => {
 
   await photoCommentRepo.create({
     sessionId: session.id,
-    authorId: athlete.id,
+    authorId: req.currentUser.id,
     content,
   });
 
@@ -180,7 +187,7 @@ export const addComment = asyncHandler(async (req, res) => {
 
 export const deleteComment = asyncHandler(async (req, res) => {
   const athlete = req.currentAthlete;
-  await photoCommentRepo.remove(req.params.commentId, athlete.id);
+  await photoCommentRepo.remove(req.params.commentId, req.currentUser.id);
   req.flash('success', 'Commentaire supprimé.');
   return res.redirect(`/mon-espace/photos/${req.params.sessionId}`);
 });

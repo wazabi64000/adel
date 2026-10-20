@@ -2,6 +2,7 @@ import * as programRepo from '../../repositories/program.repo.js';
 import * as programDayRepo from '../../repositories/programDay.repo.js';
 import * as exerciseRepo from '../../repositories/exercise.repo.js';
 import * as logRepo from '../../repositories/log.repo.js';
+import * as photoReportRepo from '../../repositories/photoReport.repo.js';
 import { athleteStats, programStats } from '../../services/stats.service.js';
 import { validateLog } from '../../validators/index.js';
 import { asyncHandler, toInt, clean, HttpError } from '../../utils/http.js';
@@ -17,10 +18,11 @@ async function ownedProgramOrThrow(programId, athleteId) {
 
 export const dashboard = asyncHandler(async (req, res) => {
   const athlete = req.currentAthlete;
-  const [programs, stats, recentLogs] = await Promise.all([
+  const [programs, stats, recentLogs, photoReports] = await Promise.all([
     programRepo.findByAthlete(athlete.id, { status: 'active' }),
     athleteStats(athlete.id),
     logRepo.listByAthlete(athlete.id, { limit: 8, offset: 0 }),
+    photoReportRepo.listValidatedByAthlete(athlete.id),
   ]);
   return res.render('athlete/dashboard', {
     title: 'Mon espace',
@@ -28,6 +30,7 @@ export const dashboard = asyncHandler(async (req, res) => {
     programs,
     stats,
     recentLogs,
+    photoReports,
   });
 });
 

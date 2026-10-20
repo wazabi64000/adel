@@ -94,7 +94,7 @@ export const create = asyncHandler(async (req, res) => {
         title: 'Nouveau programme',
         program: null,
         athletes,
-        presetAthleteId: null,
+        presetAthleteId: clean(req.body.athlete_id),
         formErrors: errors,
         formData: req.body,
       }),

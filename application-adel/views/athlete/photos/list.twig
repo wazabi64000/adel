@@ -3,6 +3,20 @@
 {% block heading %}Suivi photographique{% endblock %}
 
 {% block content %}
+{% if reports and reports | length > 0 %}
+<section class="panel" style="margin-bottom:16px">
+  <div class="panel-head"><h2>Historique des rapports</h2></div>
+  <div class="panel-body">
+    {% for r in reports %}
+    <article class="report-history">
+      <p class="follow-date-label">{{ date_fr(r.session_date) }} — validé le {{ date_fr(r.validated_at, true) }}</p>
+      <p>{{ r.content }}</p>
+      <a class="btn btn-ghost btn-sm" href="/mon-espace/photos/{{ r.session_id }}">Voir la séance</a>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 {% if sessions and sessions | length > 0 %}
 <div class="toolbar">
   <a class="btn btn-primary btn-sm" href="/mon-espace/photos/new">+ Nouvelle séance</a>

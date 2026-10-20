@@ -29,22 +29,33 @@
   {% endfor %}
 </div>
 
-<!-- Commentaires du sportif sur cette séance -->
+{% if report %}
+<section class="panel" style="margin-top:24px">
+  <div class="panel-head"><h2>Rapport du coach</h2></div>
+  <div class="panel-body">
+    <p class="muted">Validé le {{ date_fr(report.validated_at, true) }}{% if report.sent_at %} · envoyé le {{ date_fr(report.sent_at, true) }}{% endif %}</p>
+    <p class="report-history">{{ report.content }}</p>
+  </div>
+</section>
+{% endif %}
+
 <div class="photo-comments" style="margin-top:24px">
-  <h3 style="font-size:1rem;margin-bottom:10px;color:var(--fg)">Vos commentaires</h3>
+  <h3 style="font-size:1rem;margin-bottom:10px;color:var(--fg)">Commentaires</h3>
   {% if comments and comments | length > 0 %}
   <ul class="comment-list">
     {% for c in comments %}
     <li class="comment-item">
       <div class="comment-content">{{ c.content }}</div>
       <div class="comment-meta">
-        <span class="comment-author">{{ c.author_name }}</span>
-        <span class="comment-date">{{ c.created_at }}</span>
+        <span class="comment-author">{{ c.author_role == 'admin' ? 'Coach' : c.author_name }}</span>
+        <span class="comment-date">{{ date_fr(c.created_at, true) }}</span>
       </div>
+      {% if c.author_id == currentUser.id %}
       <form method="post" action="/mon-espace/photos/{{ session.id }}/comments/{{ c.id }}?_method=DELETE" data-confirm="Supprimer ce commentaire ?" style="display:inline;margin-top:4px">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <button class="btn btn-danger btn-sm" type="submit">Suppr.</button>
       </form>
+      {% endif %}
     </li>
     {% endfor %}
   </ul>
@@ -56,7 +67,8 @@
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <div class="field">
       <label for="comment_content">Ajouter un commentaire</label>
-      <textarea id="comment_content" name="content" rows="2" placeholder="Écrivez votre commentaire…" required></div>
+      <textarea id="comment_content" name="content" rows="2" placeholder="Écrivez votre commentaire…" required></textarea>
+    </div>
     <div class="form-actions">
       <button class="btn btn-primary" type="submit">Ajouter</button>
     </div>
