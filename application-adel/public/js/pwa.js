@@ -5,7 +5,6 @@
 
   const bar = document.getElementById('pwa-install');
   const btn = document.getElementById('pwa-install-btn');
-  const dismiss = document.getElementById('pwa-install-dismiss');
   const hint = document.getElementById('pwa-install-hint');
 
   const updateModal = document.getElementById('pwa-update');
@@ -17,25 +16,47 @@
   let waitingWorker = null;
   let refreshing = false;
   let updateLocked = false;
+  let installLocked = false;
+  let deferredPrompt = null;
 
-  function showInstallBar() {
-    if (!bar || isStandalone) return;
-    bar.hidden = false;
-    bar.classList.add('is-forced');
+  function lockInstall() {
+    installLocked = true;
+    document.documentElement.classList.add('pwa-install-locked');
+    document.body.classList.add('pwa-install-locked');
   }
 
-  function hideInstallBar() {
-    if (bar) bar.hidden = true;
+  function unlockInstall() {
+    installLocked = false;
+    document.documentElement.classList.remove('pwa-install-locked');
+    document.body.classList.remove('pwa-install-locked');
   }
 
-  function lockPage() {
+  function lockUpdate() {
     document.documentElement.classList.add('pwa-update-locked');
     document.body.classList.add('pwa-update-locked');
   }
 
-  function unlockPage() {
-    document.documentElement.classList.remove('pwa-update-locked');
-    document.body.classList.remove('pwa-update-locked');
+  function showInstallModal() {
+    if (!bar || isStandalone || updateLocked) return;
+    bar.hidden = false;
+    lockInstall();
+    btn?.focus({ preventScroll: true });
+  }
+
+  function hideInstallModal() {
+    if (bar) bar.hidden = true;
+    unlockInstall();
+  }
+
+  function setInstallHint(message) {
+    if (!hint) return;
+    if (!message) {
+      hint.hidden = true;
+      hint.textContent = '';
+      return;
+    }
+    hint.hidden = false;
+    hint.textContent = message;
   }
 
   function showUpdateModal(worker) {
@@ -43,8 +64,8 @@
     waitingWorker = worker;
     updateLocked = true;
     updateModal.hidden = false;
-    lockPage();
-    hideInstallBar();
+    lockUpdate();
+    hideInstallModal();
     updateBtn?.focus({ preventScroll: true });
   }
 
@@ -63,8 +84,14 @@
 
   updateBtn?.addEventListener('click', applyUpdate);
 
-  // Empêche Escape / clic fond : mise à jour obligatoire
   updateModal?.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
+
+  bar?.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       event.preventDefault();
       event.stopPropagation();
@@ -81,7 +108,6 @@
 
     navigator.serviceWorker.addEventListener('message', (event) => {
       if (event.data?.type === 'SW_UPDATED' && updateLocked) {
-        // SW déjà actif après SKIP_WAITING → recharger si controllerchange a raté
         if (!refreshing) {
           refreshing = true;
           window.location.reload();
@@ -96,7 +122,6 @@
       if (navigator.serviceWorker.controller) {
         showUpdateModal(worker);
       } else {
-        // Première installation : activer sans modal
         worker.postMessage({ type: 'SKIP_WAITING' });
       }
     };
@@ -145,56 +170,50 @@
     else window.addEventListener('load', register);
   }
 
-  /* ---------- Installation (bandeau) ---------- */
+  /* ---------- Installation forcée (modal + rotation) ---------- */
   if (isStandalone) {
-    hideInstallBar();
+    hideInstallModal();
     return;
   }
-
-  let deferredPrompt = null;
 
   window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
     deferredPrompt = event;
-    if (updateLocked) return;
-    if (hint) hint.hidden = true;
-    showInstallBar();
+    setInstallHint('');
+    showInstallModal();
   });
 
+  // Affiche dès l’ouverture si pas encore installé
   if (isIos && isSafari) {
-    if (hint) {
-      hint.hidden = false;
-      hint.textContent = 'Sur iPhone : Partager → Sur l’écran d’accueil';
-    }
-    if (!updateLocked) showInstallBar();
+    setInstallHint('Sur iPhone : tape Partager, puis « Sur l’écran d’accueil ».');
+  } else {
+    setInstallHint('Appuie sur « Installer maintenant ». Si le navigateur ne propose rien, ouvre le menu → Installer l’application.');
   }
+  showInstallModal();
 
   btn?.addEventListener('click', async () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const choice = await deferredPrompt.userChoice;
       deferredPrompt = null;
-      if (choice?.outcome === 'accepted') hideInstallBar();
-      else showInstallBar();
+      if (choice?.outcome === 'accepted') {
+        hideInstallModal();
+      } else {
+        setInstallHint('Installation refusée. Pour continuer, installe Coach Adel.');
+        showInstallModal();
+      }
       return;
     }
-    if (hint) {
-      hint.hidden = false;
-      if (isIos) hint.textContent = 'Tape Partager, puis « Sur l’écran d’accueil ».';
-      else hint.textContent = 'Menu du navigateur → Installer l’application.';
+    if (isIos) {
+      setInstallHint('Tape Partager, puis « Sur l’écran d’accueil ». Ensuite rouvre l’icône Coach Adel.');
+    } else {
+      setInstallHint('Menu du navigateur (⋮ ou ⋯) → Installer l’application / Ajouter à l’écran d’accueil.');
     }
-    showInstallBar();
-  });
-
-  dismiss?.addEventListener('click', () => {
-    hideInstallBar();
-    setTimeout(() => {
-      if (!updateLocked) showInstallBar();
-    }, 30 * 60 * 1000);
+    showInstallModal();
   });
 
   window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
-    hideInstallBar();
+    hideInstallModal();
   });
 })();
