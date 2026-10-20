@@ -31,6 +31,21 @@
 <p class="empty">Aucun programme actif pour le moment. Coach Adel t'en prépare un !</p>
 {% endif %}
 
+{% if photoReports and photoReports | length > 0 %}
+<h2 class="section-title">Rapports du coach</h2>
+<section class="panel">
+  <div class="panel-body">
+    {% for r in photoReports %}
+    <article class="report-history">
+      <p class="follow-date-label">Photos du {{ date_fr(r.session_date) }} — validé le {{ date_fr(r.validated_at, true) }}</p>
+      <p>{{ r.content }}</p>
+      <a class="btn btn-ghost btn-sm" href="/mon-espace/photos/{{ r.session_id }}">Voir la séance</a>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
 <h2 class="section-title">Dernières séances</h2>
 <section class="panel">
   <div class="panel-body">

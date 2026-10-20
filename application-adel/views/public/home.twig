@@ -1,7 +1,7 @@
 {% extends 'layouts/public.twig' %}
 
 {% block head %}
-<script type="application/ld+json">
+<script type="application/ld+json" nonce="{{ cspNonce }}">
 {"@context":"https://schema.org","@graph":[
 {"@type":"Person","name":"Coach Adel","jobTitle":"Coach en accompagnement global"},
 {"@type":"ProfessionalService","name":"Accompagnement global — Coach Adel","areaServed":"France"}]}

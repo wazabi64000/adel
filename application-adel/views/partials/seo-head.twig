@@ -17,7 +17,7 @@
 <meta name="twitter:card" content="{{ seo.image ? 'summary_large_image' : 'summary' }}">
 <meta name="twitter:title" content="{{ seoTitle }}">
 <meta name="twitter:description" content="{{ seoDescription }}">
-<script type="application/ld+json">
+<script type="application/ld+json" nonce="{{ cspNonce }}">
 {"@context":"https://schema.org","@graph":[
 {"@type":"WebSite","name":"Coach Adel","url":"{{ appUrl }}/","inLanguage":"fr-FR","description":"Accompagnement physique, nutrition et preparation mentale avec Coach Adel."},
 {"@type":"ProfessionalService","name":"Coach Adel","url":"{{ appUrl }}/","areaServed":"France","email":"annabelle.adel300@gmail.com","knowsAbout":["coaching sportif","nutrition","preparation mentale"]}

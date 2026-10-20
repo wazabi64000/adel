@@ -210,6 +210,43 @@ export function sendSessionReminder({
   });
 }
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+/**
+ * Envoie à l'athlète les commentaires de la séance et le rapport validé.
+ */
+export function sendPhotoReview({ name, email, dateLabel, comments, report, sessionUrl }) {
+  const commentHtml = comments.length
+    ? `<ul style="margin:8px 0 16px;padding-left:18px">${comments
+        .map(
+          (c) =>
+            `<li style="${pStyle}"><strong style="color:#f5f1ea">${escapeHtml(c.author)}</strong> — ${escapeHtml(c.content)}</li>`,
+        )
+        .join('')}</ul>`
+    : `<p style="${pStyle}">Aucun commentaire sur cette séance.</p>`;
+
+  return sendMail({
+    to: email,
+    subject: `Rapport photo du ${dateLabel}`,
+    html: layout({
+      title: 'Ton rapport de suivi photo',
+      body: `<p style="${pStyle}">Bonjour ${escapeHtml(name)},</p>
+        <p style="${pStyle}">Coach Adel a validé le rapport de tes photos du <strong style="color:#f5f1ea">${escapeHtml(dateLabel)}</strong>.</p>
+        <p style="${pStyle}"><strong style="color:#f5f1ea">Commentaires</strong></p>
+        ${commentHtml}
+        <p style="${pStyle}"><strong style="color:#f5f1ea">Rapport</strong></p>
+        <p style="${pStyle};white-space:pre-line">${escapeHtml(report)}</p>
+        <p style="${pStyle};margin-top:16px"><a href="${sessionUrl}" style="${btnStyle}">Voir dans mon espace</a></p>`,
+    }),
+    text: `Bonjour ${name}. Rapport photo du ${dateLabel}.\n\nCommentaires :\n${comments.map((c) => `- ${c.author} : ${c.content}`).join('\n') || 'Aucun.'}\n\nRapport :\n${report}\n\n${sessionUrl}`,
+  });
+}
+
 export default {
   sendMail,
   sendContactNotification,
@@ -218,4 +255,5 @@ export default {
   sendPasswordReset,
   sendProgramUpdate,
   sendSessionReminder,
+  sendPhotoReview,
 };

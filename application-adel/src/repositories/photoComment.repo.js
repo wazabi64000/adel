@@ -2,6 +2,18 @@ import { query, queryOne, execute } from '../config/database.js';
 
 const FIELDS = `pc.id, pc.session_id, pc.author_id, pc.content, pc.created_at`;
 
+/** Liste tous les commentaires d'une séance, du plus ancien au plus récent. */
+export async function listAllBySession(sessionId) {
+  return query(
+    `SELECT ${FIELDS}, u.name AS author_name, u.role AS author_role
+       FROM photo_comments pc
+       JOIN users u ON u.id = pc.author_id
+      WHERE pc.session_id = ?
+      ORDER BY pc.created_at ASC, pc.id ASC`,
+    [sessionId],
+  );
+}
+
 /** Liste les commentaires d'une séance (propriétaire uniquement). */
 export async function listBySession(sessionId, authorId) {
   return query(

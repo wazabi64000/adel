@@ -15,6 +15,7 @@ import * as day from '../controllers/admin/day.controller.js';
 import * as exercise from '../controllers/admin/exercise.controller.js';
 import * as inbox from '../controllers/admin/inbox.controller.js';
 import * as gallery from '../controllers/admin/gallery.controller.js';
+import * as follow from '../controllers/admin/follow.controller.js';
 
 const router = Router();
 
@@ -24,6 +25,10 @@ router.use(adminBadges);
 
 /* ------------------------------- Tableau de bord ------------------------------- */
 router.get('/', dashboard.index);
+router.get('/suivi/sessions/:id', follow.show);
+router.post('/suivi/sessions/:id/comments', follow.addComment);
+router.post('/suivi/sessions/:id/rapport', follow.saveReport);
+router.post('/suivi/sessions/:id/rapport/valider', follow.validateReport);
 
 /* ---------------------------------- Articles ---------------------------------- */
 router.get('/articles', article.list);

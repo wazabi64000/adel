@@ -42,7 +42,7 @@
   "shortcuts": [
     {
       "name": "Mon espace",
-      "short_name": "Espace",
+      "short_name": "Mon espace",
       "description": "Accéder à ton espace sportif ou coach",
       "url": "/login?source=pwa-shortcut",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]

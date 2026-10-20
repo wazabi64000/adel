@@ -41,13 +41,14 @@ export function csrfCheck(req, res, next) {
   const expected = req.session.csrfToken;
   const sent = req.body?._csrf || req.get('x-csrf-token');
 
-  if (!expected || !sent || sent.length !== expected.length) {
-    return res.status(403).render('errors/403', { title: 'Requête invalide', message: 'Jeton de sécurité manquant ou invalide.' });
-  }
-
-  const a = Buffer.from(String(sent));
-  const b = Buffer.from(String(expected));
-  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+  const sentBuf = Buffer.from(String(sent || ''));
+  const expectedBuf = Buffer.from(String(expected || ''));
+  const mismatch = !expected || !sent || sentBuf.length !== expectedBuf.length
+    || !crypto.timingSafeEqual(sentBuf, expectedBuf);
+  if (mismatch) {
+    if (req.accepts(['html', 'json']) === 'json') {
+      return res.status(403).json({ error: 'Jeton de sécurité invalide.', code: 'CSRF' });
+    }
     return res.status(403).render('errors/403', { title: 'Requête invalide', message: 'Jeton de sécurité invalide.' });
   }
 

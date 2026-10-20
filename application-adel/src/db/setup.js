@@ -127,6 +127,27 @@ const TABLE_MIGRATIONS = [
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
   },
   {
+    table: 'photo_reports',
+    ddl: `CREATE TABLE IF NOT EXISTS photo_reports (
+      id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+      session_id   INT UNSIGNED NOT NULL,
+      athlete_id   INT UNSIGNED NOT NULL,
+      author_id    INT UNSIGNED NOT NULL,
+      content      TEXT NOT NULL,
+      status       ENUM('draft','validated') NOT NULL DEFAULT 'draft',
+      validated_at DATETIME NULL,
+      sent_at      DATETIME NULL,
+      created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      PRIMARY KEY (id),
+      UNIQUE KEY uq_report_session (session_id),
+      KEY idx_reports_athlete (athlete_id, validated_at),
+      CONSTRAINT fk_report_session FOREIGN KEY (session_id) REFERENCES photo_sessions (id) ON DELETE CASCADE,
+      CONSTRAINT fk_report_athlete FOREIGN KEY (athlete_id) REFERENCES athletes (id) ON DELETE CASCADE,
+      CONSTRAINT fk_report_author FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+  },
+  {
     table: 'session_reminders',
     ddl: `CREATE TABLE IF NOT EXISTS session_reminders (
       id              INT UNSIGNED NOT NULL AUTO_INCREMENT,

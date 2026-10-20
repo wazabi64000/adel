@@ -113,6 +113,22 @@
 </section>
 
 <section class="panel">
+  <div class="panel-head"><h2>Historique des rapports photo</h2></div>
+  <div class="panel-body">
+    {% if photoReports and photoReports | length > 0 %}
+      {% for r in photoReports %}
+      <article class="report-history">
+        <p class="follow-date-label">Photos du {{ date_fr(r.session_date) }} — validé le {{ date_fr(r.validated_at, true) }}{% if r.sent_at %} · envoyé le {{ date_fr(r.sent_at, true) }}{% endif %}</p>
+        <p>{{ r.content }}</p>
+      </article>
+      {% endfor %}
+    {% else %}
+    <p class="muted">Aucun rapport validé pour ce sportif.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="panel">
   <div class="panel-head"><h2>Programmes</h2><a class="btn btn-primary btn-sm" href="/admin/programs/new?athlete_id={{ athlete.id }}">+ Nouveau</a></div>
   <div class="panel-body">
     {% if programs and programs | length > 0 %}

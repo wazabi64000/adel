@@ -42,64 +42,8 @@
   </div>
 </form>
 
-<script>
-(function(){
-  var input = document.getElementById('image');
-  var preview = document.getElementById('image-preview');
-  if (!input || !preview) return;
+{% endblock %}
 
-  function renderPreview(){
-    preview.innerHTML = '';
-    var files = Array.from(input.files || []);
-    if (!files.length) return;
-    files.forEach(function(file, idx){
-      if (!file.type.startsWith('image/')) return;
-      var url = URL.createObjectURL(file);
-      var wrap = document.createElement('div');
-      wrap.className = 'image-preview-item';
-      wrap.style.position = 'relative';
-      var img = document.createElement('img');
-      img.src = url;
-      img.alt = file.name;
-      img.className = 'image-preview-thumb';
-      var del = document.createElement('button');
-      del.type = 'button';
-      del.className = 'image-preview-remove';
-      del.setAttribute('aria-label', 'Retirer ' + file.name);
-      del.innerHTML = '×';
-      del.addEventListener('click', function(){
-        var dt = new DataTransfer();
-        input.files = (function(){
-          var remaining = Array.from(input.files).filter(function(_, i){ return i !== idx; });
-          remaining.forEach(function(f){ dt.items.add(f); });
-          return dt.files;
-        })();
-        renderPreview();
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-      });
-      wrap.appendChild(img);
-      wrap.appendChild(del);
-      preview.appendChild(wrap);
-    });
-  }
-  input.addEventListener('change', renderPreview);
-
-  // Empêche l'envoi si aucune image
-  var form = document.getElementById('gallery-form');
-  form.addEventListener('submit', function(e){
-    if (!input.files || input.files.length === 0) {
-      e.preventDefault();
-      var err = document.getElementById('image-error');
-      if (!err) {
-        err = document.createElement('small');
-        err.id = 'image-error';
-        err.className = 'field-error';
-        err.textContent = 'Au moins une image est obligatoire.';
-        input.parentNode.appendChild(err);
-      }
-      input.focus();
-    }
-  });
-})();
-</script>
+{% block scripts %}
+<script src="/js/gallery-form.js" defer></script>
 {% endblock %}

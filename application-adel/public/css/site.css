@@ -636,6 +636,11 @@ button.btn-primary:hover,
 .bottomnav a[aria-current="true"],.bottomnav button[aria-current="true"]{
   background:var(--brand);color:var(--ink-on-brand);border-color:var(--brand);
 }
+.bottomnav a.bottomnav-cta{
+  background:var(--brand);color:var(--ink-on-brand);border-color:var(--brand);
+  letter-spacing:.03em;font-size:.62rem;padding-inline:2px;
+}
+.bottomnav a.bottomnav-cta:hover{opacity:.92;color:var(--ink-on-brand)}
 .totop{
   position:fixed;right:12px;bottom:calc(78px + env(safe-area-inset-bottom));z-index:1000;
   min-height:44px;padding:10px 14px;border-radius:2px;border:1px solid var(--line);
