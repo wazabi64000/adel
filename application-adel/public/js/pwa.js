@@ -8,8 +8,15 @@
   const dismiss = document.getElementById('pwa-install-dismiss');
   const hint = document.getElementById('pwa-install-hint');
 
+  const updateModal = document.getElementById('pwa-update');
+  const updateBtn = document.getElementById('pwa-update-btn');
+
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+  let waitingWorker = null;
+  let refreshing = false;
+  let updateLocked = false;
 
   function showInstallBar() {
     if (!bar || isStandalone) return;
@@ -21,23 +28,89 @@
     if (bar) bar.hidden = true;
   }
 
-  /* ---------- Mises à jour forcées ---------- */
-  if ('serviceWorker' in navigator) {
-    let refreshing = false;
+  function lockPage() {
+    document.documentElement.classList.add('pwa-update-locked');
+    document.body.classList.add('pwa-update-locked');
+  }
 
-    // Nouveau SW actif → rechargement immédiat de tous les onglets
+  function unlockPage() {
+    document.documentElement.classList.remove('pwa-update-locked');
+    document.body.classList.remove('pwa-update-locked');
+  }
+
+  function showUpdateModal(worker) {
+    if (!updateModal || !worker) return;
+    waitingWorker = worker;
+    updateLocked = true;
+    updateModal.hidden = false;
+    lockPage();
+    hideInstallBar();
+    updateBtn?.focus({ preventScroll: true });
+  }
+
+  function applyUpdate() {
+    if (!waitingWorker) {
+      window.location.reload();
+      return;
+    }
+    if (updateBtn) {
+      updateBtn.disabled = true;
+      updateBtn.textContent = 'Mise à jour…';
+    }
+    waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+    waitingWorker.postMessage('SKIP_WAITING');
+  }
+
+  updateBtn?.addEventListener('click', applyUpdate);
+
+  // Empêche Escape / clic fond : mise à jour obligatoire
+  updateModal?.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
+
+  /* ---------- Mises à jour forcées (modal bloquant) ---------- */
+  if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (refreshing) return;
       refreshing = true;
       window.location.reload();
     });
 
-    const forceUpdate = (reg) => {
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data?.type === 'SW_UPDATED' && updateLocked) {
+        // SW déjà actif après SKIP_WAITING → recharger si controllerchange a raté
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      }
+    });
+
+    const promptIfWaiting = (reg) => {
       if (!reg) return;
-      reg.update().catch(() => {});
-      const worker = reg.installing || reg.waiting;
-      if (worker) worker.postMessage('SKIP_WAITING');
-      if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
+      const worker = reg.waiting;
+      if (!worker) return;
+      if (navigator.serviceWorker.controller) {
+        showUpdateModal(worker);
+      } else {
+        // Première installation : activer sans modal
+        worker.postMessage({ type: 'SKIP_WAITING' });
+      }
+    };
+
+    const watchInstalling = (reg, worker) => {
+      if (!worker) return;
+      worker.addEventListener('statechange', () => {
+        if (worker.state !== 'installed') return;
+        if (navigator.serviceWorker.controller) {
+          showUpdateModal(worker);
+        } else {
+          worker.postMessage({ type: 'SKIP_WAITING' });
+        }
+      });
     };
 
     const register = async () => {
@@ -47,20 +120,17 @@
           updateViaCache: 'none',
         });
 
-        forceUpdate(reg);
+        promptIfWaiting(reg);
+        if (reg.installing) watchInstalling(reg, reg.installing);
 
         reg.addEventListener('updatefound', () => {
-          const worker = reg.installing;
-          if (!worker) return;
-          worker.addEventListener('statechange', () => {
-            if (worker.state === 'installed') {
-              worker.postMessage('SKIP_WAITING');
-            }
-          });
+          watchInstalling(reg, reg.installing);
         });
 
-        // Vérifie souvent (focus, visibilité, intervalle)
-        const check = () => forceUpdate(reg);
+        const check = () => {
+          reg.update().catch(() => {});
+          promptIfWaiting(reg);
+        };
         window.addEventListener('focus', check);
         document.addEventListener('visibilitychange', () => {
           if (document.visibilityState === 'visible') check();
@@ -75,7 +145,7 @@
     else window.addEventListener('load', register);
   }
 
-  /* ---------- Installation forcée (bandeau persistant) ---------- */
+  /* ---------- Installation (bandeau) ---------- */
   if (isStandalone) {
     hideInstallBar();
     return;
@@ -86,17 +156,17 @@
   window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
     deferredPrompt = event;
+    if (updateLocked) return;
     if (hint) hint.hidden = true;
     showInstallBar();
   });
 
-  // iOS Safari : pas d'API d'install → guide permanent
   if (isIos && isSafari) {
     if (hint) {
       hint.hidden = false;
       hint.textContent = 'Sur iPhone : Partager → Sur l’écran d’accueil';
     }
-    showInstallBar();
+    if (!updateLocked) showInstallBar();
   }
 
   btn?.addEventListener('click', async () => {
@@ -105,10 +175,9 @@
       const choice = await deferredPrompt.userChoice;
       deferredPrompt = null;
       if (choice?.outcome === 'accepted') hideInstallBar();
-      else showInstallBar(); // refuse → on réaffiche
+      else showInstallBar();
       return;
     }
-    // Fallback : guide iOS / navigateur sans beforeinstallprompt
     if (hint) {
       hint.hidden = false;
       if (isIos) hint.textContent = 'Tape Partager, puis « Sur l’écran d’accueil ».';
@@ -117,10 +186,11 @@
     showInstallBar();
   });
 
-  // « Plus tard » ne cache que 30 min — puis réapparaît
   dismiss?.addEventListener('click', () => {
     hideInstallBar();
-    setTimeout(showInstallBar, 30 * 60 * 1000);
+    setTimeout(() => {
+      if (!updateLocked) showInstallBar();
+    }, 30 * 60 * 1000);
   });
 
   window.addEventListener('appinstalled', () => {
