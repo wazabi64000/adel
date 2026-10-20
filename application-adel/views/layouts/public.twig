@@ -89,11 +89,11 @@
 
 <footer class="sitefoot">
   <div class="container foot-grid">
-    <div>
+    <div class="foot-brand">
       <a class="brand" href="{{ home ? '#accueil' : '/#accueil' }}" aria-label="Coach Adel — retour à l'accueil">COACH<span>ADEL</span></a>
       <p class="foot-desc">Accompagnement personnalisé physique, nutritionnel et mental — pour une progression plus équilibrée et durable.</p>
     </div>
-    <nav aria-label="Pied de page">
+    <nav class="foot-col foot-col--nav" aria-label="Pied de page">
       <p class="foot-h">Navigation</p>
       <ul class="foot-nav">
         <li><a href="{{ home ? '#accueil' : '/#accueil' }}">Accueil</a></li>
@@ -103,24 +103,26 @@
         <li><a href="{{ home ? '#rejoindre' : '/#rejoindre' }}">Rejoindre</a></li>
       </ul>
     </nav>
-    <div>
-      <p class="foot-h">Contact</p>
-      <ul class="foot-contact">
-        <li><a href="https://wa.me/33774923253?text=Bonjour%20Adel%2C%20je%20souhaite%20%C3%A9changer%20sur%20votre%20accompagnement." target="_blank" rel="noopener">WhatsApp — +33 7 74 92 32 53</a></li>
-        <li><a href="mailto:annabelle.adel300@gmail.com">annabelle.adel300@gmail.com</a></li>
-      </ul>
-    </div>
-    <div>
-      <p class="foot-h">Réseaux</p>
-      <ul class="socials" aria-label="Réseaux sociaux de Coach Adel">
-        <li><a href="https://www.instagram.com/adel.fitness.coaching/" target="_blank" rel="noopener">Instagram</a></li>
-        <li><a href="https://www.tiktok.com/@adel.cherif36" target="_blank" rel="noopener">TikTok</a></li>
-        <li><a href="https://www.snapchat.com/@adelcoaching?share_id=Rv4zMyheqh4&locale=fr-FR" target="_blank" rel="noopener">Snapchat</a></li>
-        <li><a href="https://www.facebook.com/profile.php?id=61590430498696" target="_blank" rel="noopener" class="social-facebook" aria-label="Page Facebook Coach Adel">
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.09 3.098 9.386 7.378 11.194v-6.814h-3.061v-4.337h3.061V8.554c0-2.302 1.351-4.085 3.334-4.085 1.102 0 2.178.085 2.456.13v3.131h-1.515c-1.218 0-1.656.789-1.656 1.584v1.444h2.533l-.514 3.131h-2.019v4.337H18v-3.05c0-.155.013-.305.026-.457 2.595-1.405 4.398-4.266 4.398-7.591"/></svg>
-          Facebook
-        </a>
-      </ul>
+    <div class="foot-aside">
+      <div class="foot-col foot-col--contact">
+        <p class="foot-h">Contact</p>
+        <ul class="foot-contact">
+          <li><a href="https://wa.me/33774923253?text=Bonjour%20Adel%2C%20je%20souhaite%20%C3%A9changer%20sur%20votre%20accompagnement." target="_blank" rel="noopener">WhatsApp — +33 7 74 92 32 53</a></li>
+          <li><a href="mailto:annabelle.adel300@gmail.com">annabelle.adel300@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="foot-col foot-col--social">
+        <p class="foot-h">Réseaux</p>
+        <ul class="socials" aria-label="Réseaux sociaux de Coach Adel">
+          <li><a href="https://www.instagram.com/adel.fitness.coaching/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://www.tiktok.com/@adel.cherif36" target="_blank" rel="noopener">TikTok</a></li>
+          <li><a href="https://www.snapchat.com/@adelcoaching?share_id=Rv4zMyheqh4&locale=fr-FR" target="_blank" rel="noopener">Snapchat</a></li>
+          <li><a href="https://www.facebook.com/profile.php?id=61590430498696" target="_blank" rel="noopener" class="social-facebook" aria-label="Page Facebook Coach Adel">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.09 3.098 9.386 7.378 11.194v-6.814h-3.061v-4.337h3.061V8.554c0-2.302 1.351-4.085 3.334-4.085 1.102 0 2.178.085 2.456.13v3.131h-1.515c-1.218 0-1.656.789-1.656 1.584v1.444h2.533l-.514 3.131h-2.019v4.337H18v-3.05c0-.155.013-.305.026-.457 2.595-1.405 4.398-4.266 4.398-7.591"/></svg>
+            Facebook
+          </a></li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="container foot-legal">
