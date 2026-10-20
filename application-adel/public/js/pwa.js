@@ -5,6 +5,7 @@
 
   const bar = document.getElementById('pwa-install');
   const btn = document.getElementById('pwa-install-btn');
+  const dismiss = document.getElementById('pwa-install-dismiss');
   const hint = document.getElementById('pwa-install-hint');
 
   const updateModal = document.getElementById('pwa-update');
@@ -12,6 +13,9 @@
 
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+  const DISMISS_KEY = 'adel-pwa-install-dismissed-at';
+  const DISMISS_MS = 24 * 60 * 60 * 1000;
 
   let waitingWorker = null;
   let refreshing = false;
@@ -36,8 +40,25 @@
     document.body.classList.add('pwa-update-locked');
   }
 
+  function wasInstallDismissed() {
+    try {
+      const at = Number(localStorage.getItem(DISMISS_KEY) || 0);
+      return Boolean(at && Date.now() - at < DISMISS_MS);
+    } catch {
+      return false;
+    }
+  }
+
+  function rememberInstallDismiss() {
+    try {
+      localStorage.setItem(DISMISS_KEY, String(Date.now()));
+    } catch {
+      /* ignore */
+    }
+  }
+
   function showInstallModal() {
-    if (!bar || isStandalone || updateLocked) return;
+    if (!bar || isStandalone || updateLocked || wasInstallDismissed()) return;
     bar.hidden = false;
     lockInstall();
     btn?.focus({ preventScroll: true });
@@ -46,6 +67,11 @@
   function hideInstallModal() {
     if (bar) bar.hidden = true;
     unlockInstall();
+  }
+
+  function dismissInstall() {
+    rememberInstallDismiss();
+    hideInstallModal();
   }
 
   function setInstallHint(message) {
@@ -83,15 +109,13 @@
   }
 
   updateBtn?.addEventListener('click', applyUpdate);
-
-  updateModal?.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+  dismiss?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dismissInstall();
   });
 
-  bar?.addEventListener('keydown', (event) => {
+  updateModal?.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       event.preventDefault();
       event.stopPropagation();
@@ -170,7 +194,7 @@
     else window.addEventListener('load', register);
   }
 
-  /* ---------- Installation forcée (modal + rotation) ---------- */
+  /* ---------- Installation (modal + Plus tard) ---------- */
   if (isStandalone) {
     hideInstallModal();
     return;
@@ -183,11 +207,12 @@
     showInstallModal();
   });
 
-  // Affiche dès l’ouverture si pas encore installé
   if (isIos && isSafari) {
     setInstallHint('Sur iPhone : tape Partager, puis « Sur l’écran d’accueil ».');
   } else {
-    setInstallHint('Appuie sur « Installer maintenant ». Si le navigateur ne propose rien, ouvre le menu → Installer l’application.');
+    setInstallHint(
+      'Appuie sur « Installer maintenant ». Si le navigateur ne propose rien, ouvre le menu → Installer l’application.',
+    );
   }
   showInstallModal();
 
@@ -199,7 +224,7 @@
       if (choice?.outcome === 'accepted') {
         hideInstallModal();
       } else {
-        setInstallHint('Installation refusée. Pour continuer, installe Coach Adel.');
+        setInstallHint('Installation refusée. Tu peux réessayer ou choisir « Plus tard ».');
         showInstallModal();
       }
       return;
