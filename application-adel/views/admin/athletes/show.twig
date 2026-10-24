@@ -59,8 +59,19 @@
   </section>
 </div>
 
+<section class="panel" id="suivi-photos">
+  <div class="panel-head">
+    <h2>Photos de suivi (athlète)</h2>
+    <a class="btn btn-secondary btn-sm" href="/admin?athlete={{ athlete.id }}&vue=photos">Ouvrir dans le tableau de bord</a>
+  </div>
+  <div class="panel-body">
+    <p class="muted" style="margin-bottom:12px">Photos envoyées par le sportif depuis son espace « Suivi photographique ».</p>
+    {% include 'admin/partials/follow-photos.twig' with { days: sessionPhotoDates, emptyMessage: 'Aucune photo de suivi envoyée pour l\'instant.' } %}
+  </div>
+</section>
+
 <section class="panel" id="photos">
-  <div class="panel-head"><h2>Photos avant / après</h2></div>
+  <div class="panel-head"><h2>Photos avant / après (coach)</h2></div>
   <div class="panel-body">
     <form class="app-form photo-form" method="post" action="/admin/athletes/{{ athlete.id }}/photos" enctype="multipart/form-data" novalidate>
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -193,4 +204,10 @@
     </div>
   </div>
 </section>
+
+{% include 'admin/partials/follow-review-modal.twig' %}
+{% endblock %}
+
+{% block scripts %}
+<script src="/js/follow-review.js" defer></script>
 {% endblock %}

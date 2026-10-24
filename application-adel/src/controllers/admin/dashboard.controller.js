@@ -24,10 +24,13 @@ function groupLogsByDay(logs) {
 export const index = asyncHandler(async (req, res) => {
   const data = await adminDashboard();
   const athleteId = toInt(req.query.athlete);
-  const vue = VUES.includes(req.query.vue) ? req.query.vue : '';
   const selectedAthlete = athleteId
     ? data.athleteFollowUp.find((athlete) => Number(athlete.id) === athleteId) || null
     : null;
+  // Sans ?vue=, ouvrir directement le suivi photo s'il y en a — c'est là que les
+  // athlètes envoient leurs images, et c'était souvent manqué derrière le résumé.
+  let vue = VUES.includes(req.query.vue) ? req.query.vue : '';
+  if (selectedAthlete && !vue && selectedAthlete.photoCount > 0) vue = 'photos';
   const athleteLogs = selectedAthlete && vue === 'seances'
     ? groupLogsByDay(await logRepo.listByAthlete(selectedAthlete.id, { limit: 80, offset: 0 }))
     : [];

@@ -26,6 +26,7 @@ router.use(adminBadges);
 /* ------------------------------- Tableau de bord ------------------------------- */
 router.get('/', dashboard.index);
 router.get('/suivi/sessions/:id', follow.show);
+router.get('/suivi/sessions/:id/file/:viewKey', follow.serveFile);
 router.post('/suivi/sessions/:id/comments', follow.addComment);
 router.post('/suivi/sessions/:id/rapport', follow.saveReport);
 router.post('/suivi/sessions/:id/rapport/valider', follow.validateReport);

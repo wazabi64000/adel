@@ -3,6 +3,7 @@ import * as athleteRepo from '../../repositories/athlete.repo.js';
 import * as programRepo from '../../repositories/program.repo.js';
 import * as userRepo from '../../repositories/user.repo.js';
 import * as progressRepo from '../../repositories/progressPhoto.repo.js';
+import * as photoSessionRepo from '../../repositories/photoSession.repo.js';
 import * as photoReportRepo from '../../repositories/photoReport.repo.js';
 import * as authService from '../../services/auth.service.js';
 import * as logRepo from '../../repositories/log.repo.js';
@@ -14,7 +15,42 @@ import { asyncHandler, clean, paginate, HttpError } from '../../utils/http.js';
 
 const PHASES = ['avant', 'apres'];
 const VIEWS = ['devant', 'dos', 'profil_droit', 'profil_gauche'];
+const SESSION_VIEW_ORDER = ['devant', 'dos', 'profil_gauche', 'profil_droit', 'complementaire'];
 const isoToday = () => new Date().toISOString().slice(0, 10);
+
+/** Groupe les photos de séances envoyées par l'athlète (suivi) par séance. */
+function groupSessionPhotos(rows) {
+  const dates = [];
+  const bySession = new Map();
+  for (const photo of rows) {
+    const sessionId = Number(photo.session_id);
+    let group = bySession.get(sessionId);
+    if (!group) {
+      group = {
+        key: String(sessionId),
+        sessionId,
+        date: photo.session_date,
+        notes: photo.notes || '',
+        reportStatus: photo.report_status || '',
+        photos: [],
+      };
+      bySession.set(sessionId, group);
+      dates.push(group);
+    }
+    group.photos.push({
+      view: photo.view_key,
+      url: `/admin/suivi/sessions/${sessionId}/file/${photo.view_key}`,
+      sessionId,
+      reportStatus: photo.report_status || '',
+    });
+  }
+  for (const group of dates) {
+    group.photos.sort(
+      (a, b) => SESSION_VIEW_ORDER.indexOf(a.view) - SESSION_VIEW_ORDER.indexOf(b.view),
+    );
+  }
+  return dates;
+}
 
 export const list = asyncHandler(async (req, res) => {
   const { page, perPage, offset, limit } = paginate(req.query, { perPage: 12 });
@@ -35,12 +71,13 @@ export const list = asyncHandler(async (req, res) => {
 export const show = asyncHandler(async (req, res) => {
   const athlete = await athleteRepo.findById(req.params.id);
   if (!athlete) throw new HttpError(404, 'Profil introuvable.');
-  const [programs, stats, logs, photos, photoReports] = await Promise.all([
+  const [programs, stats, logs, photos, photoReports, sentPhotoRows] = await Promise.all([
     programRepo.findByAthlete(athlete.id),
     athleteStats(athlete.id),
     logRepo.listByAthlete(athlete.id, { limit: 15, offset: 0 }),
     progressRepo.listByAthlete(athlete.id),
     photoReportRepo.listValidatedByAthlete(athlete.id),
+    photoSessionRepo.listSentByAthlete(athlete.id),
   ]);
   return res.render('admin/athletes/show', {
     title: `${athlete.first_name} ${athlete.last_name}`,
@@ -50,6 +87,7 @@ export const show = asyncHandler(async (req, res) => {
     logs,
     photos,
     photoReports,
+    sessionPhotoDates: groupSessionPhotos(sentPhotoRows),
     today: isoToday(),
   });
 });
