@@ -119,7 +119,8 @@ function buildAthleteFollowUp(sessionStats, sentPhotos) {
     }
     group.photos.push({
       view: photo.view_key,
-      url: photo.image_url,
+      // Proxy admin same-origin (évite les blocages CSP / hotlink sur Cloudinary).
+      url: `/admin/suivi/sessions/${photo.session_id}/file/${photo.view_key}`,
       sessionId: photo.session_id,
       reportStatus: photo.report_status || '',
     });

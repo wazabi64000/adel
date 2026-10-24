@@ -87,27 +87,7 @@
       <p class="muted">Aucune séance enregistrée pour cet athlète.</p>
       {% endif %}
     {% elseif athleteVue == 'photos' %}
-      {% if selectedAthlete.photoDates and selectedAthlete.photoDates | length > 0 %}
-      <div class="follow-dates">
-        {% for day in selectedAthlete.photoDates %}
-        <div class="follow-date">
-          <p class="follow-date-label">{{ day.dateLabel }}{% if day.notes %} — {{ day.notes }}{% endif %}</p>
-          <div class="follow-photos">
-            {% for photo in day.photos %}
-            <figure>
-              <button type="button" class="follow-photo" data-session="{{ photo.sessionId }}" data-view="{{ photo.view }}" aria-label="Ouvrir la photo {{ photo.view == 'devant' ? 'devant' : photo.view == 'dos' ? 'dos' : photo.view == 'profil_gauche' ? 'profil gauche' : photo.view == 'profil_droit' ? 'profil droit' : 'complémentaire' }} du {{ day.dateLabel }}">
-                <img src="{{ photo.url }}" alt="" loading="lazy">
-              </button>
-              <figcaption>{{ photo.view == 'devant' ? 'Devant' : photo.view == 'dos' ? 'Dos' : photo.view == 'profil_gauche' ? 'Profil gauche' : photo.view == 'profil_droit' ? 'Profil droit' : 'Complémentaire' }}{% if photo.reportStatus == 'validated' %} · Rapport validé{% endif %}</figcaption>
-            </figure>
-            {% endfor %}
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-      {% else %}
-      <p class="muted">Aucune photo envoyée.</p>
-      {% endif %}
+      {% include 'admin/partials/follow-photos.twig' with { days: selectedAthlete.photoDates, emptyMessage: 'Aucune photo envoyée.' } %}
     {% else %}
       <div class="follow-stats">
         <div><b>{{ selectedAthlete.sessionsCount }}</b><span>Séances</span></div>
@@ -126,7 +106,7 @@
       {% for a in athleteFollowUp %}
       <article class="follow-card">
         <div class="follow-head">
-          <h3><a href="/admin?athlete={{ a.id }}">{{ a.firstName }} {{ a.lastName }}</a></h3>
+          <h3><a href="/admin?athlete={{ a.id }}{% if a.photoCount > 0 %}&vue=photos{% endif %}">{{ a.firstName }} {{ a.lastName }}</a></h3>
           {% if not a.isActive %}<span class="tag tag-neutral">Inactif</span>{% endif %}
         </div>
         <nav class="follow-menu" aria-label="Menu de {{ a.firstName }} {{ a.lastName }}">
@@ -147,48 +127,7 @@
   </div>
 </section>
 
-<dialog class="review-modal" id="review-modal" aria-labelledby="review-title" data-csrf="{{ csrfToken }}">
-  <div class="review-modal-bar">
-    <h2 id="review-title">Photo</h2>
-    <button type="button" class="review-close" id="review-close" aria-label="Fermer">×</button>
-  </div>
-  <p class="review-loading" id="review-loading">Chargement…</p>
-  <div class="review-layout" id="review-layout" hidden>
-    <div class="review-stage">
-      <div class="review-zoom">
-        <button type="button" class="btn btn-ghost btn-sm" id="review-zoom-out" aria-label="Réduire">−</button>
-        <input id="review-zoom" type="range" min="1" max="3" step="0.1" value="1" aria-label="Agrandir la photo">
-        <button type="button" class="btn btn-ghost btn-sm" id="review-zoom-in" aria-label="Agrandir">+</button>
-        <span id="review-zoom-label">100 %</span>
-      </div>
-      <div class="review-thumbs" id="review-thumbs"></div>
-      <div class="review-frame" id="review-frame" title="Glisser pour déplacer la photo">
-        <img id="review-image" alt="">
-      </div>
-    </div>
-    <div class="review-side">
-      <h3>Commentaires</h3>
-      <ul id="review-comments" class="review-comments"></ul>
-      <form id="review-comment-form">
-        <label for="review-comment">Ajouter un commentaire</label>
-        <textarea id="review-comment" name="content" rows="3" maxlength="1000" required placeholder="Observation sur cette photo…"></textarea>
-        <button class="btn btn-secondary btn-sm" type="submit">Ajouter</button>
-        <p class="review-status" id="review-comment-status" role="status"></p>
-      </form>
-      <h3>Rapport</h3>
-      <p class="muted" id="review-report-state"></p>
-      <form id="review-report-form">
-        <label for="review-report">Évaluation à valider</label>
-        <textarea id="review-report" name="content" rows="5" maxlength="4000" required placeholder="Rapport pour l'athlète…"></textarea>
-        <div class="btn-row">
-          <button class="btn btn-secondary btn-sm" type="button" id="review-save">Enregistrer</button>
-          <button class="btn btn-primary btn-sm" type="submit" id="review-validate">Valider et envoyer</button>
-        </div>
-        <p class="review-status" id="review-report-status" role="status"></p>
-      </form>
-    </div>
-  </div>
-</dialog>
+{% include 'admin/partials/follow-review-modal.twig' %}
 
 <div class="btn-row" style="margin-top:24px">
   <a class="btn btn-primary" href="/admin/programs/new">Créer un programme</a>

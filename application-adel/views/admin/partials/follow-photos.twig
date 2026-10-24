@@ -1,0 +1,23 @@
+{# Grille des photos de suivi envoyées par l'athlète.
+   Attend : days (photoDates), emptyMessage (string optionnelle) #}
+{% if days and days | length > 0 %}
+<div class="follow-dates">
+  {% for day in days %}
+  <div class="follow-date">
+    <p class="follow-date-label">{{ day.dateLabel | default(date_fr(day.date)) }}{% if day.notes %} — {{ day.notes }}{% endif %}</p>
+    <div class="follow-photos">
+      {% for photo in day.photos %}
+      <figure>
+        <button type="button" class="follow-photo" data-session="{{ photo.sessionId }}" data-view="{{ photo.view }}" aria-label="Ouvrir la photo {{ photo.view == 'devant' ? 'devant' : photo.view == 'dos' ? 'dos' : photo.view == 'profil_gauche' ? 'profil gauche' : photo.view == 'profil_droit' ? 'profil droit' : 'complémentaire' }}">
+          <img src="{{ photo.url }}" alt="" loading="lazy">
+        </button>
+        <figcaption>{{ photo.view == 'devant' ? 'Devant' : photo.view == 'dos' ? 'Dos' : photo.view == 'profil_gauche' ? 'Profil gauche' : photo.view == 'profil_droit' ? 'Profil droit' : 'Complémentaire' }}{% if photo.reportStatus == 'validated' or day.reportStatus == 'validated' %} · Rapport validé{% endif %}</figcaption>
+      </figure>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="muted">{{ emptyMessage | default('Aucune photo envoyée.') }}</p>
+{% endif %}

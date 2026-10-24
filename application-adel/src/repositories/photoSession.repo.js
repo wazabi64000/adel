@@ -14,6 +14,20 @@ export async function listAllSent() {
   );
 }
 
+/** Photos de suivi d'un sportif (mêmes champs que listAllSent). */
+export async function listSentByAthlete(athleteId) {
+  return query(
+    `SELECT ps.id AS session_id, ps.athlete_id, ps.session_date, ps.notes,
+            sp.view_key, sp.image_url, pr.status AS report_status
+       FROM photo_sessions ps
+       JOIN session_photos sp ON sp.session_id = ps.id
+       LEFT JOIN photo_reports pr ON pr.session_id = ps.id
+      WHERE ps.athlete_id = ?
+      ORDER BY ps.session_date DESC, ps.id DESC, sp.view_key ASC`,
+    [athleteId],
+  );
+}
+
 /** Liste les séances photo d'un sportif (les siennes uniquement). */
 export async function listByAthlete(athleteId) {
   return query(
